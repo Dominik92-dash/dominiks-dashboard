@@ -16,8 +16,8 @@
 .note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid #c7cdd3;border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
-.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.delegated-shell{padding:14px;background:var(--delegated);border:1px solid var(--delegated);border-radius:var(--radius)}.flat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.flat-head h3{margin:0;font-size:17px;line-height:1.2;font-weight:700;color:#1c4668}
-.project-row{display:grid;grid-template-columns:minmax(138px,.66fr) minmax(264px,1.56fr) 170px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.project-current{display:grid;grid-template-columns:155px 1fr;gap:10px;align-items:center}.current-label{font-size:12px;color:var(--muted)}.current-item{display:flex;gap:7px;align-items:flex-start;font-size:13px;margin:3px 0}.current-bullet{flex:0 0 auto;line-height:1.25}.project-status{padding:8px 9px;border:1px solid var(--border);border-radius:7px;font-weight:600;text-align:center}
+.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.delegated-shell{padding:14px;background:var(--delegated);border:1px solid var(--delegated);border-radius:var(--radius)}.flat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.flat-head h3{margin:0;font-size:17px;line-height:1.2;font-weight:700;color:#1c4668}
+.project-row{display:grid;grid-template-columns:minmax(138px,.66fr) minmax(264px,1.56fr) 170px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.project-current{display:grid;grid-template-columns:155px 1fr;gap:10px;align-items:center;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}.current-label{font-size:12px;color:var(--muted)}.current-item{display:flex;gap:7px;align-items:flex-start;font-size:13px;margin:3px 0}.current-bullet{flex:0 0 auto;line-height:1.25}.project-status{padding:8px 9px;border:1px solid var(--border);border-radius:7px;font-weight:600;text-align:center}
 .overlay{display:none;position:fixed;z-index:100;inset:0 0 0 var(--sidebar);padding:29px;background:var(--bg);overflow:auto}.overlay.open{display:block}.shell{width:min(1100px,100%);min-height:calc(100vh - 58px);margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}.editor-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;padding:21px 23px 15px;border-bottom:1px solid var(--border)}.editor-head h2{margin:0}.title-large{width:100%;border:0;outline:0;background:transparent;font-size:27px;font-weight:700}.close-btn{width:36px;height:36px;border:0;border-radius:8px;background:transparent;font-size:25px;cursor:pointer}.close-btn:hover{background:#f0f2f4}.detail-body{padding:23px;display:grid;gap:19px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:grid;gap:7px}.field[hidden]{display:none!important}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#fff}.field textarea{min-height:100px;resize:vertical}.details-text{min-height:235px}.editor-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 23px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
 .toolbar{display:flex;flex-wrap:wrap;gap:7px;padding:11px 23px;border-bottom:1px solid var(--border);background:#fafbfc}.toolbar-group{display:flex;gap:5px;align-items:center;padding-right:8px;border-right:1px solid var(--border)}.toolbar-btn{height:34px;padding:0 9px;border:1px solid transparent;border-radius:7px;background:transparent;cursor:pointer}.toolbar-btn:hover{background:#edf0f3}.color-btn{width:27px;height:27px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px var(--border);cursor:pointer}.rich-editor{flex:1;min-height:420px;padding:27px 31px 48px;outline:0;line-height:1.65}.rich-editor ol ol{list-style-type:lower-alpha}.check-line{display:flex;gap:9px;align-items:flex-start;margin:5px 0}.check-line.checked .check-text{text-decoration:line-through;color:var(--muted)}
 .subtask-head{display:flex;justify-content:space-between;align-items:center}.subtask-row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) 165px 145px 170px auto;gap:8px;align-items:start;padding:10px;background:#fafbfc;border:1px solid var(--border);border-radius:10px}.subtask-row input,.subtask-row select,.subtask-row textarea{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}.subtask-row textarea{min-height:38px;resize:none;overflow:hidden;line-height:1.4}
@@ -290,6 +290,55 @@ body.mobile .todo-row>.actions .icon{
  height:42px
 }
 
+
+/* Mobile Projektkarte: gleiche Linkskante und gemeinsame Status-/Aktionszeile. */
+body.mobile .project-row{
+ grid-template-columns:minmax(0,1fr) auto;
+ column-gap:9px;
+ row-gap:8px
+}
+body.mobile .project-row>div:first-child{
+ grid-column:1/-1;
+ width:100%;
+ min-width:0
+}
+body.mobile .project-row .title-input-inline,
+body.mobile .project-row .mini-select{
+ display:block;
+ width:100%;
+ margin-left:0;
+ padding-left:8px
+}
+body.mobile .project-row .mini-select{
+ height:32px;
+ padding-top:4px;
+ padding-bottom:4px
+}
+body.mobile .project-row>.project-current{
+ grid-column:1/-1;
+ width:100%;
+ min-width:0;
+ padding-left:8px
+}
+body.mobile .project-row>.project-status{
+ grid-column:1;
+ width:100%;
+ min-width:0;
+ min-height:42px;
+ display:flex;
+ align-items:center
+}
+body.mobile .project-row>.actions{
+ grid-column:2;
+ align-self:stretch;
+ justify-content:flex-end;
+ gap:7px
+}
+body.mobile .project-row>.actions .icon{
+ width:42px;
+ height:42px
+}
+
 @media(max-width:480px){
  body.mobile .page-header{flex-direction:column}
  body.mobile .page-header>.primary,
@@ -309,7 +358,7 @@ body.mobile .todo-row>.actions .icon{
 .auth-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:5px}.auth-message{min-height:18px;font-size:12px;color:var(--muted)}
 .auth-message.error{color:var(--danger)}.auth-message.success{color:#2f7040}
 .auth-note{padding:10px 11px;border-radius:8px;background:#f4f6f8;color:var(--muted);font-size:12px;line-height:1.45}
-.sync-indicator{min-width:33px;width:33px;height:33px;padding:0;font-size:18px;line-height:1;white-space:nowrap;overflow:hidden}
+.sync-indicator{min-width:33px;width:33px;height:33px;padding:0;font-size:18px;line-height:1;white-space:nowrap;overflow:hidden;cursor:default}
 .sync-indicator[data-state="saved"]{color:#2f7040;background:#e8f3eb;border-color:#c8dfce}
 .sync-indicator[data-state="saving"]{color:#7b641a;background:#fff7da;border-color:#eadc9e}
 .sync-indicator[data-state="saving"] .sync-glyph{display:inline-block;animation:sync-spin .9s linear infinite}
@@ -461,7 +510,7 @@ body.mobile .todo-row>.actions .icon{
   <header class="editor-head"><input id="project-title" class="title-large" placeholder="Bezeichnung"><button type="button" class="close-btn" data-close-overlay="project">×</button></header>
   <div class="detail-body">
     <div class="detail-grid">
-      <div class="field full"><label>Anmerkung für die Übersicht</label><textarea id="project-summary"></textarea></div>
+      <div class="field full"><label>Anmerkungen</label><textarea id="project-summary"></textarea></div>
       <div class="field"><label>Aufgabenbereich</label><select id="project-area"></select></div>
       <div class="field"><label>Aktueller Stand</label><input id="project-status" readonly></div>
       <div class="field"><label>Priorität</label><select id="project-priority"></select></div>
@@ -1464,24 +1513,7 @@ $('#backup-file-input').addEventListener('change',async event=>{
  }
 });
 
-$('#sync-status-btn').addEventListener('click',()=>{
- if(cloudUser){
-  if(readPendingChanges()||$('#sync-status-btn').dataset.state==='error'){
-   if(navigator.onLine){
-    saveCloudState();
-   }else{
-    alert('Aktuell besteht keine Internetverbindung. Änderungen bleiben lokal gespeichert und werden später automatisch synchronisiert.');
-   }
-   return;
-  }
-  if(confirm(`Angemeldet als ${cloudUser.email||'Benutzer'}.\n\nMöchtest du dich abmelden?`)){
-   signOutFromCloud();
-  }
- }else{
-  $('#auth-gate').classList.remove('hidden');
-  showAuthPanel(readCloudConfig()?'login-panel':'cloud-setup-panel');
- }
-});
+
 
 // Direct controls
 $('#new-note-btn').addEventListener('click',createNote);
