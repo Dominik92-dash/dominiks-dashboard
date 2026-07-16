@@ -24,9 +24,71 @@
 .settings-shell{width:min(1180px,100%)}.settings-body{display:grid;gap:18px;padding:23px}.settings-section{padding:15px;border:1px solid var(--border);border-radius:12px}.settings-section h3{margin:0 0 13px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(290px,1fr));gap:15px}.settings-group{padding:12px;border:1px solid var(--border);border-radius:10px}.settings-group h4{margin:0 0 9px}.settings-hint{margin:-3px 0 10px;color:var(--muted);font-size:11px}.option-list{display:grid;gap:7px}.option-row{display:grid;grid-template-columns:23px minmax(120px,1fr) auto;gap:7px;align-items:center;padding:7px;background:#f7f8fa;border:1px solid var(--border);border-radius:8px}.option-row.status-option{grid-template-columns:23px minmax(110px,1fr) 42px 105px auto}.option-row.dragging{opacity:.35}.option-row.drop-target{outline:2px dashed var(--accent)}.drag-handle{cursor:grab;text-align:center;color:var(--muted)}.option-row input[type=text],.option-row select{width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;background:#fff}.option-row input[type=color]{width:38px;height:30px;border:0;background:transparent}.option-delete{width:30px;height:30px;border:0;border-radius:7px;background:#f7e5e5;color:var(--danger);cursor:pointer}.add-option{margin-top:9px;padding:7px 10px;border:1px dashed var(--accent);border-radius:7px;background:#fff;color:var(--accent);cursor:pointer}
 @media(max-width:1080px){.todo-row,.todo-row.delegated,.project-row{grid-template-columns:1fr}.todo-row>*,.project-row>*{grid-column:1}.subtask-row{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){:root{--sidebar:0px}body.mobile .app{grid-template-columns:1fr}body.mobile .sidebar{position:sticky;top:0;min-height:auto;padding:12px 13px;border-right:0;border-bottom:1px solid var(--border)}body.mobile .brand p{display:none}body.mobile .nav{grid-template-columns:repeat(4,1fr)}body.mobile .nav button{text-align:center;padding:9px 5px;font-size:12px}body.mobile .main{padding:16px 11px}body.mobile .page-header p{display:none}body.mobile .overlay{inset:0;padding:0}body.mobile .shell{min-height:100vh;border:0;border-radius:0}.detail-grid,.settings-grid{grid-template-columns:1fr}.project-current{grid-template-columns:1fr}.subtask-row{grid-template-columns:1fr}}
+
+.auth-gate{position:fixed;z-index:5000;inset:0;display:grid;place-items:center;padding:22px;background:linear-gradient(135deg,#edf2f7,#dce7f1)}
+.auth-gate.hidden{display:none}
+.auth-card{width:min(440px,100%);padding:26px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 55px rgba(25,45,65,.18)}
+.auth-card h2{margin:0 0 7px;font-size:24px}.auth-card p{margin:0 0 20px;color:var(--muted);line-height:1.45}
+.auth-panel{display:grid;gap:13px}.auth-panel.hidden{display:none}.auth-field{display:grid;gap:6px}.auth-field label{font-size:12px;font-weight:700}
+.auth-field input{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;background:#fff}
+.auth-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:5px}.auth-message{min-height:18px;font-size:12px;color:var(--muted)}
+.auth-message.error{color:var(--danger)}.auth-message.success{color:#2f7040}
+.auth-note{padding:10px 11px;border-radius:8px;background:#f4f6f8;color:var(--muted);font-size:12px;line-height:1.45}
+.sync-indicator{min-width:33px;width:auto;padding:0 9px;font-size:12px;white-space:nowrap}
+.sync-indicator[data-state="saved"]{color:#2f7040;background:#e8f3eb;border-color:#c8dfce}
+.sync-indicator[data-state="saving"]{color:#7b641a;background:#fff7da;border-color:#eadc9e}
+.sync-indicator[data-state="offline"],.sync-indicator[data-state="error"]{color:#8b4747;background:#f8e8e8;border-color:#e8caca}
+
 </style>
 </head>
 <body>
+
+<section id="auth-gate" class="auth-gate">
+  <div class="auth-card">
+    <h2>Dominiks Dashboard</h2>
+    <p id="auth-intro">Mit Supabase verbinden und anmelden.</p>
+
+    <form id="cloud-setup-panel" class="auth-panel hidden">
+      <div class="auth-note">
+        Die Project URL und der Publishable Key werden nur lokal in diesem Browser gespeichert.
+        Verwende niemals einen Secret- oder Service-Role-Key.
+      </div>
+      <div class="auth-field">
+        <label for="cloud-url">Supabase Project URL</label>
+        <input id="cloud-url" type="url" placeholder="https://…supabase.co" autocomplete="off" required>
+      </div>
+      <div class="auth-field">
+        <label for="cloud-key">Supabase Publishable Key</label>
+        <input id="cloud-key" type="password" placeholder="sb_publishable_… oder anon key" autocomplete="off" required>
+      </div>
+      <div id="setup-message" class="auth-message"></div>
+      <div class="auth-actions">
+        <button id="save-cloud-config" class="primary" type="submit">Verbindung speichern</button>
+      </div>
+    </form>
+
+    <form id="login-panel" class="auth-panel hidden">
+      <div class="auth-field">
+        <label for="login-email">E-Mail-Adresse</label>
+        <input id="login-email" type="email" autocomplete="username" required>
+      </div>
+      <div class="auth-field">
+        <label for="login-password">Passwort</label>
+        <input id="login-password" type="password" autocomplete="current-password" required>
+      </div>
+      <div id="login-message" class="auth-message"></div>
+      <div class="auth-actions">
+        <button id="change-cloud-config" class="secondary" type="button">Verbindung ändern</button>
+        <button class="primary" type="submit">Anmelden</button>
+      </div>
+    </form>
+
+    <div id="cloud-loading-panel" class="auth-panel hidden">
+      <div class="auth-note" id="cloud-loading-text">Cloud-Daten werden geladen …</div>
+    </div>
+  </div>
+</section>
+
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -38,6 +100,7 @@
       <button id="undo-btn" class="tool" title="Rückgängig">↶</button>
       <button id="redo-btn" class="tool" title="Wiederholen">↷</button>
       <button id="settings-btn" class="tool" title="Einstellungen">⚙</button>
+      <button id="sync-status-btn" class="tool sync-indicator" data-state="offline" title="Cloud-Status">Lokal</button>
     </div>
     <nav id="nav" class="nav"></nav>
   </aside>
@@ -132,12 +195,15 @@
   <footer class="editor-foot"><span>Änderungen werden automatisch gespeichert.</span><button class="primary" data-close-overlay="settings">Fertig</button></footer>
 </div></section>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=>{
 'use strict';
 
 const STORAGE_KEY='dominik_dashboard_v26';
 const LEGACY_KEYS=['dominik_dashboard_v23','dominik_dashboard_v24','dominik_dashboard_v25'];
+const CLOUD_CONFIG_KEY='dominik_dashboard_supabase_config';
+const CLOUD_TABLE='user_dashboards';
 const $=(selector,root=document)=>root.querySelector(selector);
 const $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -281,8 +347,185 @@ let activePage='notes';
 let current={noteId:null,todoId:null,todoType:'own',projectId:null};
 let filters={own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set(),person:new Set()},projects:{status:new Set(),area:new Set()}};
 let historyPast=[],historyFuture=[],editKey=null,noteRange=null;
+let supabaseClient=null;
+let cloudUser=null;
+let cloudReady=false;
+let cloudSaveTimer=null;
+let cloudSaveRunning=false;
+let cloudSaveQueued=false;
+let suppressCloudSave=false;
 
-function saveState(){safeStorage.set(STORAGE_KEY,JSON.stringify(state))}
+function saveLocalState(){safeStorage.set(STORAGE_KEY,JSON.stringify(state))}
+function saveState(){
+ saveLocalState();
+ if(cloudReady&&!suppressCloudSave)scheduleCloudSave();
+}
+function setSyncStatus(text,status='offline'){
+ const button=$('#sync-status-btn');
+ if(!button)return;
+ button.textContent=text;
+ button.dataset.state=status;
+ button.title=`Cloud-Status: ${text}`;
+}
+function readCloudConfig(){
+ const raw=safeStorage.get(CLOUD_CONFIG_KEY);
+ if(!raw)return null;
+ try{
+  const parsed=JSON.parse(raw);
+  if(typeof parsed.url==='string'&&typeof parsed.key==='string'&&parsed.url&&parsed.key)return parsed;
+ }catch(error){console.error('Cloud-Konfiguration ungültig:',error)}
+ return null;
+}
+function writeCloudConfig(config){
+ safeStorage.set(CLOUD_CONFIG_KEY,JSON.stringify(config));
+}
+function clearCloudConfig(){
+ try{localStorage.removeItem(CLOUD_CONFIG_KEY)}catch{}
+}
+function showAuthPanel(name){
+ ['cloud-setup-panel','login-panel','cloud-loading-panel'].forEach(id=>{
+  $(`#${id}`)?.classList.toggle('hidden',id!==name);
+ });
+ $('#auth-gate')?.classList.remove('hidden');
+}
+function hideAuthGate(){
+ $('#auth-gate')?.classList.add('hidden');
+}
+function authMessage(id,message,type=''){
+ const target=$(`#${id}`);
+ if(!target)return;
+ target.textContent=message||'';
+ target.className=`auth-message${type?` ${type}`:''}`;
+}
+function createSupabaseClient(config){
+ if(!globalThis.supabase?.createClient){
+  throw new Error('Die Supabase-Bibliothek konnte nicht geladen werden. Prüfe deine Internetverbindung.');
+ }
+ return globalThis.supabase.createClient(config.url,config.key,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+ });
+}
+function scheduleCloudSave(){
+ clearTimeout(cloudSaveTimer);
+ setSyncStatus('Speichert …','saving');
+ cloudSaveTimer=setTimeout(()=>saveCloudState(),650);
+}
+async function saveCloudState(){
+ if(!cloudReady||!cloudUser||!supabaseClient)return;
+ if(cloudSaveRunning){
+  cloudSaveQueued=true;
+  return;
+ }
+ cloudSaveRunning=true;
+ cloudSaveQueued=false;
+ setSyncStatus('Speichert …','saving');
+ try{
+  const {error}=await supabaseClient
+   .from(CLOUD_TABLE)
+   .upsert({
+    user_id:cloudUser.id,
+    dashboard_data:state,
+    updated_at:new Date().toISOString()
+   },{onConflict:'user_id'});
+  if(error)throw error;
+  setSyncStatus('Gespeichert','saved');
+ }catch(error){
+  console.error('Cloud-Speicherung fehlgeschlagen:',error);
+  setSyncStatus('Nur lokal','error');
+ }finally{
+  cloudSaveRunning=false;
+  if(cloudSaveQueued)scheduleCloudSave();
+ }
+}
+async function loadCloudState(user){
+ showAuthPanel('cloud-loading-panel');
+ $('#cloud-loading-text').textContent='Cloud-Daten werden geladen …';
+ setSyncStatus('Lädt …','saving');
+ const {data,error}=await supabaseClient
+  .from(CLOUD_TABLE)
+  .select('dashboard_data,updated_at')
+  .eq('user_id',user.id)
+  .maybeSingle();
+ if(error)throw error;
+
+ suppressCloudSave=true;
+ try{
+  if(data?.dashboard_data&&typeof data.dashboard_data==='object'){
+   state=normalizeState(data.dashboard_data);
+   saveLocalState();
+  }else{
+   await supabaseClient
+    .from(CLOUD_TABLE)
+    .upsert({
+     user_id:user.id,
+     dashboard_data:state,
+     updated_at:new Date().toISOString()
+    },{onConflict:'user_id'})
+    .then(({error:uploadError})=>{
+     if(uploadError)throw uploadError;
+    });
+  }
+ }finally{
+  suppressCloudSave=false;
+ }
+ cloudUser=user;
+ cloudReady=true;
+ renderAll();
+ growAll();
+ hideAuthGate();
+ setSyncStatus('Gespeichert','saved');
+}
+async function initializeCloud(){
+ const config=readCloudConfig();
+ if(!config){
+  showAuthPanel('cloud-setup-panel');
+  setSyncStatus('Einrichten','offline');
+  return;
+ }
+ try{
+  supabaseClient=createSupabaseClient(config);
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error)throw error;
+
+  supabaseClient.auth.onAuthStateChange(async(event,session)=>{
+   if(event==='SIGNED_OUT'){
+    cloudUser=null;
+    cloudReady=false;
+    setSyncStatus('Abgemeldet','offline');
+    showAuthPanel('login-panel');
+   }
+  });
+
+  if(data.session?.user){
+   await loadCloudState(data.session.user);
+  }else{
+   showAuthPanel('login-panel');
+   setSyncStatus('Abgemeldet','offline');
+  }
+ }catch(error){
+  console.error('Cloud-Initialisierung fehlgeschlagen:',error);
+  showAuthPanel('cloud-setup-panel');
+  authMessage('setup-message',error.message||'Verbindung fehlgeschlagen.','error');
+  setSyncStatus('Fehler','error');
+ }
+}
+async function signInToCloud(email,password){
+ authMessage('login-message','Anmeldung läuft …');
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+ if(error)throw error;
+ if(!data.user)throw new Error('Die Anmeldung war nicht erfolgreich.');
+ await loadCloudState(data.user);
+}
+async function signOutFromCloud(){
+ if(!supabaseClient)return;
+ setSyncStatus('Abmeldung …','saving');
+ const {error}=await supabaseClient.auth.signOut();
+ if(error){
+  console.error(error);
+  setSyncStatus('Fehler','error');
+  alert(`Abmeldung fehlgeschlagen: ${error.message}`);
+ }
+}
 function snapshot(){return JSON.stringify(state)}
 function checkpoint(){const value=snapshot();if(historyPast.at(-1)!==value)historyPast.push(value);if(historyPast.length>100)historyPast.shift();historyFuture=[];renderHistoryButtons()}
 function commit(mutator){checkpoint();mutator();saveState();renderAll()}
@@ -514,6 +757,72 @@ document.addEventListener('drop',event=>{
  const group=event.target.closest('[data-own-drop]');if(group){event.preventDefault();const id=event.dataTransfer.getData('application/x-own-todo');if(!id)return;commit(()=>{const todo=state.ownTodos.find(item=>item.id===id);if(!todo)return;if(group.dataset.ownDrop==='__completed__'){const done=todoDoneStatus('own');if(done)setTodoStatus(todo,'own',done.id)}else{if(todoIsCompleted(todo,'own')){const open=todoOpenStatus('own');if(open)setTodoStatus(todo,'own',open.id)}todo.priorityId=group.dataset.ownDrop;todo.previousPriorityId=todo.priorityId}todo.updatedAt=now()})}
 });
 
+
+// Cloud setup, login and status controls
+$('#cloud-setup-panel').addEventListener('submit',async event=>{
+ event.preventDefault();
+ authMessage('setup-message','Verbindung wird geprüft …');
+ const url=$('#cloud-url').value.trim().replace(/\/+$/,'');
+ const key=$('#cloud-key').value.trim();
+ if(!/^https:\/\/.+\.supabase\.co$/i.test(url)){
+  authMessage('setup-message','Bitte eine gültige Supabase Project URL eingeben.','error');
+  return;
+ }
+ if(key.length<20){
+  authMessage('setup-message','Der Publishable Key scheint unvollständig zu sein.','error');
+  return;
+ }
+ try{
+  const testClient=createSupabaseClient({url,key});
+  const {error}=await testClient.auth.getSession();
+  if(error)throw error;
+  writeCloudConfig({url,key});
+  supabaseClient=testClient;
+  authMessage('setup-message','Verbindung gespeichert.','success');
+  showAuthPanel('login-panel');
+  setSyncStatus('Abgemeldet','offline');
+ }catch(error){
+  console.error(error);
+  authMessage('setup-message',error.message||'Verbindung konnte nicht hergestellt werden.','error');
+ }
+});
+$('#login-panel').addEventListener('submit',async event=>{
+ event.preventDefault();
+ const email=$('#login-email').value.trim();
+ const password=$('#login-password').value;
+ try{
+  await signInToCloud(email,password);
+  $('#login-password').value='';
+ }catch(error){
+  console.error(error);
+  authMessage('login-message',error.message||'Anmeldung fehlgeschlagen.','error');
+ }
+});
+$('#change-cloud-config').addEventListener('click',async()=>{
+ if(supabaseClient){
+  try{await supabaseClient.auth.signOut()}catch{}
+ }
+ cloudReady=false;
+ cloudUser=null;
+ supabaseClient=null;
+ clearCloudConfig();
+ $('#cloud-url').value='';
+ $('#cloud-key').value='';
+ authMessage('setup-message','');
+ showAuthPanel('cloud-setup-panel');
+ setSyncStatus('Einrichten','offline');
+});
+$('#sync-status-btn').addEventListener('click',()=>{
+ if(cloudUser){
+  if(confirm(`Angemeldet als ${cloudUser.email||'Benutzer'}.\n\nMöchtest du dich abmelden?`)){
+   signOutFromCloud();
+  }
+ }else{
+  $('#auth-gate').classList.remove('hidden');
+  showAuthPanel(readCloudConfig()?'login-panel':'cloud-setup-panel');
+ }
+});
+
 // Direct controls
 $('#new-note-btn').addEventListener('click',createNote);
 $('#new-own-btn').addEventListener('click',()=>createTodo('own'));
@@ -535,8 +844,22 @@ $('#note-checkbox-btn').addEventListener('click',insertCheckboxLine);
 $('#note-editor').addEventListener('mouseup',saveNoteSelection);$('#note-editor').addEventListener('keyup',saveNoteSelection);
 window.addEventListener('resize',()=>{applyMobileMode();closeFilters()});window.addEventListener('scroll',()=>closeFilters(),true);
 
-state=normalizeState(state);saveState();applyMobileMode();renderNoteColors();renderAll();growAll();
-window.__dashboardTest={normalizeState,createDefaults,getState:()=>clone(state)};
+state=normalizeState(state);
+suppressCloudSave=true;
+saveLocalState();
+suppressCloudSave=false;
+applyMobileMode();
+renderNoteColors();
+renderAll();
+growAll();
+initializeCloud();
+window.__dashboardTest={
+ normalizeState,
+ createDefaults,
+ getState:()=>clone(state),
+ saveCloudState,
+ initializeCloud
+};
 })();
 </script>
 </body>
