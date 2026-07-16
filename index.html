@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dominik's Übersicht</title>
+<style>
+:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--own:#bfd6e9;--project:#bfd6e9;--delegated:#bfd6e9;--note:#d9dee3;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px}
+*{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
+.sidebar{position:relative;z-index:80;background:var(--panel);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:22px;line-height:1.15;cursor:pointer}.brand p{margin:7px 0 0;font-size:13px;color:var(--muted);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
+.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
+.main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
+.primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
+.quick-note{display:grid;gap:7px;margin-bottom:16px;padding:14px;background:#eef1f4;border:1px solid #d7dce1;border-radius:var(--radius)}.quick-note label{font-size:12px;font-weight:700;color:var(--muted)}.quick-note textarea{width:100%;min-height:78px;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;resize:vertical}
+.note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid #c7cdd3;border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
+.group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
+.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.delegated-shell{padding:14px;background:var(--delegated);border:1px solid var(--delegated);border-radius:var(--radius)}.flat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.flat-head h3{margin:0;color:#1c4668}
+.project-row{display:grid;grid-template-columns:minmax(138px,.66fr) minmax(264px,1.56fr) 170px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.project-current{display:grid;grid-template-columns:155px 1fr;gap:10px;align-items:center}.current-label{font-size:12px;color:var(--muted)}.current-item{display:flex;gap:7px;align-items:flex-start;font-size:13px;margin:3px 0}.current-bullet{flex:0 0 auto;line-height:1.25}.project-status{padding:8px 9px;border:1px solid var(--border);border-radius:7px;font-weight:600;text-align:center}
+.overlay{display:none;position:fixed;z-index:100;inset:0 0 0 var(--sidebar);padding:29px;background:var(--bg);overflow:auto}.overlay.open{display:block}.shell{width:min(1100px,100%);min-height:calc(100vh - 58px);margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}.editor-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;padding:21px 23px 15px;border-bottom:1px solid var(--border)}.editor-head h2{margin:0}.title-large{width:100%;border:0;outline:0;background:transparent;font-size:27px;font-weight:700}.close-btn{width:36px;height:36px;border:0;border-radius:8px;background:transparent;font-size:25px;cursor:pointer}.close-btn:hover{background:#f0f2f4}.detail-body{padding:23px;display:grid;gap:19px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#fff}.field textarea{min-height:100px;resize:vertical}.details-text{min-height:235px}.editor-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 23px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:7px;padding:11px 23px;border-bottom:1px solid var(--border);background:#fafbfc}.toolbar-group{display:flex;gap:5px;align-items:center;padding-right:8px;border-right:1px solid var(--border)}.toolbar-btn{height:34px;padding:0 9px;border:1px solid transparent;border-radius:7px;background:transparent;cursor:pointer}.toolbar-btn:hover{background:#edf0f3}.color-btn{width:27px;height:27px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px var(--border);cursor:pointer}.rich-editor{flex:1;min-height:420px;padding:27px 31px 48px;outline:0;line-height:1.65}.rich-editor ol ol{list-style-type:lower-alpha}.check-line{display:flex;gap:9px;align-items:flex-start;margin:5px 0}.check-line.checked .check-text{text-decoration:line-through;color:var(--muted)}
+.subtask-head{display:flex;justify-content:space-between;align-items:center}.subtask-row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) 165px 145px 170px auto;gap:8px;align-items:start;padding:10px;background:#fafbfc;border:1px solid var(--border);border-radius:10px}.subtask-row input,.subtask-row select,.subtask-row textarea{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}.subtask-row textarea{min-height:38px;resize:none;overflow:hidden;line-height:1.4}
+.settings-shell{width:min(1180px,100%)}.settings-body{display:grid;gap:18px;padding:23px}.settings-section{padding:15px;border:1px solid var(--border);border-radius:12px}.settings-section h3{margin:0 0 13px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(290px,1fr));gap:15px}.settings-group{padding:12px;border:1px solid var(--border);border-radius:10px}.settings-group h4{margin:0 0 9px}.settings-hint{margin:-3px 0 10px;color:var(--muted);font-size:11px}.option-list{display:grid;gap:7px}.option-row{display:grid;grid-template-columns:23px minmax(120px,1fr) auto;gap:7px;align-items:center;padding:7px;background:#f7f8fa;border:1px solid var(--border);border-radius:8px}.option-row.status-option{grid-template-columns:23px minmax(110px,1fr) 42px 105px auto}.option-row.dragging{opacity:.35}.option-row.drop-target{outline:2px dashed var(--accent)}.drag-handle{cursor:grab;text-align:center;color:var(--muted)}.option-row input[type=text],.option-row select{width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;background:#fff}.option-row input[type=color]{width:38px;height:30px;border:0;background:transparent}.option-delete{width:30px;height:30px;border:0;border-radius:7px;background:#f7e5e5;color:var(--danger);cursor:pointer}.add-option{margin-top:9px;padding:7px 10px;border:1px dashed var(--accent);border-radius:7px;background:#fff;color:var(--accent);cursor:pointer}
+@media(max-width:1080px){.todo-row,.todo-row.delegated,.project-row{grid-template-columns:1fr}.todo-row>*,.project-row>*{grid-column:1}.subtask-row{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){:root{--sidebar:0px}body.mobile .app{grid-template-columns:1fr}body.mobile .sidebar{position:sticky;top:0;min-height:auto;padding:12px 13px;border-right:0;border-bottom:1px solid var(--border)}body.mobile .brand p{display:none}body.mobile .nav{grid-template-columns:repeat(4,1fr)}body.mobile .nav button{text-align:center;padding:9px 5px;font-size:12px}body.mobile .main{padding:16px 11px}body.mobile .page-header p{display:none}body.mobile .overlay{inset:0;padding:0}body.mobile .shell{min-height:100vh;border:0;border-radius:0}.detail-grid,.settings-grid{grid-template-columns:1fr}.project-current{grid-template-columns:1fr}.subtask-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1 id="app-title" title="Zum Umbenennen anklicken">Dominik's Übersicht</h1>
+      <p id="app-subtitle" title="Zum Ändern anklicken">Notizen, Projekte und Aufgaben</p>
+    </div>
+    <div class="tools">
+      <button id="view-toggle" class="tool" title="Handy-/Desktopansicht">▣</button>
+      <button id="undo-btn" class="tool" title="Rückgängig">↶</button>
+      <button id="redo-btn" class="tool" title="Wiederholen">↷</button>
+      <button id="settings-btn" class="tool" title="Einstellungen">⚙</button>
+    </div>
+    <nav id="nav" class="nav"></nav>
+  </aside>
+
+  <main class="main">
+    <section id="page-notes" class="page">
+      <header class="page-header"><div><h2>Notizen</h2><p>Gedanken, Informationen und Erinnerungen.</p></div><button id="new-note-btn" class="primary">Neue Notiz</button></header>
+      <section class="quick-note"><label for="quick-note-input">Schnelle Notizen</label><textarea id="quick-note-input" placeholder="Kurz etwas notieren …"></textarea></section>
+      <div id="notes-list" class="note-list"></div>
+    </section>
+
+    <section id="page-projects" class="page">
+      <header class="page-header"><div><h2>Projekte</h2><p>Projekte mit Priorität, Deadline und Unteraufgaben.</p></div><button id="new-project-btn" class="primary">Neues Projekt</button></header>
+      <div id="project-filters" class="filters"></div>
+      <div id="project-groups" class="groups"></div>
+    </section>
+
+    <section id="page-own" class="page">
+      <header class="page-header"><div><h2>Eigene Aufgaben</h2><p>Eigene Aufgaben nach Priorität und Bearbeitungsstand.</p></div><button id="new-own-btn" class="primary">Neue Aufgabe</button></header>
+      <div id="own-filters" class="filters"></div>
+      <div id="own-groups" class="groups"></div>
+    </section>
+
+    <section id="page-delegated" class="page">
+      <header class="page-header"><div><h2>Vergebene Aufgaben</h2><p>Delegierte Aufgaben und Verantwortlichkeiten.</p></div><div class="actions"><button id="quick-delegated-btn" class="quick-add" title="Schnell hinzufügen">+</button><button id="new-delegated-btn" class="primary">Neue Aufgabe</button></div></header>
+      <div id="delegated-filters" class="filters"></div>
+      <div id="delegated-groups" class="groups">
+        <section class="delegated-shell">
+          <div class="flat-head">
+            <h3>Aktive Aufgaben</h3>
+            <span id="delegated-active-count" class="count"></span>
+          </div>
+          <div id="delegated-active-list" class="list"></div>
+        </section>
+
+        <section class="delegated-shell">
+          <div class="flat-head">
+            <h3>Erledigt</h3>
+            <span id="delegated-done-count" class="count"></span>
+          </div>
+          <div id="delegated-done-list" class="list"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<section id="note-overlay" class="overlay"><div class="shell">
+  <header class="editor-head"><div><input id="note-title" class="title-large" placeholder="Überschrift"><input id="note-area" style="margin-top:9px;width:320px;max-width:100%;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="Bereich"></div><button class="close-btn" data-close-overlay="note">×</button></header>
+  <div class="toolbar">
+    <div class="toolbar-group"><button class="toolbar-btn" data-note-command="bold"><b>F</b></button><button class="toolbar-btn" data-note-command="italic"><i>K</i></button><button class="toolbar-btn" data-note-command="underline"><u>U</u></button><button class="toolbar-btn" data-note-command="strikeThrough"><s>D</s></button></div>
+    <div class="toolbar-group"><select id="note-font-size"><option value="">Größe</option><option value="12">12</option><option value="14">14</option><option value="16">16</option><option value="18">18</option><option value="22">22</option><option value="28">28</option></select></div>
+    <div id="note-color-buttons" class="toolbar-group"></div>
+    <div class="toolbar-group"><button class="toolbar-btn" data-note-command="insertUnorderedList">• Liste</button><button class="toolbar-btn" data-note-command="insertOrderedList">1. Liste</button><button class="toolbar-btn" data-note-command="indent">↳</button><button class="toolbar-btn" data-note-command="outdent">↰</button></div>
+    <button id="note-checkbox-btn" class="toolbar-btn">☑ Checkbox</button>
+  </div>
+  <div id="note-editor" class="rich-editor" contenteditable="true"></div>
+  <footer class="editor-foot"><span>Automatische Speicherung</span><button id="delete-note-detail" class="danger">Notiz löschen</button></footer>
+</div></section>
+
+<section id="todo-overlay" class="overlay"><div class="shell">
+  <header class="editor-head"><input id="todo-title" class="title-large" placeholder="Bezeichnung"><button class="close-btn" data-close-overlay="todo">×</button></header>
+  <div class="detail-body"><div class="detail-grid">
+    <div class="field full"><label>Anmerkungen für die Übersicht</label><textarea id="todo-summary"></textarea></div>
+    <div class="field"><label>Aufgabenbereich</label><select id="todo-area"></select></div>
+    <div id="todo-person-field" class="field"><label>Verantwortliche Person</label><select id="todo-person"></select></div>
+    <div class="field"><label>Aktueller Stand</label><select id="todo-status"></select></div>
+    <div class="field"><label>Priorität</label><select id="todo-priority"></select></div>
+    <div class="field full"><label>Ausführliche Notizen</label><textarea id="todo-details" class="details-text"></textarea></div>
+  </div></div>
+  <footer class="editor-foot"><span>Automatische Speicherung</span><button id="delete-todo-detail" class="danger">Aufgabe löschen</button></footer>
+</div></section>
+
+<section id="project-overlay" class="overlay"><div class="shell">
+  <header class="editor-head"><input id="project-title" class="title-large" placeholder="Bezeichnung"><button class="close-btn" data-close-overlay="project">×</button></header>
+  <div class="detail-body">
+    <div class="detail-grid">
+      <div class="field full"><label>Anmerkung für die Übersicht</label><textarea id="project-summary"></textarea></div>
+      <div class="field"><label>Aufgabenbereich</label><select id="project-area"></select></div>
+      <div class="field"><label>Aktueller Stand</label><input id="project-status" readonly></div>
+      <div class="field"><label>Priorität</label><select id="project-priority"></select></div>
+      <div class="field"><label>Deadline</label><input id="project-deadline" type="date"></div>
+    </div>
+    <section><div class="subtask-head"><h3>Unteraufgaben</h3><button id="add-subtask-btn" class="primary">Unteraufgabe hinzufügen</button></div><div id="subtask-list" class="subtask-list"></div></section>
+  </div>
+  <footer class="editor-foot"><span>Automatische Speicherung</span><button id="delete-project-detail" class="danger">Projekt löschen</button></footer>
+</div></section>
+
+<section id="settings-overlay" class="overlay"><div class="shell settings-shell">
+  <header class="editor-head"><div><h2>Einstellungen</h2><p style="margin:6px 0 0;color:var(--muted)">Dropdown-Werte, Statusfarben und Reihenfolgen verwalten.</p></div><button class="close-btn" data-close-overlay="settings">×</button></header>
+  <div id="settings-body" class="settings-body"></div>
+  <footer class="editor-foot"><span>Änderungen werden automatisch gespeichert.</span><button class="primary" data-close-overlay="settings">Fertig</button></footer>
+</div></section>
+
+<script>
+(()=>{
+'use strict';
+
+const STORAGE_KEY='dominik_dashboard_v26';
+const LEGACY_KEYS=['dominik_dashboard_v23','dominik_dashboard_v24','dominik_dashboard_v25'];
+const $=(selector,root=document)=>root.querySelector(selector);
+const $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
+const clone=value=>JSON.parse(JSON.stringify(value));
+const now=()=>new Date().toISOString();
+const uid=()=>globalThis.crypto?.randomUUID?.()||`id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+const safeStorage={get(key){try{return localStorage.getItem(key)}catch{return null}},set(key,value){try{localStorage.setItem(key,value)}catch{}}};
+
+const status=(id,label,color,kind='active')=>({id,label,color,kind});
+const option=(id,label)=>({id,label});
+
+function createDefaults(){
+ return {
+  version:26,
+  meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:''},
+  config:{
+   navOrder:['notes','projects','own','delegated'],
+   noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
+   projects:{
+    statuses:[status('project-open','Offen','#fff7d6','open'),status('project-active','In Bearbeitung','#fff0df','active'),status('project-done','Erledigt','#e6f1e8','done')],
+    priorities:[option('project-very-high','Sehr hohe Priorität'),option('project-high','Hohe Priorität'),option('project-medium','Mittlere Priorität'),option('project-low','Geringe Priorität')],
+    areas:[option('area-general','Allgemeines'),option('area-finance','Finanzen'),option('area-controlling','Controlling'),option('area-hr','Personal'),option('area-forecast','Forecasting'),option('area-cleaning','Reinigung'),option('area-kitchen','Küche'),option('area-canteen','Mensa'),option('area-catering','Catering'),option('area-station','Stationsservice'),option('area-supply','Versorgungsassistenz'),option('area-temp','Arbeitnehmerüberlassung'),option('area-other','Sonstiges')]
+   },
+   subtasks:{
+    statuses:[status('sub-open','Offen','#fff7d6','open'),status('sub-active','In Bearbeitung','#fff0df','active'),status('sub-support','Zuarbeit erforderlich','#f1e8fb','active'),status('sub-appointment','Termin vereinbart','#ece8fb','active'),status('sub-done','Erledigt','#e6f1e8','done')],
+    people:['M. Dawid','D. Schauer','N. Weitz','N. Schauer','V. Dindelegan','H. Mytilinakis','S. Liebsch','S. Hegitsch','B. Morosan','M. Bulgur','T. Janßen'].map((name,index)=>option(`person-${index+1}`,name))
+   },
+   own:{
+    statuses:[status('own-open','Offen','#fff7d6','open'),status('own-active','In Bearbeitung','#fff0df','active'),status('own-support','Zuarbeit erforderlich','#f1e8fb','active'),status('own-appointment','Termin vereinbart','#ece8fb','active'),status('own-done','Erledigt','#e6f1e8','done')],
+    priorities:[option('own-daily','Tagesgeschäft'),option('own-very-high','Sehr hohe Priorität'),option('own-high','Hohe Priorität'),option('own-medium','Mittlere Priorität'),option('own-low','Geringe Priorität')],
+    areas:[]
+   },
+   delegated:{
+    statuses:[status('delegated-open','Offen','#fff7d6','open'),status('delegated-active','In Bearbeitung','#fff0df','active'),status('delegated-support','Zuarbeit erforderlich','#f1e8fb','active'),status('delegated-appointment','Termin vereinbart','#ece8fb','active'),status('delegated-done','Erledigt','#e6f1e8','done')],
+    priorities:[option('delegated-very-high','Sehr hohe Priorität'),option('delegated-high','Hohe Priorität'),option('delegated-medium','Mittlere Priorität'),option('delegated-low','Geringe Priorität')],
+    areas:[],people:[]
+   }
+  },
+  notes:[{id:uid(),title:'Erste Notiz',area:'Allgemeines',content:'<p>Hier können wichtige Gedanken und Informationen festgehalten werden.</p>',updatedAt:now()}],
+  ownTodos:[{id:uid(),title:'Ersten Entwurf prüfen',summary:'Aufbau und Funktionen prüfen.',details:'',statusId:'own-open',areaId:'area-general',priorityId:'own-high',previousPriorityId:'own-high',completed:false,updatedAt:now()}],
+  delegatedTodos:[],
+  projects:[{id:uid(),title:'Persönliches Organisationstool',summary:'Weiterentwicklung der Oberfläche und Funktionen.',areaId:'area-general',priorityId:'project-high',deadline:'',subtasks:[],updatedAt:now()}]
+ };
+}
+
+function slug(value){return String(value||'option').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'option'}
+function inferKind(id,label){const value=`${id||''} ${label||''}`.toLowerCase();if(value.includes('erled')||value.includes('done'))return'done';if(value.includes('offen')||value.includes('open')||value.includes('neu'))return'open';return'active'}
+function normalizeOptions(raw,fallback,{statusGroup=false}={}){
+ const source=Array.isArray(raw)&&raw.filter(Boolean).length?raw.filter(Boolean):fallback;
+ const used=new Set();
+ return source.map((item,index)=>{
+  const label=typeof item==='string'?item:String(item?.label||item?.name||item?.id||`Auswahl ${index+1}`);
+  const fallbackMatch=fallback.find(entry=>entry.id===item?.id||entry.label.toLowerCase()===label.toLowerCase());
+  let id=String((typeof item==='object'&&item?.id)||fallbackMatch?.id||slug(label));
+  while(used.has(id))id=`${id}-${index+1}`;
+  used.add(id);
+  return statusGroup?{id,label,color:String(item?.color||fallbackMatch?.color||'#eeeeee'),kind:['open','active','done'].includes(item?.kind)?item.kind:(fallbackMatch?.kind||inferKind(id,label))}:{id,label};
+ });
+}
+function normalizeSection(raw,fallback){
+ const section={};
+ for(const group of Object.keys(fallback)){
+  section[group]=normalizeOptions(raw?.[group],fallback[group],{statusGroup:group==='statuses'});
+ }
+ return section;
+}
+function findOption(list,value){
+ if(!Array.isArray(list))return null;
+ const raw=typeof value==='object'?(value?.id||value?.label||value?.name):value;
+ if(raw===undefined||raw===null)return null;
+ const text=String(raw);
+ return list.find(item=>item.id===text)||list.find(item=>item.label.toLowerCase()===text.toLowerCase())||null;
+}
+function resolveOrAdd(config,section,group,value,fallbackId){
+ const list=config[section][group];
+ const found=findOption(list,value);
+ if(found)return found.id;
+ const raw=typeof value==='object'?(value?.label||value?.name||value?.id):value;
+ if(raw!==undefined&&raw!==null&&String(raw).trim()){
+  const label=String(raw).replace(/^custom:/,'').trim();
+  let id=`custom-${slug(label)}-${Math.random().toString(16).slice(2,7)}`;
+  while(list.some(item=>item.id===id))id=`${id}-x`;
+  const created=group==='statuses'?status(id,label,'#eeeeee',inferKind(id,label)):option(id,label);
+  list.push(created);
+  return id;
+ }
+ return fallbackId||list[0]?.id||'';
+}
+function normalizeState(raw){
+ const defaults=createDefaults();
+ const source=raw&&typeof raw==='object'?raw:{};
+ const result={version:26,meta:{...defaults.meta,...(source.meta||{})},config:{},notes:[],ownTodos:[],delegatedTodos:[],projects:[]};
+ result.meta.title=String(result.meta.title||defaults.meta.title);result.meta.subtitle=String(result.meta.subtitle||defaults.meta.subtitle);result.meta.quickNote=String(result.meta.quickNote||'');
+ result.config.projects=normalizeSection(source.config?.projects,defaults.config.projects);
+ result.config.subtasks=normalizeSection(source.config?.subtasks,defaults.config.subtasks);
+ result.config.own=normalizeSection(source.config?.own,defaults.config.own);
+ result.config.delegated=normalizeSection(source.config?.delegated,defaults.config.delegated);
+ if(!result.config.own.statuses.some(item=>item.kind==='done')){
+  result.config.own.statuses.push(clone(defaults.config.own.statuses.find(item=>item.kind==='done')));
+ }
+ if(!result.config.delegated.statuses.some(item=>item.kind==='done')){
+  result.config.delegated.statuses.push(clone(defaults.config.delegated.statuses.find(item=>item.kind==='done')));
+ }
+ if(!result.config.own.areas.length)result.config.own.areas=clone(result.config.projects.areas);
+ if(!result.config.delegated.areas.length)result.config.delegated.areas=clone(result.config.projects.areas);
+ if(!result.config.delegated.people.length)result.config.delegated.people=clone(result.config.subtasks.people);
+ result.config.noteColors=Array.isArray(source.config?.noteColors)&&source.config.noteColors.length?source.config.noteColors.map(String):clone(defaults.config.noteColors);
+ const allowed=['notes','projects','own','delegated'];
+ result.config.navOrder=Array.isArray(source.config?.navOrder)?source.config.navOrder.filter(item=>allowed.includes(item)):clone(defaults.config.navOrder);
+ allowed.forEach(item=>{if(!result.config.navOrder.includes(item))result.config.navOrder.push(item)});
+ const noteSource=Array.isArray(source.notes)?source.notes:defaults.notes;
+ result.notes=noteSource.filter(item=>item&&typeof item==='object').map(item=>({id:String(item.id||uid()),title:String(item.title??item.name??''),area:String(item.area??item.category??''),content:String(item.content??item.body??item.text??''),updatedAt:String(item.updatedAt||item.modifiedAt||now())}));
+ const ownSource=Array.isArray(source.ownTodos)?source.ownTodos:(Array.isArray(source.todos)?source.todos:defaults.ownTodos);
+ result.ownTodos=ownSource.filter(item=>item&&typeof item==='object').map(item=>{
+  const priorityId=resolveOrAdd(result.config,'own','priorities',item.priorityId??item.priority,'own-daily');
+  const resolvedStatusId=resolveOrAdd(result.config,'own','statuses',item.statusId??item.status,'own-open');
+  const migratedDone=Boolean(item.completed||item.done)||result.config.own.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
+  const doneStatusId=result.config.own.statuses.find(entry=>entry.kind==='done')?.id||resolvedStatusId;
+  return{id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),details:String(item.details??item.description??item.notes??''),statusId:migratedDone?doneStatusId:resolvedStatusId,areaId:resolveOrAdd(result.config,'own','areas',item.areaId??item.area,'area-general'),priorityId,previousPriorityId:resolveOrAdd(result.config,'own','priorities',item.previousPriorityId??item.previousPriority??item.priorityId??item.priority,priorityId),completed:migratedDone,updatedAt:String(item.updatedAt||item.modifiedAt||now())};
+ });
+ const delegatedSource=Array.isArray(source.delegatedTodos)?source.delegatedTodos:(Array.isArray(source.assignedTodos)?source.assignedTodos:defaults.delegatedTodos);
+ result.delegatedTodos=delegatedSource.filter(item=>item&&typeof item==='object').map(item=>{
+  const priorityId=resolveOrAdd(result.config,'delegated','priorities',item.priorityId??item.priority,'delegated-very-high');
+  const resolvedStatusId=resolveOrAdd(result.config,'delegated','statuses',item.statusId??item.status,'delegated-open');
+  const migratedDone=Boolean(item.completed||item.done)||result.config.delegated.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
+  const doneStatusId=result.config.delegated.statuses.find(entry=>entry.kind==='done')?.id||resolvedStatusId;
+  return{id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),details:String(item.details??item.description??item.notes??''),statusId:migratedDone?doneStatusId:resolvedStatusId,areaId:resolveOrAdd(result.config,'delegated','areas',item.areaId??item.area,'area-general'),personId:resolveOrAdd(result.config,'delegated','people',item.personId??item.person??item.responsible,result.config.delegated.people[0]?.id),priorityId,previousPriorityId:resolveOrAdd(result.config,'delegated','priorities',item.previousPriorityId??item.previousPriority??item.priorityId??item.priority,priorityId),completed:migratedDone,updatedAt:String(item.updatedAt||item.modifiedAt||now())};
+ });
+ const projectSource=Array.isArray(source.projects)?source.projects:defaults.projects;
+ result.projects=projectSource.filter(item=>item&&typeof item==='object').map(item=>({id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),areaId:resolveOrAdd(result.config,'projects','areas',item.areaId??item.area,'area-general'),priorityId:resolveOrAdd(result.config,'projects','priorities',item.priorityId??item.priority,'project-very-high'),deadline:String(item.deadline??item.dueDate??''),updatedAt:String(item.updatedAt||item.modifiedAt||now()),subtasks:(Array.isArray(item.subtasks)?item.subtasks:[]).filter(task=>task&&typeof task==='object').map(task=>({id:String(task.id||uid()),title:String(task.title??task.name??''),summary:String(task.summary??task.annotation??task.note??''),personId:resolveOrAdd(result.config,'subtasks','people',task.personId??task.person??task.responsible,result.config.subtasks.people[0]?.id),deadline:String(task.deadline??task.dueDate??''),statusId:resolveOrAdd(result.config,'subtasks','statuses',task.statusId??task.status,'sub-open'),updatedAt:String(task.updatedAt||task.modifiedAt||now())}))}));
+ return result;
+}
+function loadState(){
+ const current=safeStorage.get(STORAGE_KEY);if(current){try{return normalizeState(JSON.parse(current))}catch(error){console.error(error)}}
+ for(const key of LEGACY_KEYS){const raw=safeStorage.get(key);if(raw){try{return normalizeState(JSON.parse(raw))}catch(error){console.error(error)}}}
+ return normalizeState(createDefaults());
+}
+
+let state=loadState();
+let activePage='notes';
+let current={noteId:null,todoId:null,todoType:'own',projectId:null};
+let filters={own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set(),person:new Set()},projects:{status:new Set(),area:new Set()}};
+let historyPast=[],historyFuture=[],editKey=null,noteRange=null;
+
+function saveState(){safeStorage.set(STORAGE_KEY,JSON.stringify(state))}
+function snapshot(){return JSON.stringify(state)}
+function checkpoint(){const value=snapshot();if(historyPast.at(-1)!==value)historyPast.push(value);if(historyPast.length>100)historyPast.shift();historyFuture=[];renderHistoryButtons()}
+function commit(mutator){checkpoint();mutator();saveState();renderAll()}
+function undo(){if(!historyPast.length)return;historyFuture.push(snapshot());state=normalizeState(JSON.parse(historyPast.pop()));saveState();renderAll();renderHistoryButtons()}
+function redo(){if(!historyFuture.length)return;historyPast.push(snapshot());state=normalizeState(JSON.parse(historyFuture.pop()));saveState();renderAll();renderHistoryButtons()}
+function renderHistoryButtons(){$('#undo-btn').disabled=!historyPast.length;$('#redo-btn').disabled=!historyFuture.length}
+function beginEdit(key){if(editKey!==key){checkpoint();editKey=key}}
+function endEdit(){editKey=null}
+
+function sectionConfig(section){return state.config[section]||{}}
+function options(section,group){return Array.isArray(sectionConfig(section)[group])?sectionConfig(section)[group]:[]}
+function optionById(section,group,id){return options(section,group).find(item=>item.id===id)||null}
+function optionLabel(section,group,id){return optionById(section,group,id)?.label||''}
+function optionColor(section,id){return optionById(section,'statuses',id)?.color||'#eeeeee'}
+function optionKind(section,id){return optionById(section,'statuses',id)?.kind||'active'}
+function readableTextColor(hex){const value=String(hex||'').replace('#','');if(value.length!==6)return'#374151';const r=parseInt(value.slice(0,2),16),g=parseInt(value.slice(2,4),16),b=parseInt(value.slice(4,6),16);return(r*299+g*587+b*114)/1000>175?'#374151':'#fff'}
+function statusStyle(section,id){const background=optionColor(section,id);return`background:${background};border-color:${background};color:${readableTextColor(background)}`}
+function selectOptions(section,group,selected,{custom=false}={}){let html=options(section,group).map(item=>`<option value="${esc(item.id)}" ${item.id===selected?'selected':''}>${esc(item.label)}</option>`).join('');if(custom)html+='<option value="__custom__">Sonstiges …</option>';return html}
+function addCustomOption(section,group,label){const clean=String(label||'').trim();if(!clean)return null;const existing=options(section,group).find(item=>item.label.toLowerCase()===clean.toLowerCase());if(existing)return existing.id;const created=group==='statuses'?status(`custom-${uid()}`,clean,'#eeeeee','active'):option(`custom-${uid()}`,clean);sectionConfig(section)[group].push(created);return created.id}
+function handleCustomSelect(select,section,group){if(select.value!=='__custom__')return select.value;const label=prompt('Neue Auswahl eingeben:')?.trim();if(!label)return null;return addCustomOption(section,group,label)}
+
+const pageLabels={notes:'Notizen',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
+function renderBrand(){$('#app-title').textContent=state.meta.title;$('#app-subtitle').textContent=state.meta.subtitle;if(document.activeElement!==$('#quick-note-input'))$('#quick-note-input').value=state.meta.quickNote}
+function renderNav(){$('#nav').innerHTML=state.config.navOrder.map(page=>`<button draggable="true" data-page="${page}" class="${page===activePage?'active':''}">${pageLabels[page]}</button>`).join('');$$('.page').forEach(page=>page.classList.toggle('active',page.id===`page-${activePage}`))}
+function openOverlay(name){closeOverlays();$(`#${name}-overlay`).classList.add('open');document.body.style.overflow='hidden'}
+function closeOverlays(){$$('.overlay.open').forEach(item=>item.classList.remove('open'));document.body.style.overflow=''}
+function textFromHtml(html){const div=document.createElement('div');div.innerHTML=html||'';return(div.textContent||'').replace(/\s+/g,' ').trim()}
+function autoGrow(element){if(!element)return;element.style.height='auto';element.style.height=`${Math.max(38,element.scrollHeight)}px`}
+function growAll(){$$('.subtask-row textarea').forEach(autoGrow)}
+
+function renderNotes(){const list=$('#notes-list');const notes=[...state.notes].sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));list.innerHTML=notes.length?notes.map(note=>`<article class="note-card" data-note-id="${note.id}"><div class="note-main"><h3>${esc(note.title||'Ohne Überschrift')}</h3><div class="small">${esc(note.area||'Kein Bereich')}</div><div class="preview">${esc(textFromHtml(note.content)||'Leere Notiz')}</div></div><div class="card-footer"><span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span><div class="actions"><button class="icon open-btn" data-action="open-note">⛶</button><button class="icon delete-btn" data-action="delete-note">×</button></div></div></article>`).join(''):'<div class="empty">Noch keine Notizen.</div>'}
+
+function todoDoneStatus(type){return options(type,'statuses').find(item=>item.kind==='done')||null}
+function todoOpenStatus(type){return options(type,'statuses').find(item=>item.kind!=='done')||options(type,'statuses')[0]||null}
+function todoIsCompleted(todo,type){return Boolean(todo.completed)||optionKind(type,todo.statusId)==='done'}
+function setTodoStatus(todo,type,statusId){
+ const selected=options(type,'statuses').find(item=>item.id===statusId);
+ const becomesDone=selected?.kind==='done';
+ if(becomesDone){
+  if(!todoIsCompleted(todo,type))todo.previousPriorityId=todo.priorityId;
+  todo.completed=true;
+  todo.statusId=statusId;
+ }else{
+  if(todoIsCompleted(todo,type)){
+   todo.completed=false;
+   todo.priorityId=todo.previousPriorityId||options(type,'priorities')[0]?.id||todo.priorityId;
+  }
+  todo.statusId=statusId;
+ }
+}
+function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
+function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))&&(type!=='delegated'||!selected.person.size||selected.person.has(todo.personId))}
+function renderTodoRow(todo,type,{draggable=false}={}){const completed=todoIsCompleted(todo,type);return`<div class="todo-row ${type==='delegated'?'delegated':''} ${completed?'completed':''}" data-todo-id="${todo.id}" data-todo-type="${type}" draggable="${draggable}"><div><input class="inline title-input-inline" data-todo-field="title" value="${esc(todo.title)}" placeholder="Bezeichnung"><select class="mini-select" data-todo-field="areaId">${selectOptions(type,'areas',todo.areaId,{custom:true})}</select></div><textarea class="inline summary-input" data-todo-field="summary" rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>${type==='delegated'?`<select class="person-select" data-todo-field="personId">${selectOptions(type,'people',todo.personId,{custom:true})}</select><select class="priority-select" data-todo-field="priorityId">${selectOptions(type,'priorities',todo.priorityId)}</select>`:''}<select class="status-select" data-todo-field="statusId" style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select><div class="actions"><button class="icon open-btn" data-action="open-todo">⛶</button><button class="icon delete-btn" data-action="delete-todo">×</button></div></div>`}
+function renderOwn(){renderFilter('#own-filters','own',['status','area']);const active=filters.own.status.size||filters.own.area.size;if(active){const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));$('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#own-filters .filter-info').textContent=`${items.length} Treffer`;growAll();return}$('#own-filters .filter-info').textContent='';const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];$('#own-groups').innerHTML=groups.map(group=>{const items=state.ownTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'own'):!todoIsCompleted(todo,'own')&&todo.priorityId===group.id);return`<section class="group own" data-own-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span><button class="quick-add" data-action="quick-own" data-priority-id="${group.id}">+</button></div></div><div class="list">${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div></section>`}).join('');growAll()}
+function renderDelegated(){
+ renderFilter('#delegated-filters','delegated',['status','area','person']);
+
+ const priorityOrder=options('delegated','priorities').map(item=>item.id);
+ const filtered=state.delegatedTodos.filter(todo=>todoMatches(todo,'delegated'));
+
+ const activeItems=filtered
+  .filter(todo=>!todoIsCompleted(todo,'delegated'))
+  .sort((a,b)=>
+   (priorityOrder.indexOf(a.priorityId)-priorityOrder.indexOf(b.priorityId))||
+   String(b.updatedAt).localeCompare(String(a.updatedAt))
+  );
+
+ const doneItems=filtered
+  .filter(todo=>todoIsCompleted(todo,'delegated'))
+  .sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
+
+ $('#delegated-active-list').innerHTML=
+  activeItems.map(todo=>renderTodoRow(todo,'delegated')).join('')||
+  '<div class="empty">Keine aktiven Aufgaben.</div>';
+
+ $('#delegated-done-list').innerHTML=
+  doneItems.map(todo=>renderTodoRow(todo,'delegated')).join('')||
+  '<div class="empty">Keine erledigten Aufgaben.</div>';
+
+ $('#delegated-active-count').textContent=
+  `${activeItems.length} Aufgabe${activeItems.length===1?'':'n'}`;
+
+ $('#delegated-done-count').textContent=
+  `${doneItems.length} Aufgabe${doneItems.length===1?'':'n'}`;
+
+ const filtersActive=
+  filters.delegated.status.size||
+  filters.delegated.area.size||
+  filters.delegated.person.size;
+
+ $('#delegated-filters .filter-info').textContent=
+  filtersActive?`${filtered.length} Treffer`:'';
+
+ growAll();
+}
+
+function subtaskKind(task){return optionKind('subtasks',task.statusId)}
+function projectStatusKind(project){const tasks=project.subtasks||[];if(!tasks.length)return'open';if(tasks.every(task=>subtaskKind(task)==='done'))return'done';if(tasks.some(task=>subtaskKind(task)==='active'))return'active';return'open'}
+function projectStatusOption(project){const kind=projectStatusKind(project);return options('projects','statuses').find(item=>item.kind===kind)||options('projects','statuses')[0]||status('missing','Unbekannt','#eeeeee','open')}
+function projectMatches(project){const statusId=projectStatusOption(project).id;return(!filters.projects.status.size||filters.projects.status.has(statusId))&&(!filters.projects.area.size||filters.projects.area.has(project.areaId))}
+function renderProjectRow(project){const statusOption=projectStatusOption(project);const activeTasks=(project.subtasks||[]).filter(task=>subtaskKind(task)==='active');return`<div class="project-row" data-project-id="${project.id}"><div><input class="inline title-input-inline" data-project-field="title" value="${esc(project.title)}" placeholder="Bezeichnung"><select class="mini-select" data-project-field="areaId">${selectOptions('projects','areas',project.areaId,{custom:true})}</select></div><div class="project-current"><div class="current-label">Aktuelle Aufgaben in Bearbeitung:</div><div>${activeTasks.length?activeTasks.map(task=>`<div class="current-item"><span class="current-bullet">•</span><span>${esc(task.title||'Ohne Bezeichnung')} <span class="small">${task.personId?`– ${esc(optionLabel('subtasks','people',task.personId))}`:''}</span></span></div>`).join(''):'<span class="small">Projekt nicht gestartet</span>'}</div></div><div class="project-status" style="${statusStyle('projects',statusOption.id)}">${esc(statusOption.label)}</div><div class="actions"><button class="icon open-btn" data-action="open-project">⛶</button><button class="icon delete-btn" data-action="delete-project">×</button></div></div>`}
+function renderProjects(){renderFilter('#project-filters','projects',['status','area']);const active=filters.projects.status.size||filters.projects.area.size;if(active){const items=state.projects.filter(projectMatches);$('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#project-filters .filter-info').textContent=`${items.length} Treffer`;return}$('#project-filters .filter-info').textContent='';const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];$('#project-groups').innerHTML=groups.map(group=>{const items=state.projects.filter(project=>group.id==='__completed__'?projectStatusKind(project)==='done':projectStatusKind(project)!=='done'&&project.priorityId===group.id);return`<section class="group project"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${group.id!=='__completed__'?`<button class="quick-add" data-action="quick-project" data-priority-id="${group.id}">+</button>`:''}</div></div><div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div></section>`}).join('')}
+
+function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
+function renderOptionRow(section,group,item){return`<div class="option-row ${group==='statuses'?'status-option':''}" draggable="true" data-option-id="${item.id}" data-option-section="${section}" data-option-group="${group}"><span class="drag-handle">⋮⋮</span><input type="text" data-setting-field="label" value="${esc(item.label)}">${group==='statuses'?`<input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}"><select data-setting-field="kind"><option value="open" ${item.kind==='open'?'selected':''}>Offen</option><option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option><option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option></select>`:''}<button class="option-delete" data-action="delete-option">×</button></div>`}
+function renderAll(){renderBrand();renderNav();renderNotes();renderOwn();renderDelegated();renderProjects();renderSettings();renderHistoryButtons()}
+
+function createNote(){const note={id:uid(),title:'',area:'',content:'',updatedAt:now()};commit(()=>state.notes.unshift(note));openNote(note.id)}
+function openNote(id){const note=state.notes.find(item=>item.id===id);if(!note)return;current.noteId=id;$('#note-title').value=note.title;$('#note-area').value=note.area;$('#note-editor').innerHTML=note.content;openOverlay('note')}
+function saveCurrentNote(){const note=state.notes.find(item=>item.id===current.noteId);if(!note)return;note.title=$('#note-title').value.trim();note.area=$('#note-area').value.trim();note.content=$('#note-editor').innerHTML;note.updatedAt=now();saveState()}
+function deleteNote(id){const note=state.notes.find(item=>item.id===id);if(!note||!confirm(`Soll „${note.title||'diese Notiz'}“ wirklich gelöscht werden?`))return;commit(()=>state.notes=state.notes.filter(item=>item.id!==id));closeOverlays()}
+
+function createTodo(type,{open=true,priorityId=null,completed=false}={}){const config=sectionConfig(type);const shouldComplete=completed||priorityId==='__completed__';const normalStatus=todoOpenStatus(type)?.id||config.statuses[0]?.id||'';const doneStatus=todoDoneStatus(type)?.id||normalStatus;const effectivePriority=priorityId&&priorityId!=='__completed__'?priorityId:(config.priorities[0]?.id||'');const todo={id:uid(),title:'',summary:'',details:'',statusId:shouldComplete?doneStatus:normalStatus,areaId:config.areas[0]?.id||'',personId:type==='delegated'?(config.people[0]?.id||''):'',priorityId:effectivePriority,previousPriorityId:effectivePriority,completed:shouldComplete,updatedAt:now()};commit(()=>state[type==='own'?'ownTodos':'delegatedTodos'].unshift(todo));if(open)openTodo(todo.id,type)}
+function openTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});openOverlay('todo')}
+function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===current.todoId);if(!todo)return;todo.title=$('#todo-title').value.trim();todo.summary=$('#todo-summary').value;todo.details=$('#todo-details').value;todo.areaId=$('#todo-area').value;const selectedPriority=$('#todo-priority').value;if(!todoIsCompleted(todo,current.todoType)){todo.priorityId=selectedPriority;todo.previousPriorityId=selectedPriority}else{todo.previousPriorityId=selectedPriority}setTodoStatus(todo,current.todoType,$('#todo-status').value);if(current.todoType==='delegated')todo.personId=$('#todo-person').value;todo.updatedAt=now();$('#todo-status').style.cssText=statusStyle(current.todoType,todo.statusId);saveState()}
+function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});closeOverlays()}
+function toggleTodo(id,type){commit(()=>{const todo=(type==='own'?state.ownTodos:state.delegatedTodos).find(item=>item.id===id);if(!todo)return;const next=todoIsCompleted(todo,type)?todoOpenStatus(type):todoDoneStatus(type);if(next)setTodoStatus(todo,type,next.id);todo.updatedAt=now()})}
+
+function createProject({open=true,priorityId=null}={}){const project={id:uid(),title:'',summary:'',areaId:options('projects','areas')[0]?.id||'',priorityId:priorityId||options('projects','priorities')[0]?.id||'',deadline:'',subtasks:[],updatedAt:now()};commit(()=>state.projects.unshift(project));if(open)openProject(project.id)}
+function openProject(id){const project=state.projects.find(item=>item.id===id);if(!project)return;current.projectId=id;$('#project-title').value=project.title;$('#project-summary').value=project.summary;$('#project-area').innerHTML=selectOptions('projects','areas',project.areaId,{custom:true});$('#project-priority').innerHTML=selectOptions('projects','priorities',project.priorityId);$('#project-deadline').value=project.deadline;updateProjectStatusField(project);renderSubtasks();openOverlay('project')}
+function updateProjectStatusField(project){const selected=projectStatusOption(project);const input=$('#project-status');input.value=selected.label;input.style.cssText=statusStyle('projects',selected.id)}
+function saveCurrentProject(){const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.title=$('#project-title').value.trim();project.summary=$('#project-summary').value;project.areaId=$('#project-area').value;project.priorityId=$('#project-priority').value;project.deadline=$('#project-deadline').value;project.updatedAt=now();saveState();updateProjectStatusField(project)}
+function deleteProject(id){const project=state.projects.find(item=>item.id===id);if(!project||!confirm(`Soll „${project.title||'dieses Projekt'}“ wirklich gelöscht werden? Alle Unteraufgaben werden ebenfalls gelöscht.`))return;commit(()=>state.projects=state.projects.filter(item=>item.id!==id));closeOverlays()}
+function renderSubtasks(){const project=state.projects.find(item=>item.id===current.projectId);const list=$('#subtask-list');list.innerHTML=project?.subtasks?.length?project.subtasks.map(task=>`<div class="subtask-row" data-subtask-id="${task.id}"><textarea data-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea><textarea data-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea><select data-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select><input type="date" data-subtask-field="deadline" value="${esc(task.deadline)}"><select data-subtask-field="statusId" style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select><button class="icon delete-btn" data-action="delete-subtask">×</button></div>`).join(''):'<div class="empty">Noch keine Unteraufgaben.</div>';growAll()}
+function addSubtask(){commit(()=>{const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.subtasks.push({id:uid(),title:'',summary:'',personId:options('subtasks','people')[0]?.id||'',deadline:'',statusId:options('subtasks','statuses')[0]?.id||'',updatedAt:now()});project.updatedAt=now()});renderSubtasks();const project=state.projects.find(item=>item.id===current.projectId);if(project)updateProjectStatusField(project)}
+function deleteSubtask(id){commit(()=>{const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.subtasks=project.subtasks.filter(item=>item.id!==id);project.updatedAt=now()});renderSubtasks();const project=state.projects.find(item=>item.id===current.projectId);if(project)updateProjectStatusField(project)}
+
+function usageCount(section,group,id){let count=0;if(section==='own'){state.ownTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===id)count++;if(group==='priorities'&&(todo.priorityId===id||todo.previousPriorityId===id))count++;if(group==='areas'&&todo.areaId===id)count++})}if(section==='delegated'){state.delegatedTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===id)count++;if(group==='priorities'&&(todo.priorityId===id||todo.previousPriorityId===id))count++;if(group==='areas'&&todo.areaId===id)count++;if(group==='people'&&todo.personId===id)count++})}if(section==='projects'){state.projects.forEach(project=>{if(group==='priorities'&&project.priorityId===id)count++;if(group==='areas'&&project.areaId===id)count++})}if(section==='subtasks'){state.projects.flatMap(project=>project.subtasks||[]).forEach(task=>{if(group==='statuses'&&task.statusId===id)count++;if(group==='people'&&task.personId===id)count++})}return count}
+function replaceUsage(section,group,oldId,newId){if(section==='own')state.ownTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===oldId)todo.statusId=newId;if(group==='priorities'){if(todo.priorityId===oldId)todo.priorityId=newId;if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId}if(group==='areas'&&todo.areaId===oldId)todo.areaId=newId});if(section==='delegated')state.delegatedTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===oldId)todo.statusId=newId;if(group==='priorities'){if(todo.priorityId===oldId)todo.priorityId=newId;if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId}if(group==='areas'&&todo.areaId===oldId)todo.areaId=newId;if(group==='people'&&todo.personId===oldId)todo.personId=newId});if(section==='projects')state.projects.forEach(project=>{if(group==='priorities'&&project.priorityId===oldId)project.priorityId=newId;if(group==='areas'&&project.areaId===oldId)project.areaId=newId});if(section==='subtasks')state.projects.flatMap(project=>project.subtasks||[]).forEach(task=>{if(group==='statuses'&&task.statusId===oldId)task.statusId=newId;if(group==='people'&&task.personId===oldId)task.personId=newId})}
+function addSettingOption(section,group){commit(()=>{const list=sectionConfig(section)[group];list.push(group==='statuses'?status(`custom-${uid()}`,'Neue Auswahl','#eeeeee','active'):option(`custom-${uid()}`,'Neue Auswahl'))})}
+function deleteSettingOption(section,group,id){const list=options(section,group);if(list.length<=1){alert('Mindestens eine Auswahl muss erhalten bleiben.');return}if(group==='statuses'){const item=list.find(entry=>entry.id===id);if(item&&list.filter(entry=>entry.kind===item.kind).length<=1){alert('Für diese Einordnung muss mindestens ein Status erhalten bleiben. Ändere zuerst die Einordnung eines anderen Status.');return}}
+ const count=usageCount(section,group,id);let replacementId=null;if(count){const alternatives=list.filter(item=>item.id!==id);const answer=prompt(`Diese Auswahl wird ${count}-mal verwendet. Bitte Ersatz auswählen:\n${alternatives.map((item,index)=>`${index+1}: ${item.label}`).join('\n')}`);const index=Number(answer)-1;if(!Number.isInteger(index)||!alternatives[index])return;replacementId=alternatives[index].id}if(!confirm('Auswahl wirklich löschen?'))return;commit(()=>{if(replacementId)replaceUsage(section,group,id,replacementId);sectionConfig(section)[group]=sectionConfig(section)[group].filter(item=>item.id!==id)})}
+
+function saveNoteSelection(){const selection=getSelection();if(selection.rangeCount&&$('#note-editor').contains(selection.anchorNode))noteRange=selection.getRangeAt(0).cloneRange()}
+function restoreNoteSelection(){if(noteRange){const selection=getSelection();selection.removeAllRanges();selection.addRange(noteRange)}else $('#note-editor').focus()}
+function noteCommand(command,value=null){restoreNoteSelection();document.execCommand(command,false,value);saveNoteSelection();saveCurrentNote()}
+function placeCaretAtEnd(element){const range=document.createRange(),selection=getSelection();range.selectNodeContents(element);range.collapse(false);selection.removeAllRanges();selection.addRange(range)}
+function insertCheckboxLine(){restoreNoteSelection();const selection=getSelection();if(!selection.rangeCount)return;const range=selection.getRangeAt(0);const selectedText=selection.toString();let block=range.startContainer.nodeType===3?range.startContainer.parentElement:range.startContainer;while(block&&block!==$('#note-editor')&&!['DIV','P','LI'].includes(block.tagName))block=block.parentElement;const line=document.createElement('div');line.className='check-line';line.innerHTML=`<input type="checkbox" contenteditable="false"><span class="check-text">${esc(selectedText||block?.textContent||'Aufgabe')}</span>`;if(selectedText){range.deleteContents();range.insertNode(line)}else if(block&&block!==$('#note-editor'))block.replaceWith(line);else range.insertNode(line);placeCaretAtEnd($('.check-text',line));saveCurrentNote()}
+
+function closeFilters(except=null){$$('.filter.open').forEach(item=>{if(item!==except)item.classList.remove('open')})}
+function switchPage(page){activePage=page;closeOverlays();renderNav()}
+function updateInlineTodo(element){const row=element.closest('[data-todo-id]');const type=row.dataset.todoType;const todo=(type==='own'?state.ownTodos:state.delegatedTodos).find(item=>item.id===row.dataset.todoId);if(!todo)return;const field=element.dataset.todoField;if(['areaId','personId'].includes(field)){const group=field==='areaId'?'areas':'people';const value=handleCustomSelect(element,type,group);if(value===null){renderAll();return}todo[field]=value}else if(field==='statusId'){setTodoStatus(todo,type,element.value)}else{todo[field]=element.value;if(field==='priorityId')todo.previousPriorityId=todo.priorityId}todo.updatedAt=now();saveState()}
+function updateInlineProject(element){const row=element.closest('[data-project-id]');const project=state.projects.find(item=>item.id===row.dataset.projectId);if(!project)return;const field=element.dataset.projectField;if(field==='areaId'){const value=handleCustomSelect(element,'projects','areas');if(value===null){renderAll();return}project.areaId=value}else project[field]=element.value;project.updatedAt=now();saveState()}
+
+function renderNoteColors(){$('#note-color-buttons').innerHTML=state.config.noteColors.map(color=>`<button class="color-btn" data-note-color="${esc(color)}" style="background:${esc(color)}"></button>`).join('')}
+function applyMobileMode(){document.body.classList.toggle('mobile',window.innerWidth<=760)}
+
+// Click handling
+document.addEventListener('click',event=>{
+ const nav=event.target.closest('[data-page]');if(nav){switchPage(nav.dataset.page);return}
+ const filterTrigger=event.target.closest('.filter-trigger');if(filterTrigger){event.stopPropagation();const filter=filterTrigger.closest('.filter');const shouldOpen=!filter.classList.contains('open');closeFilters(filter);filter.classList.toggle('open',shouldOpen);return}
+ if(!event.target.closest('.filter'))closeFilters();
+ const reset=event.target.closest('[data-reset-filter]');if(reset){const section=reset.dataset.resetFilter;Object.values(filters[section]).forEach(set=>set.clear());renderAll();return}
+ const action=event.target.closest('[data-action]');if(action){
+  const noteCard=action.closest('[data-note-id]'),todoRow=action.closest('[data-todo-id]'),projectRow=action.closest('[data-project-id]'),subtaskRow=action.closest('[data-subtask-id]');
+  switch(action.dataset.action){
+   case'open-note':openNote(noteCard.dataset.noteId);break;
+   case'delete-note':deleteNote(noteCard.dataset.noteId);break;
+   case'open-todo':openTodo(todoRow.dataset.todoId,todoRow.dataset.todoType);break;
+   case'delete-todo':deleteTodo(todoRow.dataset.todoId,todoRow.dataset.todoType);break;
+   case'quick-own':createTodo('own',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
+   case'open-project':openProject(projectRow.dataset.projectId);break;
+   case'delete-project':deleteProject(projectRow.dataset.projectId);break;
+   case'quick-project':createProject({open:false,priorityId:action.dataset.priorityId});break;
+   case'delete-subtask':deleteSubtask(subtaskRow.dataset.subtaskId);break;
+   case'add-option':addSettingOption(action.dataset.optionSection,action.dataset.optionGroup);break;
+   case'delete-option':{const row=action.closest('[data-option-id]');deleteSettingOption(row.dataset.optionSection,row.dataset.optionGroup,row.dataset.optionId);break}
+  }
+  return;
+ }
+ const noteMain=event.target.closest('.note-main');if(noteMain){openNote(noteMain.closest('[data-note-id]').dataset.noteId);return}
+ const close=event.target.closest('[data-close-overlay]');if(close){if(close.dataset.closeOverlay==='note')saveCurrentNote();if(close.dataset.closeOverlay==='todo')saveCurrentTodo();if(close.dataset.closeOverlay==='project')saveCurrentProject();closeOverlays();renderAll();return}
+ const colorButton=event.target.closest('[data-note-color]');if(colorButton){noteCommand('foreColor',colorButton.dataset.noteColor);return}
+});
+
+document.addEventListener('change',event=>{
+ const filterInput=event.target.closest('[data-filter-section]');if(filterInput){const set=filters[filterInput.dataset.filterSection][filterInput.dataset.filterGroup];filterInput.checked?set.add(filterInput.value):set.delete(filterInput.value);renderAll();return}
+ const todoField=event.target.closest('[data-todo-field]');if(todoField){beginEdit(`todo:${todoField.closest('[data-todo-id]').dataset.todoId}:${todoField.dataset.todoField}`);updateInlineTodo(todoField);endEdit();renderAll();return}
+ const projectField=event.target.closest('[data-project-field]');if(projectField){beginEdit(`project:${projectField.closest('[data-project-id]').dataset.projectId}:${projectField.dataset.projectField}`);updateInlineProject(projectField);endEdit();renderAll();return}
+ const subtaskField=event.target.closest('[data-subtask-field]');if(subtaskField){const project=state.projects.find(item=>item.id===current.projectId);const task=project?.subtasks.find(item=>item.id===subtaskField.closest('[data-subtask-id]').dataset.subtaskId);if(!task)return;beginEdit(`subtask:${task.id}:${subtaskField.dataset.subtaskField}`);const field=subtaskField.dataset.subtaskField;if(field==='personId'){const value=handleCustomSelect(subtaskField,'subtasks','people');if(value===null){renderSubtasks();return}task.personId=value}else task[field]=subtaskField.value;task.updatedAt=now();project.updatedAt=now();saveState();endEdit();renderSubtasks();updateProjectStatusField(project);renderProjects();return}
+ const setting=event.target.closest('[data-setting-field]');if(setting){const row=setting.closest('[data-option-id]');const section=row.dataset.optionSection,group=row.dataset.optionGroup;const item=options(section,group).find(entry=>entry.id===row.dataset.optionId);if(!item)return;beginEdit(`setting:${section}:${group}:${row.dataset.optionId}`);if(setting.dataset.settingField==='kind'&&item.kind!==setting.value&&options(section,'statuses').filter(entry=>entry.kind===item.kind).length<=1){alert('Für jede Einordnung muss mindestens ein Status erhalten bleiben. Lege zuerst einen weiteren Status mit dieser Einordnung an.');setting.value=item.kind;endEdit();return}item[setting.dataset.settingField]=setting.dataset.settingField==='label'?(setting.value.trim()||'Neue Auswahl'):setting.value;saveState();endEdit();renderAll();return}
+ if(event.target.id==='todo-area'){const value=handleCustomSelect(event.target,current.todoType,'areas');if(value===null){openTodo(current.todoId,current.todoType);return}event.target.value=value;saveCurrentTodo();return}
+ if(event.target.id==='todo-person'){const value=handleCustomSelect(event.target,current.todoType,'people');if(value===null){openTodo(current.todoId,current.todoType);return}event.target.value=value;saveCurrentTodo();return}
+ if(event.target.id==='todo-status'){beginEdit(`todo-detail:${current.todoId}:status`);saveCurrentTodo();endEdit();renderAll();openTodo(current.todoId,current.todoType);return}
+ if(event.target.id==='todo-priority'){saveCurrentTodo();return}
+ if(event.target.id==='project-area'){const value=handleCustomSelect(event.target,'projects','areas');if(value===null){openProject(current.projectId);return}event.target.value=value;saveCurrentProject();return}
+ if(event.target.id==='project-priority'){saveCurrentProject();return}
+ if(event.target.matches('#note-editor input[type="checkbox"]')){event.target.closest('.check-line')?.classList.toggle('checked',event.target.checked);saveCurrentNote()}
+});
+
+document.addEventListener('input',event=>{
+ if(event.target.id==='quick-note-input'){state.meta.quickNote=event.target.value;saveState();return}
+ const todoField=event.target.closest('[data-todo-field]');if(todoField&&['title','summary'].includes(todoField.dataset.todoField)){updateInlineTodo(todoField);return}
+ const projectField=event.target.closest('[data-project-field]');if(projectField&&projectField.dataset.projectField==='title'){updateInlineProject(projectField);return}
+ const subtaskField=event.target.closest('[data-subtask-field]');if(subtaskField&&['title','summary'].includes(subtaskField.dataset.subtaskField)){const project=state.projects.find(item=>item.id===current.projectId);const task=project?.subtasks.find(item=>item.id===subtaskField.closest('[data-subtask-id]').dataset.subtaskId);if(task){task[subtaskField.dataset.subtaskField]=subtaskField.value;task.updatedAt=now();project.updatedAt=now();saveState();autoGrow(subtaskField)}return}
+ const setting=event.target.closest('[data-setting-field="label"]');if(setting){const row=setting.closest('[data-option-id]');const item=options(row.dataset.optionSection,row.dataset.optionGroup).find(entry=>entry.id===row.dataset.optionId);if(item){item.label=setting.value;saveState()}return}
+ if(['note-title','note-area','note-editor'].includes(event.target.id)){saveCurrentNote();return}
+ if(['todo-title','todo-summary','todo-details'].includes(event.target.id)){saveCurrentTodo();return}
+ if(['project-title','project-summary','project-deadline'].includes(event.target.id)){saveCurrentProject();return}
+});
+
+document.addEventListener('focusin',event=>{
+ const tracked=event.target.closest('input,textarea,select,[contenteditable="true"]');if(!tracked)return;
+ let key=tracked.id||tracked.dataset.todoField||tracked.dataset.projectField||tracked.dataset.subtaskField||tracked.dataset.settingField;
+ const container=tracked.closest('[data-todo-id],[data-project-id],[data-subtask-id],[data-option-id]');if(container)key+=`:${container.dataset.todoId||container.dataset.projectId||container.dataset.subtaskId||container.dataset.optionId}`;
+ beginEdit(key||'edit');
+});
+document.addEventListener('focusout',event=>{if(event.target.matches('input,textarea,select,[contenteditable="true"]'))endEdit()});
+
+document.addEventListener('keydown',event=>{
+ if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='z'&&!event.shiftKey){event.preventDefault();undo();return}
+ if((event.ctrlKey||event.metaKey)&&(event.key.toLowerCase()==='y'||(event.shiftKey&&event.key.toLowerCase()==='z'))){event.preventDefault();redo();return}
+ if(event.key==='Escape'){closeFilters();closeOverlays();return}
+ if(event.key==='Enter'&&$('#note-overlay').classList.contains('open')){let node=getSelection().anchorNode;if(node?.nodeType===3)node=node.parentElement;const line=node?.closest?.('.check-line');if(line){event.preventDefault();const next=document.createElement('div');next.className='check-line';next.innerHTML='<input type="checkbox" contenteditable="false"><span class="check-text"></span>';line.after(next);placeCaretAtEnd($('.check-text',next));saveCurrentNote()}}
+});
+
+// Drag & drop
+document.addEventListener('dragstart',event=>{
+ const nav=event.target.closest('#nav button');if(nav){nav.classList.add('dragging');event.dataTransfer.setData('application/x-nav',nav.dataset.page);return}
+ const optionRow=event.target.closest('.option-row');if(optionRow){optionRow.classList.add('dragging');event.dataTransfer.setData('application/x-option',JSON.stringify({section:optionRow.dataset.optionSection,group:optionRow.dataset.optionGroup,id:optionRow.dataset.optionId}));return}
+ const todoRow=event.target.closest('.todo-row[draggable="true"]');if(todoRow)event.dataTransfer.setData('application/x-own-todo',todoRow.dataset.todoId);
+});
+document.addEventListener('dragover',event=>{const nav=event.target.closest('#nav button');if(nav){event.preventDefault();nav.classList.add('drop-target')}const optionRow=event.target.closest('.option-row');if(optionRow){event.preventDefault();optionRow.classList.add('drop-target')}const group=event.target.closest('[data-own-drop]');if(group){event.preventDefault();group.classList.add('drag-over')}});
+document.addEventListener('dragleave',event=>{event.target.closest('#nav button')?.classList.remove('drop-target');event.target.closest('.option-row')?.classList.remove('drop-target');event.target.closest('[data-own-drop]')?.classList.remove('drag-over')});
+document.addEventListener('dragend',()=>$$('.dragging,.drop-target,.drag-over').forEach(item=>item.classList.remove('dragging','drop-target','drag-over')));
+document.addEventListener('drop',event=>{
+ const nav=event.target.closest('#nav button');if(nav){event.preventDefault();const from=event.dataTransfer.getData('application/x-nav'),to=nav.dataset.page;if(from&&to&&from!==to)commit(()=>{const order=state.config.navOrder;const fromIndex=order.indexOf(from),toIndex=order.indexOf(to);order.splice(fromIndex,1);order.splice(toIndex,0,from)});return}
+ const optionRow=event.target.closest('.option-row');if(optionRow){event.preventDefault();let data;try{data=JSON.parse(event.dataTransfer.getData('application/x-option'))}catch{return}if(data.section!==optionRow.dataset.optionSection||data.group!==optionRow.dataset.optionGroup)return;commit(()=>{const list=sectionConfig(data.section)[data.group];const fromIndex=list.findIndex(item=>item.id===data.id),toIndex=list.findIndex(item=>item.id===optionRow.dataset.optionId);if(fromIndex<0||toIndex<0)return;const[item]=list.splice(fromIndex,1);list.splice(toIndex,0,item)});return}
+ const group=event.target.closest('[data-own-drop]');if(group){event.preventDefault();const id=event.dataTransfer.getData('application/x-own-todo');if(!id)return;commit(()=>{const todo=state.ownTodos.find(item=>item.id===id);if(!todo)return;if(group.dataset.ownDrop==='__completed__'){const done=todoDoneStatus('own');if(done)setTodoStatus(todo,'own',done.id)}else{if(todoIsCompleted(todo,'own')){const open=todoOpenStatus('own');if(open)setTodoStatus(todo,'own',open.id)}todo.priorityId=group.dataset.ownDrop;todo.previousPriorityId=todo.priorityId}todo.updatedAt=now()})}
+});
+
+// Direct controls
+$('#new-note-btn').addEventListener('click',createNote);
+$('#new-own-btn').addEventListener('click',()=>createTodo('own'));
+$('#new-delegated-btn').addEventListener('click',()=>createTodo('delegated'));
+$('#quick-delegated-btn').addEventListener('click',()=>createTodo('delegated',{open:false}));
+$('#new-project-btn').addEventListener('click',()=>createProject());
+$('#add-subtask-btn').addEventListener('click',addSubtask);
+$('#undo-btn').addEventListener('click',undo);$('#redo-btn').addEventListener('click',redo);
+$('#settings-btn').addEventListener('click',()=>openOverlay('settings'));
+$('#view-toggle').addEventListener('click',()=>document.body.classList.toggle('mobile'));
+$('#app-title').addEventListener('click',()=>{const value=prompt('Name der Übersicht:',state.meta.title)?.trim();if(value)commit(()=>state.meta.title=value)});
+$('#app-subtitle').addEventListener('click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
+$('#delete-note-detail').addEventListener('click',()=>current.noteId&&deleteNote(current.noteId));
+$('#delete-todo-detail').addEventListener('click',()=>current.todoId&&deleteTodo(current.todoId,current.todoType));
+$('#delete-project-detail').addEventListener('click',()=>current.projectId&&deleteProject(current.projectId));
+$$('[data-note-command]').forEach(button=>{button.addEventListener('mousedown',event=>event.preventDefault());button.addEventListener('click',()=>noteCommand(button.dataset.noteCommand))});
+$('#note-font-size').addEventListener('change',event=>{if(!event.target.value)return;restoreNoteSelection();document.execCommand('fontSize',false,'7');$$('font[size="7"]',$('#note-editor')).forEach(font=>{const span=document.createElement('span');span.style.fontSize=`${event.target.value}px`;span.innerHTML=font.innerHTML;font.replaceWith(span)});event.target.value='';saveCurrentNote()});
+$('#note-checkbox-btn').addEventListener('click',insertCheckboxLine);
+$('#note-editor').addEventListener('mouseup',saveNoteSelection);$('#note-editor').addEventListener('keyup',saveNoteSelection);
+window.addEventListener('resize',()=>{applyMobileMode();closeFilters()});window.addEventListener('scroll',()=>closeFilters(),true);
+
+state=normalizeState(state);saveState();applyMobileMode();renderNoteColors();renderAll();growAll();
+window.__dashboardTest={normalizeState,createDefaults,getState:()=>clone(state)};
+})();
+</script>
+</body>
+</html>
