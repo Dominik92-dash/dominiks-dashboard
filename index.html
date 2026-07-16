@@ -39,6 +39,12 @@
 .sync-indicator[data-state="saving"]{color:#7b641a;background:#fff7da;border-color:#eadc9e}
 .sync-indicator[data-state="offline"],.sync-indicator[data-state="error"]{color:#8b4747;background:#f8e8e8;border-color:#e8caca}
 
+
+.account-panel{display:grid;gap:12px}
+.account-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.account-info{padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa;font-size:13px;color:var(--muted)}
+.file-input{display:none}
+
 </style>
 </head>
 <body>
@@ -191,7 +197,36 @@
 
 <section id="settings-overlay" class="overlay"><div class="shell settings-shell">
   <header class="editor-head"><div><h2>Einstellungen</h2><p style="margin:6px 0 0;color:var(--muted)">Dropdown-Werte, Statusfarben und Reihenfolgen verwalten.</p></div><button class="close-btn" data-close-overlay="settings">×</button></header>
-  <div id="settings-body" class="settings-body"></div>
+  <div class="settings-body">
+    <section class="settings-section">
+      <h3>Konto und Datensicherung</h3>
+      <div class="settings-grid">
+        <div class="settings-group account-panel">
+          <h4>Supabase-Konto</h4>
+          <div id="account-email" class="account-info">Nicht angemeldet</div>
+          <div class="account-row">
+            <button id="manual-sync-btn" class="secondary" type="button">Jetzt synchronisieren</button>
+            <button id="change-password-btn" class="secondary" type="button">Passwort ändern</button>
+            <button id="reset-password-btn" class="secondary" type="button">Passwort-Link senden</button>
+            <button id="logout-btn" class="danger" type="button">Abmelden</button>
+          </div>
+        </div>
+
+        <div class="settings-group account-panel">
+          <h4>Backup</h4>
+          <div class="settings-hint">
+            Exportiert alle Notizen, Projekte, Aufgaben und Einstellungen als JSON-Datei.
+          </div>
+          <div class="account-row">
+            <button id="export-backup-btn" class="secondary" type="button">Backup exportieren</button>
+            <button id="import-backup-btn" class="secondary" type="button">Backup importieren</button>
+            <input id="backup-file-input" class="file-input" type="file" accept=".json,application/json">
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="settings-options-body"></div>
+  </div>
   <footer class="editor-foot"><span>Änderungen werden automatisch gespeichert.</span><button class="primary" data-close-overlay="settings">Fertig</button></footer>
 </div></section>
 
@@ -638,8 +673,13 @@ async function initializeCloud(){
    if(event==='SIGNED_OUT'){
     cloudUser=null;
     cloudReady=false;
+    renderAccountInfo();
     setSyncStatus('Abgemeldet','offline');
     showAuthPanel('login-panel');
+   }
+   if(event==='USER_UPDATED'){
+    cloudUser=session?.user||cloudUser;
+    renderAccountInfo();
    }
   });
 
@@ -776,9 +816,17 @@ function projectMatches(project){const statusId=projectStatusOption(project).id;
 function renderProjectRow(project){const statusOption=projectStatusOption(project);const activeTasks=(project.subtasks||[]).filter(task=>subtaskKind(task)==='active');return`<div class="project-row" data-project-id="${project.id}"><div><input class="inline title-input-inline" data-project-field="title" value="${esc(project.title)}" placeholder="Bezeichnung"><select class="mini-select" data-project-field="areaId">${selectOptions('projects','areas',project.areaId,{custom:true})}</select></div><div class="project-current"><div class="current-label">Aktuelle Aufgaben in Bearbeitung:</div><div>${activeTasks.length?activeTasks.map(task=>`<div class="current-item"><span class="current-bullet">•</span><span>${esc(task.title||'Ohne Bezeichnung')} <span class="small">${task.personId?`– ${esc(optionLabel('subtasks','people',task.personId))}`:''}</span></span></div>`).join(''):'<span class="small">Projekt nicht gestartet</span>'}</div></div><div class="project-status" style="${statusStyle('projects',statusOption.id)}">${esc(statusOption.label)}</div><div class="actions"><button class="icon open-btn" data-action="open-project">⛶</button><button class="icon delete-btn" data-action="delete-project">×</button></div></div>`}
 function renderProjects(){renderFilter('#project-filters','projects',['status','area']);const active=filters.projects.status.size||filters.projects.area.size;if(active){const items=state.projects.filter(projectMatches);$('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#project-filters .filter-info').textContent=`${items.length} Treffer`;return}$('#project-filters .filter-info').textContent='';const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];$('#project-groups').innerHTML=groups.map(group=>{const items=state.projects.filter(project=>group.id==='__completed__'?projectStatusKind(project)==='done':projectStatusKind(project)!=='done'&&project.priorityId===group.id);return`<section class="group project"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${group.id!=='__completed__'?`<button class="quick-add" data-action="quick-project" data-priority-id="${group.id}">+</button>`:''}</div></div><div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div></section>`}).join('')}
 
-function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
+function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-options-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
 function renderOptionRow(section,group,item){return`<div class="option-row ${group==='statuses'?'status-option':''}" draggable="true" data-option-id="${item.id}" data-option-section="${section}" data-option-group="${group}"><span class="drag-handle">⋮⋮</span><input type="text" data-setting-field="label" value="${esc(item.label)}">${group==='statuses'?`<input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}"><select data-setting-field="kind"><option value="open" ${item.kind==='open'?'selected':''}>Offen</option><option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option><option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option></select>`:''}<button class="option-delete" data-action="delete-option">×</button></div>`}
-function renderAll(){renderBrand();renderNav();renderNotes();renderOwn();renderDelegated();renderProjects();renderSettings();renderHistoryButtons()}
+function renderAccountInfo(){
+ const target=$('#account-email');
+ if(target){
+  target.textContent=cloudUser?.email
+   ? `Angemeldet als ${cloudUser.email}`
+   : 'Nicht angemeldet';
+ }
+}
+function renderAll(){renderBrand();renderNav();renderNotes();renderOwn();renderDelegated();renderProjects();renderSettings();renderAccountInfo();renderHistoryButtons()}
 
 function createNote(){const note={id:uid(),title:'',area:'',content:'',updatedAt:now()};commit(()=>state.notes.unshift(note));openNote(note.id)}
 function openNote(id){const note=state.notes.find(item=>item.id===id);if(!note)return;current.noteId=id;$('#note-title').value=note.title;$('#note-area').value=note.area;$('#note-editor').innerHTML=note.content;openOverlay('note')}
@@ -905,6 +953,87 @@ document.addEventListener('drop',event=>{
 });
 
 
+
+function downloadBackup(){
+ const payload={
+  exportedAt:new Date().toISOString(),
+  appVersion:state.version||26,
+  dashboardData:state
+ };
+ const blob=new Blob(
+  [JSON.stringify(payload,null,2)],
+  {type:'application/json'}
+ );
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement('a');
+ const stamp=new Date().toISOString().slice(0,10);
+ link.href=url;
+ link.download=`dominiks-dashboard-backup-${stamp}.json`;
+ document.body.appendChild(link);
+ link.click();
+ link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function importBackupFile(file){
+ if(!file)return;
+ const text=await file.text();
+ let parsed;
+ try{parsed=JSON.parse(text)}
+ catch{throw new Error('Die Datei enthält kein gültiges JSON.')}
+
+ const imported=parsed?.dashboardData??parsed;
+ const normalized=normalizeState(imported);
+
+ const confirmed=confirm(
+  'Das Backup ersetzt den aktuellen Datenstand vollständig.\n\n'+
+  'Möchtest du fortfahren?'
+ );
+ if(!confirmed)return;
+
+ checkpoint();
+ state=normalized;
+ saveState();
+ renderAll();
+ growAll();
+
+ if(cloudReady&&navigator.onLine){
+  await saveCloudState();
+ }
+ alert('Backup wurde erfolgreich importiert.');
+}
+async function changeCurrentPassword(){
+ if(!supabaseClient||!cloudUser){
+  alert('Du bist aktuell nicht angemeldet.');
+  return;
+ }
+ const first=prompt('Neues Passwort eingeben:');
+ if(!first)return;
+ if(first.length<8){
+  alert('Das Passwort muss mindestens 8 Zeichen lang sein.');
+  return;
+ }
+ const second=prompt('Neues Passwort wiederholen:');
+ if(first!==second){
+  alert('Die Passwörter stimmen nicht überein.');
+  return;
+ }
+ const {error}=await supabaseClient.auth.updateUser({password:first});
+ if(error)throw error;
+ alert('Das Passwort wurde geändert.');
+}
+async function sendPasswordReset(){
+ if(!supabaseClient){
+  alert('Supabase ist nicht eingerichtet.');
+  return;
+ }
+ const email=cloudUser?.email||prompt('E-Mail-Adresse eingeben:')?.trim();
+ if(!email)return;
+ const redirectTo=location.origin+location.pathname;
+ const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});
+ if(error)throw error;
+ alert('Ein Link zum Zurücksetzen des Passworts wurde per E-Mail versendet.');
+}
+
 // Cloud setup, login and status controls
 $('#cloud-setup-panel').addEventListener('submit',async event=>{
  event.preventDefault();
@@ -959,6 +1088,56 @@ $('#change-cloud-config').addEventListener('click',async()=>{
  showAuthPanel('cloud-setup-panel');
  setSyncStatus('Einrichten','offline');
 });
+
+$('#manual-sync-btn').addEventListener('click',async()=>{
+ if(!cloudReady){
+  alert('Du bist aktuell nicht mit der Cloud verbunden.');
+  return;
+ }
+ if(!navigator.onLine){
+  alert('Aktuell besteht keine Internetverbindung.');
+  return;
+ }
+ await saveCloudState();
+});
+$('#logout-btn').addEventListener('click',()=>{
+ if(!cloudUser){
+  alert('Du bist aktuell nicht angemeldet.');
+  return;
+ }
+ if(confirm('Möchtest du dich wirklich abmelden?')){
+  signOutFromCloud();
+ }
+});
+$('#change-password-btn').addEventListener('click',async()=>{
+ try{await changeCurrentPassword()}
+ catch(error){
+  console.error(error);
+  alert(`Passwort konnte nicht geändert werden: ${error.message}`);
+ }
+});
+$('#reset-password-btn').addEventListener('click',async()=>{
+ try{await sendPasswordReset()}
+ catch(error){
+  console.error(error);
+  alert(`E-Mail konnte nicht versendet werden: ${error.message}`);
+ }
+});
+$('#export-backup-btn').addEventListener('click',downloadBackup);
+$('#import-backup-btn').addEventListener('click',()=>{
+ $('#backup-file-input').value='';
+ $('#backup-file-input').click();
+});
+$('#backup-file-input').addEventListener('change',async event=>{
+ const file=event.target.files?.[0];
+ if(!file)return;
+ try{await importBackupFile(file)}
+ catch(error){
+  console.error(error);
+  alert(`Backup konnte nicht importiert werden: ${error.message}`);
+ }
+});
+
 $('#sync-status-btn').addEventListener('click',()=>{
  if(cloudUser){
   if(readPendingChanges()||$('#sync-status-btn').dataset.state==='error'){
