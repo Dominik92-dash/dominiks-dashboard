@@ -7,7 +7,7 @@
 <style>
 :root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--own:#bfd6e9;--project:#bfd6e9;--delegated:#bfd6e9;--note:#d9dee3;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px}
 *{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
-.sidebar{position:relative;z-index:80;background:var(--panel);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:22px;line-height:1.15;cursor:pointer}.brand p{margin:7px 0 0;font-size:13px;color:var(--muted);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.sidebar{position:relative;z-index:80;background:var(--panel);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:22px;line-height:1.15;cursor:pointer;font-family:'Alasassy Caps',Arial,Helvetica,sans-serif;letter-spacing:.02em}.brand p{margin:7px 0 0;font-size:13px;color:var(--muted);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
 .tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
@@ -15,7 +15,7 @@
 .quick-note{display:grid;gap:7px;margin-bottom:16px;padding:14px;background:#eef1f4;border:1px solid #d7dce1;border-radius:var(--radius)}.quick-note label{font-size:12px;font-weight:700;color:var(--muted)}.quick-note textarea{width:100%;min-height:78px;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;resize:vertical}
 .note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid #c7cdd3;border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
-.group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
+.group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.delegated-group{background:var(--delegated);border-color:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
 .todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.delegated-shell{padding:14px;background:var(--delegated);border:1px solid var(--delegated);border-radius:var(--radius)}.flat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.flat-head h3{margin:0;font-size:17px;line-height:1.2;font-weight:700;color:#1c4668}
 .project-row{display:grid;grid-template-columns:minmax(138px,.66fr) minmax(264px,1.56fr) 170px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.project-current{display:grid;grid-template-columns:155px 1fr;gap:10px;align-items:center;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}.current-label{font-size:12px;color:var(--muted)}.current-item{display:flex;gap:7px;align-items:flex-start;font-size:13px;margin:3px 0}.current-bullet{flex:0 0 auto;line-height:1.25}.project-status{padding:8px 9px;border:1px solid var(--border);border-radius:7px;font-weight:600;text-align:center}
 .overlay{display:none;position:fixed;z-index:100;inset:0 0 0 var(--sidebar);padding:29px;background:var(--bg);overflow:auto}.overlay.open{display:block}.shell{width:min(1100px,100%);min-height:calc(100vh - 58px);margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}.editor-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;padding:21px 23px 15px;border-bottom:1px solid var(--border)}.editor-head h2{margin:0}.title-large{width:100%;border:0;outline:0;background:transparent;font-size:27px;font-weight:700}.close-btn{width:36px;height:36px;border:0;border-radius:8px;background:transparent;font-size:25px;cursor:pointer}.close-btn:hover{background:#f0f2f4}.detail-body{padding:23px;display:grid;gap:19px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:grid;gap:7px}.field[hidden]{display:none!important}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#fff}.field textarea{min-height:100px;resize:vertical}.details-text{min-height:235px}.editor-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 23px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
@@ -37,19 +37,19 @@ body.mobile .sidebar{
  box-shadow:0 3px 12px rgba(28,39,49,.08)
 }
 body.mobile .brand{
- display:flex;
- align-items:baseline;
- gap:8px;
+ display:block;
  min-width:0;
- margin-bottom:8px
+ margin-bottom:11px;
+ padding:3px 0 2px
 }
 body.mobile .brand h1{
  min-width:0;
  max-width:100%;
- overflow:hidden;
- text-overflow:ellipsis;
- white-space:nowrap;
- font-size:18px
+ overflow:visible;
+ text-overflow:clip;
+ white-space:normal;
+ font-size:22px;
+ line-height:1.15
 }
 body.mobile .brand p{display:none}
 body.mobile .tools{
@@ -339,6 +339,12 @@ body.mobile .project-row>.actions .icon{
  height:42px
 }
 
+
+body.mobile #project-overlay .detail-grid{grid-template-columns:minmax(0,1fr)}
+body.mobile #project-overlay .field,
+body.mobile #project-overlay .field input,
+body.mobile #project-overlay .field select,
+body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:100%}
 @media(max-width:480px){
  body.mobile .page-header{flex-direction:column}
  body.mobile .page-header>.primary,
@@ -371,6 +377,8 @@ body.mobile .project-row>.actions .icon{
 .account-info{padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa;font-size:13px;color:var(--muted)}
 .file-input{display:none}
 
+
+.group.completed-group{background:#d9dee3!important;border-color:#d9dee3!important}
 </style>
 </head>
 <body>
@@ -428,7 +436,7 @@ body.mobile .project-row>.actions .icon{
       <p id="app-subtitle" title="Zum Ändern anklicken">Notizen, Projekte und Aufgaben</p>
     </div>
     <div class="tools">
-      <button type="button" id="view-toggle" class="tool" title="Handy-/Desktopansicht">▣</button>
+      <button type="button" id="view-toggle" class="tool" title="Handy-/Desktopansicht">M</button>
       <button type="button" id="undo-btn" class="tool" title="Rückgängig">↶</button>
       <button type="button" id="redo-btn" class="tool" title="Wiederholen">↷</button>
       <button type="button" id="settings-btn" class="tool" title="Einstellungen">⚙</button>
@@ -445,19 +453,19 @@ body.mobile .project-row>.actions .icon{
     </section>
 
     <section id="page-projects" class="page">
-      <header class="page-header"><div><h2>Projekte</h2><p>Projekte mit Priorität, Deadline und Unteraufgaben.</p></div><button type="button" id="new-project-btn" class="primary">Neues Projekt</button></header>
+      <header class="page-header"><div><h2>Projekte</h2><p>Projekte mit Priorität, Deadline und Unteraufgaben.</p></div></header>
       <div id="project-filters" class="filters"></div>
       <div id="project-groups" class="groups"></div>
     </section>
 
     <section id="page-own" class="page">
-      <header class="page-header"><div><h2>Eigene Aufgaben</h2><p>Eigene Aufgaben nach Priorität und Bearbeitungsstand.</p></div><button type="button" id="new-own-btn" class="primary">Neue Aufgabe</button></header>
+      <header class="page-header"><div><h2>Eigene Aufgaben</h2><p>Eigene Aufgaben nach Priorität und Bearbeitungsstand.</p></div></header>
       <div id="own-filters" class="filters"></div>
       <div id="own-groups" class="groups"></div>
     </section>
 
     <section id="page-delegated" class="page">
-      <header class="page-header"><div><h2>Vergebene Aufgaben</h2><p>Delegierte Aufgaben und Verantwortlichkeiten.</p></div><button type="button" id="new-delegated-btn" class="primary">Neue Aufgabe</button></header>
+      <header class="page-header"><div><h2>Vergebene Aufgaben</h2><p>Delegierte Aufgaben und Verantwortlichkeiten.</p></div></header>
       <div id="delegated-filters" class="filters"></div>
       <div id="delegated-groups" class="groups">
         <section class="delegated-shell">
@@ -588,7 +596,7 @@ function createDefaults(){
    noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
    projects:{
     statuses:[status('project-open','Offen','#fff7d6','open'),status('project-active','In Bearbeitung','#fff0df','active'),status('project-done','Erledigt','#e6f1e8','done')],
-    priorities:[option('project-very-high','Sehr hohe Priorität'),option('project-high','Hohe Priorität'),option('project-medium','Mittlere Priorität'),option('project-low','Geringe Priorität')],
+    priorities:[option('project-high','Hohe Priorität'),option('project-medium','Mittlere Priorität'),option('project-low','Geringe Priorität')],
     areas:[option('area-general','Allgemeines'),option('area-finance','Finanzen'),option('area-controlling','Controlling'),option('area-hr','Personal'),option('area-forecast','Forecasting'),option('area-cleaning','Reinigung'),option('area-kitchen','Küche'),option('area-canteen','Mensa'),option('area-catering','Catering'),option('area-station','Stationsservice'),option('area-supply','Versorgungsassistenz'),option('area-temp','Arbeitnehmerüberlassung'),option('area-other','Sonstiges')]
    },
    subtasks:{
@@ -597,12 +605,12 @@ function createDefaults(){
    },
    own:{
     statuses:[status('own-open','Offen','#fff7d6','open'),status('own-active','In Bearbeitung','#fff0df','active'),status('own-support','Zuarbeit erforderlich','#f1e8fb','active'),status('own-appointment','Termin vereinbart','#ece8fb','active'),status('own-done','Erledigt','#e6f1e8','done')],
-    priorities:[option('own-daily','Tagesgeschäft'),option('own-very-high','Sehr hohe Priorität'),option('own-high','Hohe Priorität'),option('own-medium','Mittlere Priorität'),option('own-low','Geringe Priorität')],
+    priorities:[option('own-daily','Tagesgeschäft'),option('own-high','Hohe Priorität'),option('own-medium','Mittlere Priorität'),option('own-low','Geringe Priorität')],
     areas:[]
    },
    delegated:{
     statuses:[status('delegated-open','Offen','#fff7d6','open'),status('delegated-active','In Bearbeitung','#fff0df','active'),status('delegated-support','Zuarbeit erforderlich','#f1e8fb','active'),status('delegated-appointment','Termin vereinbart','#ece8fb','active'),status('delegated-done','Erledigt','#e6f1e8','done')],
-    priorities:[option('delegated-very-high','Sehr hohe Priorität'),option('delegated-high','Hohe Priorität'),option('delegated-medium','Mittlere Priorität'),option('delegated-low','Geringe Priorität')],
+    priorities:[option('delegated-high','Hohe Priorität'),option('delegated-medium','Mittlere Priorität'),option('delegated-low','Geringe Priorität')],
     areas:[],people:[]
    }
   },
@@ -665,6 +673,9 @@ function normalizeState(raw){
  result.config.subtasks=normalizeSection(source.config?.subtasks,defaults.config.subtasks);
  result.config.own=normalizeSection(source.config?.own,defaults.config.own);
  result.config.delegated=normalizeSection(source.config?.delegated,defaults.config.delegated);
+ result.config.projects.priorities=result.config.projects.priorities.filter(item=>item.id!=='project-very-high'&&item.label!=='Sehr hohe Priorität');
+ result.config.own.priorities=result.config.own.priorities.filter(item=>item.id!=='own-very-high'&&item.label!=='Sehr hohe Priorität');
+ result.config.delegated.priorities=result.config.delegated.priorities.filter(item=>item.id!=='delegated-very-high'&&item.label!=='Sehr hohe Priorität');
  if(!result.config.own.statuses.some(item=>item.kind==='done')){
   result.config.own.statuses.push(clone(defaults.config.own.statuses.find(item=>item.kind==='done')));
  }
@@ -682,7 +693,7 @@ function normalizeState(raw){
  result.notes=noteSource.filter(item=>item&&typeof item==='object').map(item=>({id:String(item.id||uid()),title:String(item.title??item.name??''),area:String(item.area??item.category??''),content:String(item.content??item.body??item.text??''),updatedAt:String(item.updatedAt||item.modifiedAt||now())}));
  const ownSource=Array.isArray(source.ownTodos)?source.ownTodos:(Array.isArray(source.todos)?source.todos:defaults.ownTodos);
  result.ownTodos=ownSource.filter(item=>item&&typeof item==='object').map(item=>{
-  const priorityId=resolveOrAdd(result.config,'own','priorities',item.priorityId??item.priority,'own-daily');
+  const priorityId=resolveOrAdd(result.config,'own','priorities',(item.priorityId==='own-very-high'?'own-high':item.priorityId)??item.priority,'own-daily');
   const resolvedStatusId=resolveOrAdd(result.config,'own','statuses',item.statusId??item.status,'own-open');
   const migratedDone=Boolean(item.completed||item.done)||result.config.own.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
   const doneStatusId=result.config.own.statuses.find(entry=>entry.kind==='done')?.id||resolvedStatusId;
@@ -690,14 +701,14 @@ function normalizeState(raw){
  });
  const delegatedSource=Array.isArray(source.delegatedTodos)?source.delegatedTodos:(Array.isArray(source.assignedTodos)?source.assignedTodos:defaults.delegatedTodos);
  result.delegatedTodos=delegatedSource.filter(item=>item&&typeof item==='object').map(item=>{
-  const priorityId=resolveOrAdd(result.config,'delegated','priorities',item.priorityId??item.priority,'delegated-very-high');
+  const priorityId=resolveOrAdd(result.config,'delegated','priorities',(item.priorityId==='delegated-very-high'?'delegated-high':item.priorityId)??item.priority,'delegated-high');
   const resolvedStatusId=resolveOrAdd(result.config,'delegated','statuses',item.statusId??item.status,'delegated-open');
   const migratedDone=Boolean(item.completed||item.done)||result.config.delegated.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
   const doneStatusId=result.config.delegated.statuses.find(entry=>entry.kind==='done')?.id||resolvedStatusId;
   return{id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),details:String(item.details??item.description??item.notes??''),statusId:migratedDone?doneStatusId:resolvedStatusId,areaId:resolveOrAdd(result.config,'delegated','areas',item.areaId??item.area,'area-general'),personId:resolveOrAdd(result.config,'delegated','people',item.personId??item.person??item.responsible,result.config.delegated.people[0]?.id),priorityId,previousPriorityId:resolveOrAdd(result.config,'delegated','priorities',item.previousPriorityId??item.previousPriority??item.priorityId??item.priority,priorityId),completed:migratedDone,updatedAt:String(item.updatedAt||item.modifiedAt||now())};
  });
  const projectSource=Array.isArray(source.projects)?source.projects:defaults.projects;
- result.projects=projectSource.filter(item=>item&&typeof item==='object').map(item=>({id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),areaId:resolveOrAdd(result.config,'projects','areas',item.areaId??item.area,'area-general'),priorityId:resolveOrAdd(result.config,'projects','priorities',item.priorityId??item.priority,'project-very-high'),deadline:String(item.deadline??item.dueDate??''),updatedAt:String(item.updatedAt||item.modifiedAt||now()),subtasks:(Array.isArray(item.subtasks)?item.subtasks:[]).filter(task=>task&&typeof task==='object').map(task=>({id:String(task.id||uid()),title:String(task.title??task.name??''),summary:String(task.summary??task.annotation??task.note??''),personId:resolveOrAdd(result.config,'subtasks','people',task.personId??task.person??task.responsible,result.config.subtasks.people[0]?.id),deadline:String(task.deadline??task.dueDate??''),statusId:resolveOrAdd(result.config,'subtasks','statuses',task.statusId??task.status,'sub-open'),updatedAt:String(task.updatedAt||task.modifiedAt||now())}))}));
+ result.projects=projectSource.filter(item=>item&&typeof item==='object').map(item=>({id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),areaId:resolveOrAdd(result.config,'projects','areas',item.areaId??item.area,'area-general'),priorityId:resolveOrAdd(result.config,'projects','priorities',(item.priorityId==='project-very-high'?'project-high':item.priorityId)??item.priority,'project-high'),deadline:String(item.deadline??item.dueDate??''),updatedAt:String(item.updatedAt||item.modifiedAt||now()),subtasks:(Array.isArray(item.subtasks)?item.subtasks:[]).filter(task=>task&&typeof task==='object').map(task=>({id:String(task.id||uid()),title:String(task.title??task.name??''),summary:String(task.summary??task.annotation??task.note??''),personId:resolveOrAdd(result.config,'subtasks','people',task.personId??task.person??task.responsible,result.config.subtasks.people[0]?.id),deadline:String(task.deadline??task.dueDate??''),statusId:resolveOrAdd(result.config,'subtasks','statuses',task.statusId??task.status,'sub-open'),updatedAt:String(task.updatedAt||task.modifiedAt||now())}))}));
  return result;
 }
 function loadState(){
@@ -1113,46 +1124,28 @@ function setTodoStatus(todo,type,statusId){
 function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button type="button" class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button type="button" class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
 function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))&&(type!=='delegated'||!selected.person.size||selected.person.has(todo.personId))}
 function renderTodoRow(todo,type,{draggable=false}={}){ensureTodoDoneStatus(type);const completed=todoIsCompleted(todo,type);return`<div class="todo-row ${type==='delegated'?'delegated':''} ${completed?'completed':''}" data-todo-id="${todo.id}" data-todo-type="${type}" draggable="${draggable}"><div><input class="inline title-input-inline" data-todo-field="title" value="${esc(todo.title)}" placeholder="Bezeichnung"><select class="mini-select" data-todo-field="areaId">${selectOptions(type,'areas',todo.areaId,{custom:true})}</select></div><textarea class="inline summary-input" data-todo-field="summary" rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>${type==='delegated'?`<select class="person-select" data-todo-field="personId">${selectOptions(type,'people',todo.personId,{custom:true})}</select><select class="priority-select" data-todo-field="priorityId">${selectOptions(type,'priorities',todo.priorityId)}</select>`:''}<select class="status-select" data-todo-field="statusId" style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select><div class="actions"><button type="button" class="icon open-btn" data-action="open-todo">⛶</button><button type="button" class="icon delete-btn" data-action="delete-todo">×</button></div></div>`}
-function renderOwn(){renderFilter('#own-filters','own',['status','area']);const active=filters.own.status.size||filters.own.area.size;if(active){const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));$('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#own-filters .filter-info').textContent=`${items.length} Treffer`;growAll();return}$('#own-filters .filter-info').textContent='';const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];$('#own-groups').innerHTML=groups.map(group=>{const items=state.ownTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'own'):!todoIsCompleted(todo,'own')&&todo.priorityId===group.id);return`<section class="group own" data-own-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span><button type="button" class="quick-add" data-action="quick-own" data-priority-id="${group.id}">+</button></div></div><div class="list">${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div></section>`}).join('');growAll()}
+function renderOwn(){renderFilter('#own-filters','own',['status','area']);const active=filters.own.status.size||filters.own.area.size;if(active){const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));$('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#own-filters .filter-info').textContent=`${items.length} Treffer`;growAll();return}$('#own-filters .filter-info').textContent='';const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];$('#own-groups').innerHTML=groups.map(group=>{const items=state.ownTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'own'):!todoIsCompleted(todo,'own')&&todo.priorityId===group.id);return`<section class="group own ${group.id==='__completed__'?'completed-group':''}" data-own-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span><button type="button" class="quick-add" data-action="quick-own" data-priority-id="${group.id}">+</button></div></div><div class="list">${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div></section>`}).join('');growAll()}
 function renderDelegated(){
  renderFilter('#delegated-filters','delegated',['status','area','person']);
-
- const priorityOrder=options('delegated','priorities').map(item=>item.id);
- const filtered=state.delegatedTodos.filter(todo=>todoMatches(todo,'delegated'));
-
- const activeItems=filtered
-  .filter(todo=>!todoIsCompleted(todo,'delegated'))
-  .sort((a,b)=>
-   (priorityOrder.indexOf(a.priorityId)-priorityOrder.indexOf(b.priorityId))||
-   String(b.updatedAt).localeCompare(String(a.updatedAt))
-  );
-
- const doneItems=filtered
-  .filter(todo=>todoIsCompleted(todo,'delegated'))
-  .sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
-
- $('#delegated-active-list').innerHTML=
-  activeItems.map(todo=>renderTodoRow(todo,'delegated')).join('')||
-  '<div class="empty">Keine aktiven Aufgaben.</div>';
-
- $('#delegated-done-list').innerHTML=
-  doneItems.map(todo=>renderTodoRow(todo,'delegated')).join('')||
-  '<div class="empty">Keine erledigten Aufgaben.</div>';
-
- $('#delegated-active-count').textContent=
-  `${activeItems.length} Aufgabe${activeItems.length===1?'':'n'}`;
-
- $('#delegated-done-count').textContent=
-  `${doneItems.length} Aufgabe${doneItems.length===1?'':'n'}`;
-
- const filtersActive=
-  filters.delegated.status.size||
-  filters.delegated.area.size||
-  filters.delegated.person.size;
-
- $('#delegated-filters .filter-info').textContent=
-  filtersActive?`${filtered.length} Treffer`:'';
-
+ const active=filters.delegated.status.size||filters.delegated.area.size||filters.delegated.person.size;
+ if(active){
+  const items=state.delegatedTodos.filter(todo=>todoMatches(todo,'delegated'));
+  $('#delegated-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'delegated')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;
+  $('#delegated-filters .filter-info').textContent=`${items.length} Treffer`;
+  growAll();return;
+ }
+ $('#delegated-filters .filter-info').textContent='';
+ const groups=[...options('delegated','priorities'),{id:'__completed__',label:'Erledigt'}];
+ $('#delegated-groups').innerHTML=groups.map(group=>{
+  const items=state.delegatedTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'delegated'):!todoIsCompleted(todo,'delegated')&&todo.priorityId===group.id);
+  return`<section class="group delegated-group ${group.id==='__completed__'?'completed-group':''}">
+   <div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta">
+    <span class="count">${items.length}</span>
+    <button type="button" class="quick-add" data-action="quick-delegated" data-priority-id="${group.id}">+</button>
+   </div></div>
+   <div class="list">${items.map(todo=>renderTodoRow(todo,'delegated')).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div>
+  </section>`;
+ }).join('');
  growAll();
 }
 
@@ -1161,7 +1154,7 @@ function projectStatusKind(project){const tasks=project.subtasks||[];if(!tasks.l
 function projectStatusOption(project){const kind=projectStatusKind(project);return options('projects','statuses').find(item=>item.kind===kind)||options('projects','statuses')[0]||status('missing','Unbekannt','#eeeeee','open')}
 function projectMatches(project){const statusId=projectStatusOption(project).id;return(!filters.projects.status.size||filters.projects.status.has(statusId))&&(!filters.projects.area.size||filters.projects.area.has(project.areaId))}
 function renderProjectRow(project){const statusOption=projectStatusOption(project);const activeTasks=(project.subtasks||[]).filter(task=>subtaskKind(task)==='active');return`<div class="project-row" data-project-id="${project.id}"><div><input class="inline title-input-inline" data-project-field="title" value="${esc(project.title)}" placeholder="Bezeichnung"><select class="mini-select" data-project-field="areaId">${selectOptions('projects','areas',project.areaId,{custom:true})}</select></div><div class="project-current"><div class="current-label">Aktuelle Aufgaben in Bearbeitung:</div><div>${activeTasks.length?activeTasks.map(task=>`<div class="current-item"><span class="current-bullet">•</span><span>${esc(task.title||'Ohne Bezeichnung')} <span class="small">${task.personId?`– ${esc(optionLabel('subtasks','people',task.personId))}`:''}</span></span></div>`).join(''):'<span class="small">Projekt nicht gestartet</span>'}</div></div><div class="project-status" style="${statusStyle('projects',statusOption.id)}">${esc(statusOption.label)}</div><div class="actions"><button type="button" class="icon open-btn" data-action="open-project">⛶</button><button type="button" class="icon delete-btn" data-action="delete-project">×</button></div></div>`}
-function renderProjects(){renderFilter('#project-filters','projects',['status','area']);const active=filters.projects.status.size||filters.projects.area.size;if(active){const items=state.projects.filter(projectMatches);$('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#project-filters .filter-info').textContent=`${items.length} Treffer`;return}$('#project-filters .filter-info').textContent='';const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];$('#project-groups').innerHTML=groups.map(group=>{const items=state.projects.filter(project=>group.id==='__completed__'?projectStatusKind(project)==='done':projectStatusKind(project)!=='done'&&project.priorityId===group.id);return`<section class="group project"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${group.id!=='__completed__'?`<button type="button" class="quick-add" data-action="quick-project" data-priority-id="${group.id}">+</button>`:''}</div></div><div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div></section>`}).join('')}
+function renderProjects(){renderFilter('#project-filters','projects',['status','area']);const active=filters.projects.status.size||filters.projects.area.size;if(active){const items=state.projects.filter(projectMatches);$('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#project-filters .filter-info').textContent=`${items.length} Treffer`;return}$('#project-filters .filter-info').textContent='';const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];$('#project-groups').innerHTML=groups.map(group=>{const items=state.projects.filter(project=>group.id==='__completed__'?projectStatusKind(project)==='done':projectStatusKind(project)!=='done'&&project.priorityId===group.id);return`<section class="group project ${group.id==='__completed__'?'completed-group':''}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${group.id!=='__completed__'?`<button type="button" class="quick-add" data-action="quick-project" data-priority-id="${group.id}">+</button>`:''}</div></div><div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div></section>`}).join('')}
 
 function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-options-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button type="button" class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
 function renderOptionRow(section,group,item){return`<div class="option-row ${group==='statuses'?'status-option':''}" draggable="true" data-option-id="${item.id}" data-option-section="${section}" data-option-group="${group}"><span class="drag-handle">⋮⋮</span><input type="text" data-setting-field="label" value="${esc(item.label)}">${group==='statuses'?`<input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}"><select data-setting-field="kind"><option value="open" ${item.kind==='open'?'selected':''}>Offen</option><option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option><option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option></select>`:''}<button type="button" class="option-delete" data-action="delete-option">×</button></div>`}
@@ -1225,7 +1218,7 @@ function applyMobileMode(){
 
  const button=$('#view-toggle');
  if(button){
-  button.textContent=mobile?'▣':'▯';
+  button.textContent=mobile?'D':'M';
   button.title=mobile
    ? 'Zur Desktopansicht wechseln'
    : 'Zur Handyansicht wechseln';
@@ -1257,6 +1250,7 @@ document.addEventListener('click',event=>{
    case'open-todo':openTodo(todoRow.dataset.todoId,todoRow.dataset.todoType);break;
    case'delete-todo':deleteTodo(todoRow.dataset.todoId,todoRow.dataset.todoType);break;
    case'quick-own':createTodo('own',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
+   case'quick-delegated':createTodo('delegated',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
    case'open-project':openProject(projectRow.dataset.projectId);break;
    case'delete-project':deleteProject(projectRow.dataset.projectId);break;
    case'quick-project':createProject({open:false,priorityId:action.dataset.priorityId});break;
