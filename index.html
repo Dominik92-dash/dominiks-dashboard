@@ -16,14 +16,238 @@
 .note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid #c7cdd3;border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
-.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.delegated-shell{padding:14px;background:var(--delegated);border:1px solid var(--delegated);border-radius:var(--radius)}.flat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.flat-head h3{margin:0;color:#1c4668}
+.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.delegated-shell{padding:14px;background:var(--delegated);border:1px solid var(--delegated);border-radius:var(--radius)}.flat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.flat-head h3{margin:0;font-size:17px;line-height:1.2;font-weight:700;color:#1c4668}
 .project-row{display:grid;grid-template-columns:minmax(138px,.66fr) minmax(264px,1.56fr) 170px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.project-current{display:grid;grid-template-columns:155px 1fr;gap:10px;align-items:center}.current-label{font-size:12px;color:var(--muted)}.current-item{display:flex;gap:7px;align-items:flex-start;font-size:13px;margin:3px 0}.current-bullet{flex:0 0 auto;line-height:1.25}.project-status{padding:8px 9px;border:1px solid var(--border);border-radius:7px;font-weight:600;text-align:center}
 .overlay{display:none;position:fixed;z-index:100;inset:0 0 0 var(--sidebar);padding:29px;background:var(--bg);overflow:auto}.overlay.open{display:block}.shell{width:min(1100px,100%);min-height:calc(100vh - 58px);margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}.editor-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;padding:21px 23px 15px;border-bottom:1px solid var(--border)}.editor-head h2{margin:0}.title-large{width:100%;border:0;outline:0;background:transparent;font-size:27px;font-weight:700}.close-btn{width:36px;height:36px;border:0;border-radius:8px;background:transparent;font-size:25px;cursor:pointer}.close-btn:hover{background:#f0f2f4}.detail-body{padding:23px;display:grid;gap:19px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#fff}.field textarea{min-height:100px;resize:vertical}.details-text{min-height:235px}.editor-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 23px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
 .toolbar{display:flex;flex-wrap:wrap;gap:7px;padding:11px 23px;border-bottom:1px solid var(--border);background:#fafbfc}.toolbar-group{display:flex;gap:5px;align-items:center;padding-right:8px;border-right:1px solid var(--border)}.toolbar-btn{height:34px;padding:0 9px;border:1px solid transparent;border-radius:7px;background:transparent;cursor:pointer}.toolbar-btn:hover{background:#edf0f3}.color-btn{width:27px;height:27px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px var(--border);cursor:pointer}.rich-editor{flex:1;min-height:420px;padding:27px 31px 48px;outline:0;line-height:1.65}.rich-editor ol ol{list-style-type:lower-alpha}.check-line{display:flex;gap:9px;align-items:flex-start;margin:5px 0}.check-line.checked .check-text{text-decoration:line-through;color:var(--muted)}
 .subtask-head{display:flex;justify-content:space-between;align-items:center}.subtask-row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) 165px 145px 170px auto;gap:8px;align-items:start;padding:10px;background:#fafbfc;border:1px solid var(--border);border-radius:10px}.subtask-row input,.subtask-row select,.subtask-row textarea{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}.subtask-row textarea{min-height:38px;resize:none;overflow:hidden;line-height:1.4}
 .settings-shell{width:min(1180px,100%)}.settings-body{display:grid;gap:18px;padding:23px}.settings-section{padding:15px;border:1px solid var(--border);border-radius:12px}.settings-section h3{margin:0 0 13px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(290px,1fr));gap:15px}.settings-group{padding:12px;border:1px solid var(--border);border-radius:10px}.settings-group h4{margin:0 0 9px}.settings-hint{margin:-3px 0 10px;color:var(--muted);font-size:11px}.option-list{display:grid;gap:7px}.option-row{display:grid;grid-template-columns:23px minmax(120px,1fr) auto;gap:7px;align-items:center;padding:7px;background:#f7f8fa;border:1px solid var(--border);border-radius:8px}.option-row.status-option{grid-template-columns:23px minmax(110px,1fr) 42px 105px auto}.option-row.dragging{opacity:.35}.option-row.drop-target{outline:2px dashed var(--accent)}.drag-handle{cursor:grab;text-align:center;color:var(--muted)}.option-row input[type=text],.option-row select{width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;background:#fff}.option-row input[type=color]{width:38px;height:30px;border:0;background:transparent}.option-delete{width:30px;height:30px;border:0;border-radius:7px;background:#f7e5e5;color:var(--danger);cursor:pointer}.add-option{margin-top:9px;padding:7px 10px;border:1px dashed var(--accent);border-radius:7px;background:#fff;color:var(--accent);cursor:pointer}
 @media(max-width:1080px){.todo-row,.todo-row.delegated,.project-row{grid-template-columns:1fr}.todo-row>*,.project-row>*{grid-column:1}.subtask-row{grid-template-columns:1fr 1fr}}
-@media(max-width:760px){:root{--sidebar:0px}body.mobile .app{grid-template-columns:1fr}body.mobile .sidebar{position:sticky;top:0;min-height:auto;padding:12px 13px;border-right:0;border-bottom:1px solid var(--border)}body.mobile .brand p{display:none}body.mobile .nav{grid-template-columns:repeat(4,1fr)}body.mobile .nav button{text-align:center;padding:9px 5px;font-size:12px}body.mobile .main{padding:16px 11px}body.mobile .page-header p{display:none}body.mobile .overlay{inset:0;padding:0}body.mobile .shell{min-height:100vh;border:0;border-radius:0}.detail-grid,.settings-grid{grid-template-columns:1fr}.project-current{grid-template-columns:1fr}.subtask-row{grid-template-columns:1fr}}
+/* Mobile layout is class-based so the toolbar toggle works on every viewport. */
+body.mobile{--sidebar:0px}
+body.mobile .app{display:block;min-height:100vh}
+body.mobile .sidebar{
+ position:sticky;
+ top:0;
+ z-index:900;
+ min-height:auto;
+ padding:10px 12px 9px;
+ border-right:0;
+ border-bottom:1px solid var(--border);
+ box-shadow:0 3px 12px rgba(28,39,49,.08)
+}
+body.mobile .brand{
+ display:flex;
+ align-items:baseline;
+ gap:8px;
+ min-width:0;
+ margin-bottom:8px
+}
+body.mobile .brand h1{
+ min-width:0;
+ max-width:100%;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ font-size:18px
+}
+body.mobile .brand p{display:none}
+body.mobile .tools{
+ display:flex;
+ gap:7px;
+ margin-bottom:8px;
+ padding-bottom:8px;
+ overflow-x:auto;
+ overscroll-behavior-x:contain;
+ scrollbar-width:thin
+}
+body.mobile .tool{
+ flex:0 0 36px;
+ width:36px;
+ height:36px
+}
+body.mobile .sync-indicator{
+ flex-basis:36px;
+ width:36px;
+ min-width:36px;
+ height:36px
+}
+body.mobile .nav{
+ display:flex;
+ gap:6px;
+ padding-bottom:2px;
+ overflow-x:auto;
+ overscroll-behavior-x:contain;
+ scrollbar-width:thin
+}
+body.mobile .nav button{
+ flex:0 0 auto;
+ min-height:38px;
+ padding:9px 12px;
+ text-align:center;
+ white-space:nowrap;
+ cursor:pointer;
+ font-size:12px
+}
+body.mobile .main{padding:14px 11px 24px}
+body.mobile .page-header{
+ align-items:stretch;
+ gap:12px;
+ margin-bottom:16px
+}
+body.mobile .page-header h2{font-size:24px}
+body.mobile .page-header p{display:none}
+body.mobile .page-header>.primary,
+body.mobile .page-header>.actions{flex:0 0 auto}
+body.mobile .page-header .actions{justify-content:flex-end}
+body.mobile .primary,
+body.mobile .secondary,
+body.mobile .danger{min-height:40px}
+body.mobile .quick-note{padding:11px}
+body.mobile .filters{
+ display:grid;
+ grid-template-columns:1fr;
+ gap:8px;
+ margin-bottom:14px
+}
+body.mobile .filter,
+body.mobile .filter-trigger{width:100%;min-width:0}
+body.mobile .filter-menu{
+ position:absolute;
+ width:100%;
+ max-width:none;
+ max-height:45vh
+}
+body.mobile .filter-reset{text-align:left;padding:7px 2px}
+body.mobile .filter-info{margin-left:0}
+body.mobile .group,
+body.mobile .delegated-shell{padding:11px}
+body.mobile .group-head,
+body.mobile .flat-head{align-items:center}
+body.mobile .group-head h3,
+body.mobile .flat-head h3{font-size:16px}
+body.mobile .todo-row,
+body.mobile .todo-row.delegated,
+body.mobile .project-row{
+ grid-template-columns:minmax(0,1fr);
+ gap:8px;
+ padding:10px
+}
+body.mobile .todo-row>*,
+body.mobile .project-row>*{grid-column:1}
+body.mobile .summary-input{
+ width:100%;
+ height:66px;
+ min-height:66px;
+ max-height:66px
+}
+body.mobile .mini-select{max-width:100%;margin-left:0}
+body.mobile .status-select,
+body.mobile .priority-select,
+body.mobile .person-select{min-height:40px}
+body.mobile .todo-row>.actions,
+body.mobile .project-row>.actions{justify-content:flex-end}
+body.mobile .project-current{
+ grid-template-columns:1fr;
+ gap:6px;
+ padding:5px 0
+}
+body.mobile .current-label{font-weight:700}
+body.mobile .project-status{text-align:left}
+body.mobile .overlay{
+ inset:0;
+ z-index:1200;
+ padding:0;
+ background:#fff
+}
+body.mobile .shell{
+ width:100%;
+ min-height:100dvh;
+ border:0;
+ border-radius:0;
+ box-shadow:none
+}
+body.mobile .editor-head{
+ position:sticky;
+ top:0;
+ z-index:5;
+ grid-template-columns:minmax(0,1fr) auto;
+ padding:14px 13px 12px;
+ background:#fff
+}
+body.mobile .title-large{font-size:22px}
+body.mobile .close-btn{
+ width:40px;
+ height:40px
+}
+body.mobile .detail-body{padding:14px 12px 24px}
+body.mobile .detail-grid,
+body.mobile .settings-grid{grid-template-columns:minmax(0,1fr)}
+body.mobile .field.full{grid-column:1}
+body.mobile .toolbar{
+ flex-wrap:nowrap;
+ padding:9px 11px;
+ overflow-x:auto;
+ overscroll-behavior-x:contain
+}
+body.mobile .toolbar-group{flex:0 0 auto}
+body.mobile .rich-editor{
+ min-height:calc(100dvh - 190px);
+ padding:20px 16px 38px
+}
+body.mobile .editor-foot{
+ flex-wrap:wrap;
+ gap:10px;
+ padding:12px
+}
+body.mobile .subtask-head{
+ align-items:flex-start;
+ gap:10px
+}
+body.mobile .subtask-head h3{margin-top:8px}
+body.mobile .subtask-row{
+ grid-template-columns:minmax(0,1fr);
+ gap:8px
+}
+body.mobile .subtask-row>*{grid-column:1}
+body.mobile .subtask-row .delete-btn{justify-self:end}
+body.mobile .settings-body{padding:12px}
+body.mobile .settings-section{padding:11px}
+body.mobile .settings-group{min-width:0}
+body.mobile .option-row{
+ grid-template-columns:22px minmax(0,1fr) auto
+}
+body.mobile .option-row.status-option{
+ grid-template-columns:22px minmax(0,1fr) 40px auto;
+ align-items:center
+}
+body.mobile .option-row.status-option [data-setting-field="kind"]{
+ grid-column:2/5;
+ grid-row:2
+}
+body.mobile .option-row.status-option .option-delete{
+ grid-column:4;
+ grid-row:1
+}
+body.mobile .account-row{align-items:stretch}
+body.mobile .account-row button{flex:1 1 150px}
+body.mobile .auth-gate{padding:12px}
+body.mobile .auth-card{padding:20px 16px}
+body.mobile .auth-actions{
+ flex-direction:column-reverse;
+ align-items:stretch
+}
+body.mobile .auth-actions button{width:100%}
+
+@media(max-width:480px){
+ body.mobile .page-header{flex-direction:column}
+ body.mobile .page-header>.primary,
+ body.mobile .page-header>.actions{width:100%}
+ body.mobile .page-header>.primary{align-self:stretch}
+ body.mobile .page-header .actions .primary{flex:1}
+ body.mobile .group-meta{gap:6px}
+ body.mobile .card-footer{align-items:flex-end;gap:8px}
+}
 
 .auth-gate{position:fixed;z-index:5000;inset:0;display:grid;place-items:center;padding:22px;background:linear-gradient(135deg,#edf2f7,#dce7f1)}
 .auth-gate.hidden{display:none}
@@ -34,10 +258,12 @@
 .auth-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:5px}.auth-message{min-height:18px;font-size:12px;color:var(--muted)}
 .auth-message.error{color:var(--danger)}.auth-message.success{color:#2f7040}
 .auth-note{padding:10px 11px;border-radius:8px;background:#f4f6f8;color:var(--muted);font-size:12px;line-height:1.45}
-.sync-indicator{min-width:33px;width:auto;padding:0 9px;font-size:12px;white-space:nowrap}
+.sync-indicator{min-width:33px;width:33px;height:33px;padding:0;font-size:18px;line-height:1;white-space:nowrap;overflow:hidden}
 .sync-indicator[data-state="saved"]{color:#2f7040;background:#e8f3eb;border-color:#c8dfce}
 .sync-indicator[data-state="saving"]{color:#7b641a;background:#fff7da;border-color:#eadc9e}
+.sync-indicator[data-state="saving"] .sync-glyph{display:inline-block;animation:sync-spin .9s linear infinite}
 .sync-indicator[data-state="offline"],.sync-indicator[data-state="error"]{color:#8b4747;background:#f8e8e8;border-color:#e8caca}
+@keyframes sync-spin{to{transform:rotate(360deg)}}
 
 
 .account-panel{display:grid;gap:12px}
@@ -102,36 +328,36 @@
       <p id="app-subtitle" title="Zum Ändern anklicken">Notizen, Projekte und Aufgaben</p>
     </div>
     <div class="tools">
-      <button id="view-toggle" class="tool" title="Handy-/Desktopansicht">▣</button>
-      <button id="undo-btn" class="tool" title="Rückgängig">↶</button>
-      <button id="redo-btn" class="tool" title="Wiederholen">↷</button>
-      <button id="settings-btn" class="tool" title="Einstellungen">⚙</button>
-      <button id="sync-status-btn" class="tool sync-indicator" data-state="offline" title="Cloud-Status">Lokal</button>
+      <button type="button" id="view-toggle" class="tool" title="Handy-/Desktopansicht">▣</button>
+      <button type="button" id="undo-btn" class="tool" title="Rückgängig">↶</button>
+      <button type="button" id="redo-btn" class="tool" title="Wiederholen">↷</button>
+      <button type="button" id="settings-btn" class="tool" title="Einstellungen">⚙</button>
+      <button type="button" id="sync-status-btn" class="tool sync-indicator" data-state="offline" title="Cloud-Status" aria-label="Cloud-Status">○</button>
     </div>
     <nav id="nav" class="nav"></nav>
   </aside>
 
   <main class="main">
     <section id="page-notes" class="page">
-      <header class="page-header"><div><h2>Notizen</h2><p>Gedanken, Informationen und Erinnerungen.</p></div><button id="new-note-btn" class="primary">Neue Notiz</button></header>
+      <header class="page-header"><div><h2>Notizen</h2><p>Gedanken, Informationen und Erinnerungen.</p></div><button type="button" id="new-note-btn" class="primary">Neue Notiz</button></header>
       <section class="quick-note"><label for="quick-note-input">Schnelle Notizen</label><textarea id="quick-note-input" placeholder="Kurz etwas notieren …"></textarea></section>
       <div id="notes-list" class="note-list"></div>
     </section>
 
     <section id="page-projects" class="page">
-      <header class="page-header"><div><h2>Projekte</h2><p>Projekte mit Priorität, Deadline und Unteraufgaben.</p></div><button id="new-project-btn" class="primary">Neues Projekt</button></header>
+      <header class="page-header"><div><h2>Projekte</h2><p>Projekte mit Priorität, Deadline und Unteraufgaben.</p></div><button type="button" id="new-project-btn" class="primary">Neues Projekt</button></header>
       <div id="project-filters" class="filters"></div>
       <div id="project-groups" class="groups"></div>
     </section>
 
     <section id="page-own" class="page">
-      <header class="page-header"><div><h2>Eigene Aufgaben</h2><p>Eigene Aufgaben nach Priorität und Bearbeitungsstand.</p></div><button id="new-own-btn" class="primary">Neue Aufgabe</button></header>
+      <header class="page-header"><div><h2>Eigene Aufgaben</h2><p>Eigene Aufgaben nach Priorität und Bearbeitungsstand.</p></div><button type="button" id="new-own-btn" class="primary">Neue Aufgabe</button></header>
       <div id="own-filters" class="filters"></div>
       <div id="own-groups" class="groups"></div>
     </section>
 
     <section id="page-delegated" class="page">
-      <header class="page-header"><div><h2>Vergebene Aufgaben</h2><p>Delegierte Aufgaben und Verantwortlichkeiten.</p></div><div class="actions"><button id="quick-delegated-btn" class="quick-add" title="Schnell hinzufügen">+</button><button id="new-delegated-btn" class="primary">Neue Aufgabe</button></div></header>
+      <header class="page-header"><div><h2>Vergebene Aufgaben</h2><p>Delegierte Aufgaben und Verantwortlichkeiten.</p></div><div class="actions"><button type="button" id="quick-delegated-btn" class="quick-add" title="Schnell hinzufügen">+</button><button type="button" id="new-delegated-btn" class="primary">Neue Aufgabe</button></div></header>
       <div id="delegated-filters" class="filters"></div>
       <div id="delegated-groups" class="groups">
         <section class="delegated-shell">
@@ -155,20 +381,20 @@
 </div>
 
 <section id="note-overlay" class="overlay"><div class="shell">
-  <header class="editor-head"><div><input id="note-title" class="title-large" placeholder="Überschrift"><input id="note-area" style="margin-top:9px;width:320px;max-width:100%;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="Bereich"></div><button class="close-btn" data-close-overlay="note">×</button></header>
+  <header class="editor-head"><div><input id="note-title" class="title-large" placeholder="Überschrift"><input id="note-area" style="margin-top:9px;width:320px;max-width:100%;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="Bereich"></div><button type="button" class="close-btn" data-close-overlay="note">×</button></header>
   <div class="toolbar">
-    <div class="toolbar-group"><button class="toolbar-btn" data-note-command="bold"><b>F</b></button><button class="toolbar-btn" data-note-command="italic"><i>K</i></button><button class="toolbar-btn" data-note-command="underline"><u>U</u></button><button class="toolbar-btn" data-note-command="strikeThrough"><s>D</s></button></div>
+    <div class="toolbar-group"><button type="button" class="toolbar-btn" data-note-command="bold"><b>F</b></button><button type="button" class="toolbar-btn" data-note-command="italic"><i>K</i></button><button type="button" class="toolbar-btn" data-note-command="underline"><u>U</u></button><button type="button" class="toolbar-btn" data-note-command="strikeThrough"><s>D</s></button></div>
     <div class="toolbar-group"><select id="note-font-size"><option value="">Größe</option><option value="12">12</option><option value="14">14</option><option value="16">16</option><option value="18">18</option><option value="22">22</option><option value="28">28</option></select></div>
     <div id="note-color-buttons" class="toolbar-group"></div>
-    <div class="toolbar-group"><button class="toolbar-btn" data-note-command="insertUnorderedList">• Liste</button><button class="toolbar-btn" data-note-command="insertOrderedList">1. Liste</button><button class="toolbar-btn" data-note-command="indent">↳</button><button class="toolbar-btn" data-note-command="outdent">↰</button></div>
-    <button id="note-checkbox-btn" class="toolbar-btn">☑ Checkbox</button>
+    <div class="toolbar-group"><button type="button" class="toolbar-btn" data-note-command="insertUnorderedList">• Liste</button><button type="button" class="toolbar-btn" data-note-command="insertOrderedList">1. Liste</button><button type="button" class="toolbar-btn" data-note-command="indent">↳</button><button type="button" class="toolbar-btn" data-note-command="outdent">↰</button></div>
+    <button type="button" id="note-checkbox-btn" class="toolbar-btn">☑ Checkbox</button>
   </div>
   <div id="note-editor" class="rich-editor" contenteditable="true"></div>
-  <footer class="editor-foot"><span>Automatische Speicherung</span><button id="delete-note-detail" class="danger">Notiz löschen</button></footer>
+  <footer class="editor-foot"><span>Automatische Speicherung</span><button type="button" id="delete-note-detail" class="danger">Notiz löschen</button></footer>
 </div></section>
 
 <section id="todo-overlay" class="overlay"><div class="shell">
-  <header class="editor-head"><input id="todo-title" class="title-large" placeholder="Bezeichnung"><button class="close-btn" data-close-overlay="todo">×</button></header>
+  <header class="editor-head"><input id="todo-title" class="title-large" placeholder="Bezeichnung"><button type="button" class="close-btn" data-close-overlay="todo">×</button></header>
   <div class="detail-body"><div class="detail-grid">
     <div class="field full"><label>Anmerkungen für die Übersicht</label><textarea id="todo-summary"></textarea></div>
     <div class="field"><label>Aufgabenbereich</label><select id="todo-area"></select></div>
@@ -177,11 +403,11 @@
     <div class="field"><label>Priorität</label><select id="todo-priority"></select></div>
     <div class="field full"><label>Ausführliche Notizen</label><textarea id="todo-details" class="details-text"></textarea></div>
   </div></div>
-  <footer class="editor-foot"><span>Automatische Speicherung</span><button id="delete-todo-detail" class="danger">Aufgabe löschen</button></footer>
+  <footer class="editor-foot"><span>Automatische Speicherung</span><button type="button" id="delete-todo-detail" class="danger">Aufgabe löschen</button></footer>
 </div></section>
 
 <section id="project-overlay" class="overlay"><div class="shell">
-  <header class="editor-head"><input id="project-title" class="title-large" placeholder="Bezeichnung"><button class="close-btn" data-close-overlay="project">×</button></header>
+  <header class="editor-head"><input id="project-title" class="title-large" placeholder="Bezeichnung"><button type="button" class="close-btn" data-close-overlay="project">×</button></header>
   <div class="detail-body">
     <div class="detail-grid">
       <div class="field full"><label>Anmerkung für die Übersicht</label><textarea id="project-summary"></textarea></div>
@@ -190,13 +416,13 @@
       <div class="field"><label>Priorität</label><select id="project-priority"></select></div>
       <div class="field"><label>Deadline</label><input id="project-deadline" type="date"></div>
     </div>
-    <section><div class="subtask-head"><h3>Unteraufgaben</h3><button id="add-subtask-btn" class="primary">Unteraufgabe hinzufügen</button></div><div id="subtask-list" class="subtask-list"></div></section>
+    <section><div class="subtask-head"><h3>Unteraufgaben</h3><button type="button" id="add-subtask-btn" class="primary">Unteraufgabe hinzufügen</button></div><div id="subtask-list" class="subtask-list"></div></section>
   </div>
-  <footer class="editor-foot"><span>Automatische Speicherung</span><button id="delete-project-detail" class="danger">Projekt löschen</button></footer>
+  <footer class="editor-foot"><span>Automatische Speicherung</span><button type="button" id="delete-project-detail" class="danger">Projekt löschen</button></footer>
 </div></section>
 
 <section id="settings-overlay" class="overlay"><div class="shell settings-shell">
-  <header class="editor-head"><div><h2>Einstellungen</h2><p style="margin:6px 0 0;color:var(--muted)">Dropdown-Werte, Statusfarben und Reihenfolgen verwalten.</p></div><button class="close-btn" data-close-overlay="settings">×</button></header>
+  <header class="editor-head"><div><h2>Einstellungen</h2><p style="margin:6px 0 0;color:var(--muted)">Dropdown-Werte, Statusfarben und Reihenfolgen verwalten.</p></div><button type="button" class="close-btn" data-close-overlay="settings">×</button></header>
   <div class="settings-body">
     <section class="settings-section">
       <h3>Konto und Datensicherung</h3>
@@ -227,7 +453,7 @@
     </section>
     <div id="settings-options-body"></div>
   </div>
-  <footer class="editor-foot"><span>Änderungen werden automatisch gespeichert.</span><button class="primary" data-close-overlay="settings">Fertig</button></footer>
+  <footer class="editor-foot"><span>Änderungen werden automatisch gespeichert.</span><button type="button" class="primary" data-close-overlay="settings">Fertig</button></footer>
 </div></section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -241,6 +467,7 @@ const CLOUD_CONFIG_KEY='dominik_dashboard_supabase_config';
 const CLOUD_SYNC_META_KEY='dominik_dashboard_cloud_sync_meta';
 const CLOUD_PENDING_KEY='dominik_dashboard_cloud_pending';
 const CLOUD_TABLE='user_dashboards';
+const VIEW_MODE_KEY='dominik_dashboard_view_mode';
 const $=(selector,root=document)=>root.querySelector(selector);
 const $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -394,6 +621,7 @@ let suppressCloudSave=false;
 let lastCloudUpdatedAt=null;
 let localChangesPending=false;
 let conflictInProgress=false;
+let viewMode=safeStorage.get(VIEW_MODE_KEY)||'auto';
 
 function saveLocalState(){safeStorage.set(STORAGE_KEY,JSON.stringify(state))}
 function saveState(){
@@ -405,9 +633,19 @@ function saveState(){
 function setSyncStatus(text,status='offline'){
  const button=$('#sync-status-btn');
  if(!button)return;
- button.textContent=text;
+
+ const icons={
+  saved:'✓',
+  saving:'↻',
+  offline:'○',
+  error:'!'
+ };
+ const glyph=icons[status]||'○';
+
+ button.innerHTML=`<span class="sync-glyph" aria-hidden="true">${glyph}</span>`;
  button.dataset.state=status;
  button.title=`Cloud-Status: ${text}`;
+ button.setAttribute('aria-label',`Cloud-Status: ${text}`);
 }
 function readCloudConfig(){
  const raw=safeStorage.get(CLOUD_CONFIG_KEY);
@@ -736,14 +974,14 @@ function handleCustomSelect(select,section,group){if(select.value!=='__custom__'
 
 const pageLabels={notes:'Notizen',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 function renderBrand(){$('#app-title').textContent=state.meta.title;$('#app-subtitle').textContent=state.meta.subtitle;if(document.activeElement!==$('#quick-note-input'))$('#quick-note-input').value=state.meta.quickNote}
-function renderNav(){$('#nav').innerHTML=state.config.navOrder.map(page=>`<button draggable="true" data-page="${page}" class="${page===activePage?'active':''}">${pageLabels[page]}</button>`).join('');$$('.page').forEach(page=>page.classList.toggle('active',page.id===`page-${activePage}`))}
+function renderNav(){$('#nav').innerHTML=state.config.navOrder.map(page=>`<button type="button" draggable="true" data-page="${page}" class="${page===activePage?'active':''}">${pageLabels[page]}</button>`).join('');$$('.page').forEach(page=>page.classList.toggle('active',page.id===`page-${activePage}`))}
 function openOverlay(name){closeOverlays();$(`#${name}-overlay`).classList.add('open');document.body.style.overflow='hidden'}
 function closeOverlays(){$$('.overlay.open').forEach(item=>item.classList.remove('open'));document.body.style.overflow=''}
 function textFromHtml(html){const div=document.createElement('div');div.innerHTML=html||'';return(div.textContent||'').replace(/\s+/g,' ').trim()}
 function autoGrow(element){if(!element)return;element.style.height='auto';element.style.height=`${Math.max(38,element.scrollHeight)}px`}
 function growAll(){$$('.subtask-row textarea').forEach(autoGrow)}
 
-function renderNotes(){const list=$('#notes-list');const notes=[...state.notes].sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));list.innerHTML=notes.length?notes.map(note=>`<article class="note-card" data-note-id="${note.id}"><div class="note-main"><h3>${esc(note.title||'Ohne Überschrift')}</h3><div class="small">${esc(note.area||'Kein Bereich')}</div><div class="preview">${esc(textFromHtml(note.content)||'Leere Notiz')}</div></div><div class="card-footer"><span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span><div class="actions"><button class="icon open-btn" data-action="open-note">⛶</button><button class="icon delete-btn" data-action="delete-note">×</button></div></div></article>`).join(''):'<div class="empty">Noch keine Notizen.</div>'}
+function renderNotes(){const list=$('#notes-list');const notes=[...state.notes].sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));list.innerHTML=notes.length?notes.map(note=>`<article class="note-card" data-note-id="${note.id}"><div class="note-main"><h3>${esc(note.title||'Ohne Überschrift')}</h3><div class="small">${esc(note.area||'Kein Bereich')}</div><div class="preview">${esc(textFromHtml(note.content)||'Leere Notiz')}</div></div><div class="card-footer"><span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span><div class="actions"><button type="button" class="icon open-btn" data-action="open-note">⛶</button><button type="button" class="icon delete-btn" data-action="delete-note">×</button></div></div></article>`).join(''):'<div class="empty">Noch keine Notizen.</div>'}
 
 function todoDoneStatus(type){return options(type,'statuses').find(item=>item.kind==='done')||null}
 function todoOpenStatus(type){return options(type,'statuses').find(item=>item.kind!=='done')||options(type,'statuses')[0]||null}
@@ -763,10 +1001,10 @@ function setTodoStatus(todo,type,statusId){
   todo.statusId=statusId;
  }
 }
-function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
+function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button type="button" class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button type="button" class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
 function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))&&(type!=='delegated'||!selected.person.size||selected.person.has(todo.personId))}
-function renderTodoRow(todo,type,{draggable=false}={}){const completed=todoIsCompleted(todo,type);return`<div class="todo-row ${type==='delegated'?'delegated':''} ${completed?'completed':''}" data-todo-id="${todo.id}" data-todo-type="${type}" draggable="${draggable}"><div><input class="inline title-input-inline" data-todo-field="title" value="${esc(todo.title)}" placeholder="Bezeichnung"><select class="mini-select" data-todo-field="areaId">${selectOptions(type,'areas',todo.areaId,{custom:true})}</select></div><textarea class="inline summary-input" data-todo-field="summary" rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>${type==='delegated'?`<select class="person-select" data-todo-field="personId">${selectOptions(type,'people',todo.personId,{custom:true})}</select><select class="priority-select" data-todo-field="priorityId">${selectOptions(type,'priorities',todo.priorityId)}</select>`:''}<select class="status-select" data-todo-field="statusId" style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select><div class="actions"><button class="icon open-btn" data-action="open-todo">⛶</button><button class="icon delete-btn" data-action="delete-todo">×</button></div></div>`}
-function renderOwn(){renderFilter('#own-filters','own',['status','area']);const active=filters.own.status.size||filters.own.area.size;if(active){const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));$('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#own-filters .filter-info').textContent=`${items.length} Treffer`;growAll();return}$('#own-filters .filter-info').textContent='';const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];$('#own-groups').innerHTML=groups.map(group=>{const items=state.ownTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'own'):!todoIsCompleted(todo,'own')&&todo.priorityId===group.id);return`<section class="group own" data-own-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span><button class="quick-add" data-action="quick-own" data-priority-id="${group.id}">+</button></div></div><div class="list">${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div></section>`}).join('');growAll()}
+function renderTodoRow(todo,type,{draggable=false}={}){const completed=todoIsCompleted(todo,type);return`<div class="todo-row ${type==='delegated'?'delegated':''} ${completed?'completed':''}" data-todo-id="${todo.id}" data-todo-type="${type}" draggable="${draggable}"><div><input class="inline title-input-inline" data-todo-field="title" value="${esc(todo.title)}" placeholder="Bezeichnung"><select class="mini-select" data-todo-field="areaId">${selectOptions(type,'areas',todo.areaId,{custom:true})}</select></div><textarea class="inline summary-input" data-todo-field="summary" rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>${type==='delegated'?`<select class="person-select" data-todo-field="personId">${selectOptions(type,'people',todo.personId,{custom:true})}</select><select class="priority-select" data-todo-field="priorityId">${selectOptions(type,'priorities',todo.priorityId)}</select>`:''}<select class="status-select" data-todo-field="statusId" style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select><div class="actions"><button type="button" class="icon open-btn" data-action="open-todo">⛶</button><button type="button" class="icon delete-btn" data-action="delete-todo">×</button></div></div>`}
+function renderOwn(){renderFilter('#own-filters','own',['status','area']);const active=filters.own.status.size||filters.own.area.size;if(active){const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));$('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#own-filters .filter-info').textContent=`${items.length} Treffer`;growAll();return}$('#own-filters .filter-info').textContent='';const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];$('#own-groups').innerHTML=groups.map(group=>{const items=state.ownTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'own'):!todoIsCompleted(todo,'own')&&todo.priorityId===group.id);return`<section class="group own" data-own-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span><button type="button" class="quick-add" data-action="quick-own" data-priority-id="${group.id}">+</button></div></div><div class="list">${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div></section>`}).join('');growAll()}
 function renderDelegated(){
  renderFilter('#delegated-filters','delegated',['status','area','person']);
 
@@ -813,11 +1051,11 @@ function subtaskKind(task){return optionKind('subtasks',task.statusId)}
 function projectStatusKind(project){const tasks=project.subtasks||[];if(!tasks.length)return'open';if(tasks.every(task=>subtaskKind(task)==='done'))return'done';if(tasks.some(task=>subtaskKind(task)==='active'))return'active';return'open'}
 function projectStatusOption(project){const kind=projectStatusKind(project);return options('projects','statuses').find(item=>item.kind===kind)||options('projects','statuses')[0]||status('missing','Unbekannt','#eeeeee','open')}
 function projectMatches(project){const statusId=projectStatusOption(project).id;return(!filters.projects.status.size||filters.projects.status.has(statusId))&&(!filters.projects.area.size||filters.projects.area.has(project.areaId))}
-function renderProjectRow(project){const statusOption=projectStatusOption(project);const activeTasks=(project.subtasks||[]).filter(task=>subtaskKind(task)==='active');return`<div class="project-row" data-project-id="${project.id}"><div><input class="inline title-input-inline" data-project-field="title" value="${esc(project.title)}" placeholder="Bezeichnung"><select class="mini-select" data-project-field="areaId">${selectOptions('projects','areas',project.areaId,{custom:true})}</select></div><div class="project-current"><div class="current-label">Aktuelle Aufgaben in Bearbeitung:</div><div>${activeTasks.length?activeTasks.map(task=>`<div class="current-item"><span class="current-bullet">•</span><span>${esc(task.title||'Ohne Bezeichnung')} <span class="small">${task.personId?`– ${esc(optionLabel('subtasks','people',task.personId))}`:''}</span></span></div>`).join(''):'<span class="small">Projekt nicht gestartet</span>'}</div></div><div class="project-status" style="${statusStyle('projects',statusOption.id)}">${esc(statusOption.label)}</div><div class="actions"><button class="icon open-btn" data-action="open-project">⛶</button><button class="icon delete-btn" data-action="delete-project">×</button></div></div>`}
-function renderProjects(){renderFilter('#project-filters','projects',['status','area']);const active=filters.projects.status.size||filters.projects.area.size;if(active){const items=state.projects.filter(projectMatches);$('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#project-filters .filter-info').textContent=`${items.length} Treffer`;return}$('#project-filters .filter-info').textContent='';const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];$('#project-groups').innerHTML=groups.map(group=>{const items=state.projects.filter(project=>group.id==='__completed__'?projectStatusKind(project)==='done':projectStatusKind(project)!=='done'&&project.priorityId===group.id);return`<section class="group project"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${group.id!=='__completed__'?`<button class="quick-add" data-action="quick-project" data-priority-id="${group.id}">+</button>`:''}</div></div><div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div></section>`}).join('')}
+function renderProjectRow(project){const statusOption=projectStatusOption(project);const activeTasks=(project.subtasks||[]).filter(task=>subtaskKind(task)==='active');return`<div class="project-row" data-project-id="${project.id}"><div><input class="inline title-input-inline" data-project-field="title" value="${esc(project.title)}" placeholder="Bezeichnung"><select class="mini-select" data-project-field="areaId">${selectOptions('projects','areas',project.areaId,{custom:true})}</select></div><div class="project-current"><div class="current-label">Aktuelle Aufgaben in Bearbeitung:</div><div>${activeTasks.length?activeTasks.map(task=>`<div class="current-item"><span class="current-bullet">•</span><span>${esc(task.title||'Ohne Bezeichnung')} <span class="small">${task.personId?`– ${esc(optionLabel('subtasks','people',task.personId))}`:''}</span></span></div>`).join(''):'<span class="small">Projekt nicht gestartet</span>'}</div></div><div class="project-status" style="${statusStyle('projects',statusOption.id)}">${esc(statusOption.label)}</div><div class="actions"><button type="button" class="icon open-btn" data-action="open-project">⛶</button><button type="button" class="icon delete-btn" data-action="delete-project">×</button></div></div>`}
+function renderProjects(){renderFilter('#project-filters','projects',['status','area']);const active=filters.projects.status.size||filters.projects.area.size;if(active){const items=state.projects.filter(projectMatches);$('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#project-filters .filter-info').textContent=`${items.length} Treffer`;return}$('#project-filters .filter-info').textContent='';const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];$('#project-groups').innerHTML=groups.map(group=>{const items=state.projects.filter(project=>group.id==='__completed__'?projectStatusKind(project)==='done':projectStatusKind(project)!=='done'&&project.priorityId===group.id);return`<section class="group project"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${group.id!=='__completed__'?`<button type="button" class="quick-add" data-action="quick-project" data-priority-id="${group.id}">+</button>`:''}</div></div><div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div></section>`}).join('')}
 
-function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-options-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
-function renderOptionRow(section,group,item){return`<div class="option-row ${group==='statuses'?'status-option':''}" draggable="true" data-option-id="${item.id}" data-option-section="${section}" data-option-group="${group}"><span class="drag-handle">⋮⋮</span><input type="text" data-setting-field="label" value="${esc(item.label)}">${group==='statuses'?`<input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}"><select data-setting-field="kind"><option value="open" ${item.kind==='open'?'selected':''}>Offen</option><option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option><option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option></select>`:''}<button class="option-delete" data-action="delete-option">×</button></div>`}
+function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-options-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button type="button" class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
+function renderOptionRow(section,group,item){return`<div class="option-row ${group==='statuses'?'status-option':''}" draggable="true" data-option-id="${item.id}" data-option-section="${section}" data-option-group="${group}"><span class="drag-handle">⋮⋮</span><input type="text" data-setting-field="label" value="${esc(item.label)}">${group==='statuses'?`<input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}"><select data-setting-field="kind"><option value="open" ${item.kind==='open'?'selected':''}>Offen</option><option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option><option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option></select>`:''}<button type="button" class="option-delete" data-action="delete-option">×</button></div>`}
 function renderAccountInfo(){
  const target=$('#account-email');
  if(target){
@@ -844,7 +1082,7 @@ function openProject(id){const project=state.projects.find(item=>item.id===id);i
 function updateProjectStatusField(project){const selected=projectStatusOption(project);const input=$('#project-status');input.value=selected.label;input.style.cssText=statusStyle('projects',selected.id)}
 function saveCurrentProject(){const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.title=$('#project-title').value.trim();project.summary=$('#project-summary').value;project.areaId=$('#project-area').value;project.priorityId=$('#project-priority').value;project.deadline=$('#project-deadline').value;project.updatedAt=now();saveState();updateProjectStatusField(project)}
 function deleteProject(id){const project=state.projects.find(item=>item.id===id);if(!project||!confirm(`Soll „${project.title||'dieses Projekt'}“ wirklich gelöscht werden? Alle Unteraufgaben werden ebenfalls gelöscht.`))return;commit(()=>state.projects=state.projects.filter(item=>item.id!==id));closeOverlays()}
-function renderSubtasks(){const project=state.projects.find(item=>item.id===current.projectId);const list=$('#subtask-list');list.innerHTML=project?.subtasks?.length?project.subtasks.map(task=>`<div class="subtask-row" data-subtask-id="${task.id}"><textarea data-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea><textarea data-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea><select data-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select><input type="date" data-subtask-field="deadline" value="${esc(task.deadline)}"><select data-subtask-field="statusId" style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select><button class="icon delete-btn" data-action="delete-subtask">×</button></div>`).join(''):'<div class="empty">Noch keine Unteraufgaben.</div>';growAll()}
+function renderSubtasks(){const project=state.projects.find(item=>item.id===current.projectId);const list=$('#subtask-list');list.innerHTML=project?.subtasks?.length?project.subtasks.map(task=>`<div class="subtask-row" data-subtask-id="${task.id}"><textarea data-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea><textarea data-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea><select data-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select><input type="date" data-subtask-field="deadline" value="${esc(task.deadline)}"><select data-subtask-field="statusId" style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select><button type="button" class="icon delete-btn" data-action="delete-subtask">×</button></div>`).join(''):'<div class="empty">Noch keine Unteraufgaben.</div>';growAll()}
 function addSubtask(){commit(()=>{const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.subtasks.push({id:uid(),title:'',summary:'',personId:options('subtasks','people')[0]?.id||'',deadline:'',statusId:options('subtasks','statuses')[0]?.id||'',updatedAt:now()});project.updatedAt=now()});renderSubtasks();const project=state.projects.find(item=>item.id===current.projectId);if(project)updateProjectStatusField(project)}
 function deleteSubtask(id){commit(()=>{const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.subtasks=project.subtasks.filter(item=>item.id!==id);project.updatedAt=now()});renderSubtasks();const project=state.projects.find(item=>item.id===current.projectId);if(project)updateProjectStatusField(project)}
 
@@ -865,8 +1103,36 @@ function switchPage(page){activePage=page;closeOverlays();renderNav()}
 function updateInlineTodo(element){const row=element.closest('[data-todo-id]');const type=row.dataset.todoType;const todo=(type==='own'?state.ownTodos:state.delegatedTodos).find(item=>item.id===row.dataset.todoId);if(!todo)return;const field=element.dataset.todoField;if(['areaId','personId'].includes(field)){const group=field==='areaId'?'areas':'people';const value=handleCustomSelect(element,type,group);if(value===null){renderAll();return}todo[field]=value}else if(field==='statusId'){setTodoStatus(todo,type,element.value)}else{todo[field]=element.value;if(field==='priorityId')todo.previousPriorityId=todo.priorityId}todo.updatedAt=now();saveState()}
 function updateInlineProject(element){const row=element.closest('[data-project-id]');const project=state.projects.find(item=>item.id===row.dataset.projectId);if(!project)return;const field=element.dataset.projectField;if(field==='areaId'){const value=handleCustomSelect(element,'projects','areas');if(value===null){renderAll();return}project.areaId=value}else project[field]=element.value;project.updatedAt=now();saveState()}
 
-function renderNoteColors(){$('#note-color-buttons').innerHTML=state.config.noteColors.map(color=>`<button class="color-btn" data-note-color="${esc(color)}" style="background:${esc(color)}"></button>`).join('')}
-function applyMobileMode(){document.body.classList.toggle('mobile',window.innerWidth<=760)}
+function renderNoteColors(){$('#note-color-buttons').innerHTML=state.config.noteColors.map(color=>`<button type="button" class="color-btn" data-note-color="${esc(color)}" style="background:${esc(color)}"></button>`).join('')}
+function prefersMobileLayout(){
+ if(viewMode==='mobile')return true;
+ if(viewMode==='desktop')return false;
+ return window.innerWidth<=760;
+}
+function applyMobileMode(){
+ const mobile=prefersMobileLayout();
+ document.body.classList.toggle('mobile',mobile);
+ document.body.classList.toggle('desktop-mode',!mobile);
+
+ const button=$('#view-toggle');
+ if(button){
+  button.textContent=mobile?'▣':'▯';
+  button.title=mobile
+   ? 'Zur Desktopansicht wechseln'
+   : 'Zur Handyansicht wechseln';
+  button.setAttribute(
+   'aria-label',
+   mobile?'Zur Desktopansicht wechseln':'Zur Handyansicht wechseln'
+  );
+ }
+ closeFilters();
+}
+function toggleViewMode(){
+ const currentlyMobile=document.body.classList.contains('mobile');
+ viewMode=currentlyMobile?'desktop':'mobile';
+ safeStorage.set(VIEW_MODE_KEY,viewMode);
+ applyMobileMode();
+}
 
 // Click handling
 document.addEventListener('click',event=>{
@@ -1166,7 +1432,7 @@ $('#new-project-btn').addEventListener('click',()=>createProject());
 $('#add-subtask-btn').addEventListener('click',addSubtask);
 $('#undo-btn').addEventListener('click',undo);$('#redo-btn').addEventListener('click',redo);
 $('#settings-btn').addEventListener('click',()=>openOverlay('settings'));
-$('#view-toggle').addEventListener('click',()=>document.body.classList.toggle('mobile'));
+$('#view-toggle').addEventListener('click',toggleViewMode);
 $('#app-title').addEventListener('click',()=>{const value=prompt('Name der Übersicht:',state.meta.title)?.trim();if(value)commit(()=>state.meta.title=value)});
 $('#app-subtitle').addEventListener('click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
 $('#delete-note-detail').addEventListener('click',()=>current.noteId&&deleteNote(current.noteId));
