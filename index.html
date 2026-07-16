@@ -1511,10 +1511,10 @@ $('#backup-file-input').addEventListener('change',async event=>{
 
 // Direct controls
 $('#new-note-btn').addEventListener('click',createNote);
-$('#new-own-btn').addEventListener('click',()=>createTodo('own'));
-$('#new-delegated-btn').addEventListener('click',()=>createTodo('delegated'));
 
-$('#new-project-btn').addEventListener('click',()=>createProject());
+
+
+
 $('#add-subtask-btn').addEventListener('click',addSubtask);
 $('#undo-btn').addEventListener('click',undo);$('#redo-btn').addEventListener('click',redo);
 $('#settings-btn').addEventListener('click',()=>openOverlay('settings'));
@@ -1530,6 +1530,25 @@ $('#note-checkbox-btn').addEventListener('click',insertCheckboxLine);
 $('#note-editor').addEventListener('mouseup',saveNoteSelection);$('#note-editor').addEventListener('keyup',saveNoteSelection);
 window.addEventListener('resize',()=>{applyMobileMode();closeFilters()});window.addEventListener('scroll',()=>closeFilters(),true);
 
+
+
+window.addEventListener('error',event=>{
+ console.error('Dashboard-Laufzeitfehler:',event.error||event.message);
+ const gate=$('#auth-gate');
+ const setup=$('#cloud-setup-panel');
+ const login=$('#login-panel');
+ if(gate&&!gate.classList.contains('hidden')&&setup?.classList.contains('hidden')&&login?.classList.contains('hidden')){
+  showAuthPanel(readCloudConfig()?'login-panel':'cloud-setup-panel');
+  authMessage(
+   readCloudConfig()?'login-message':'setup-message',
+   'Beim Laden ist ein Fehler aufgetreten. Bitte die Seite neu laden.',
+   'error'
+  );
+ }
+});
+window.addEventListener('unhandledrejection',event=>{
+ console.error('Nicht behandelter Dashboard-Fehler:',event.reason);
+});
 
 window.addEventListener('offline',()=>{
  setSyncStatus('Offline – lokal','offline');
@@ -1556,16 +1575,23 @@ window.addEventListener('beforeunload',()=>{
  saveLocalState();
 });
 
-state=normalizeState(state);
-suppressCloudSave=true;
-saveLocalState();
-suppressCloudSave=false;
-applyMobileMode();
-renderNoteColors();
-renderAll();
-growAll();
-if(!navigator.onLine)setSyncStatus('Offline – lokal','offline');
-initializeCloud();
+function startDashboard(){
+ state=normalizeState(state);
+ suppressCloudSave=true;
+ saveLocalState();
+ suppressCloudSave=false;
+ applyMobileMode();
+ renderNoteColors();
+ renderAll();
+ growAll();
+ if(!navigator.onLine)setSyncStatus('Offline – lokal','offline');
+ initializeCloud();
+}
+if(document.readyState==='loading'){
+ document.addEventListener('DOMContentLoaded',startDashboard,{once:true});
+}else{
+ startDashboard();
+}
 window.__dashboardTest={
  normalizeState,
  createDefaults,
