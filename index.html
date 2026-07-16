@@ -379,6 +379,11 @@ body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:10
 
 
 .group.completed-group{background:#d9dee3!important;border-color:#d9dee3!important}
+
+.debug-panel{margin-top:14px;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa;color:var(--muted);font-size:11px}
+.debug-panel.hidden{display:none}
+.debug-panel pre{max-height:180px;margin:7px 0 0;overflow:auto;white-space:pre-wrap;font:11px/1.4 Consolas,monospace}
+
 </style>
 </head>
 <body>
@@ -424,7 +429,16 @@ body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:10
     </form>
 
     <div id="cloud-loading-panel" class="auth-panel hidden">
-      <div class="auth-note" id="cloud-loading-text">Cloud-Daten werden geladen …</div>
+      <div class="auth-note" id="cloud-loading-text">Dashboard wird vorbereitet …</div>
+      <div class="auth-actions">
+        <button id="loading-change-config-btn" class="secondary" type="button">Verbindung ändern</button>
+        <button id="retry-cloud-btn" class="primary" type="button">Erneut versuchen</button>
+      </div>
+    </div>
+
+    <div id="debug-panel" class="debug-panel hidden" aria-live="polite">
+      <strong>Diagnose</strong>
+      <pre id="debug-log"></pre>
     </div>
   </div>
 </section>
@@ -564,7 +578,6 @@ body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:10
   <footer class="editor-foot"><span>Änderungen werden automatisch gespeichert.</span><button type="button" class="primary" data-close-overlay="settings">Fertig</button></footer>
 </div></section>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=>{
 'use strict';
@@ -575,6 +588,12 @@ const CLOUD_CONFIG_KEY='dominik_dashboard_supabase_config';
 const CLOUD_SYNC_META_KEY='dominik_dashboard_cloud_sync_meta';
 const CLOUD_PENDING_KEY='dominik_dashboard_cloud_pending';
 const CLOUD_TABLE='user_dashboards';
+const SUPABASE_CDN_URLS=[
+ 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
+ 'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
+];
+const CLOUD_TIMEOUT_MS=10000;
+const DEBUG_MODE=new URLSearchParams(location.search).get('debug')==='1';
 const VIEW_MODE_KEY='dominik_dashboard_view_mode';
 const $=(selector,root=document)=>root.querySelector(selector);
 const $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
@@ -582,7 +601,99 @@ const clone=value=>JSON.parse(JSON.stringify(value));
 const now=()=>new Date().toISOString();
 const uid=()=>globalThis.crypto?.randomUUID?.()||`id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
-const safeStorage={get(key){try{return localStorage.getItem(key)}catch{return null}},set(key,value){try{localStorage.setItem(key,value)}catch{}}};
+const safeStorage={
+ get(key){try{return localStorage.getItem(key)}catch{return null}},
+ set(key,value){try{localStorage.setItem(key,value)}catch{}},
+ remove(key){try{localStorage.removeItem(key)}catch{}}
+};
+
+function bind(selector,eventName,handler,options){
+ const element=$(selector);
+ if(!element){
+  recordDiagnostic('Bindung übersprungen',`${selector} (${eventName})`);
+  return null;
+ }
+ element.addEventListener(eventName,handler,options);
+ return element;
+}
+function setAuthIntro(text){
+ const target=$('#auth-intro');
+ if(target)target.textContent=text;
+}
+function setLoadingText(text){
+ const target=$('#cloud-loading-text');
+ if(target)target.textContent=text;
+}
+function updateDebugPanel(){
+ const panel=$('#debug-panel');
+ const log=$('#debug-log');
+ if(!panel||!log)return;
+ panel.classList.toggle('hidden',!DEBUG_MODE);
+ if(DEBUG_MODE)log.textContent=diagnostics.join('\n');
+}
+function recordDiagnostic(step,detail=''){
+ const line=`${new Date().toLocaleTimeString('de-DE')} – ${step}${detail?`: ${detail}`:''}`;
+ diagnostics.push(line);
+ if(diagnostics.length>80)diagnostics.shift();
+ if(DEBUG_MODE)console.info('[Dashboard]',step,detail);
+ updateDebugPanel();
+}
+function withTimeout(promise,timeoutMs,message){
+ let timer;
+ const timeout=new Promise((_,reject)=>{
+  timer=setTimeout(()=>reject(new Error(message)),timeoutMs);
+ });
+ return Promise.race([promise,timeout]).finally(()=>clearTimeout(timer));
+}
+function loadExternalScript(url){
+ return new Promise((resolve,reject)=>{
+  const script=document.createElement('script');
+  script.src=url;
+  script.async=true;
+  script.dataset.dashboardSdk='supabase';
+  script.onload=()=>{
+   if(globalThis.supabase?.createClient)resolve();
+   else reject(new Error('Die geladene Supabase-Bibliothek ist ungültig.'));
+  };
+  script.onerror=()=>reject(new Error(`Supabase konnte nicht geladen werden: ${url}`));
+  document.head.appendChild(script);
+ });
+}
+async function ensureSupabaseLibrary(){
+ if(globalThis.supabase?.createClient){
+  recordDiagnostic('Supabase-Bibliothek','bereits verfügbar');
+  return globalThis.supabase;
+ }
+ if(supabaseLibraryPromise)return supabaseLibraryPromise;
+
+ supabaseLibraryPromise=(async()=>{
+  let lastError=null;
+  for(const url of SUPABASE_CDN_URLS){
+   try{
+    recordDiagnostic('Supabase-Bibliothek wird geladen',url);
+    await withTimeout(
+     loadExternalScript(url),
+     CLOUD_TIMEOUT_MS,
+     'Das Laden von Supabase dauert zu lange.'
+    );
+    recordDiagnostic('Supabase-Bibliothek geladen',url);
+    return globalThis.supabase;
+   }catch(error){
+    lastError=error;
+    recordDiagnostic('Supabase-CDN fehlgeschlagen',error.message);
+    $$('script[data-dashboard-sdk="supabase"]').forEach(script=>script.remove());
+   }
+  }
+  throw lastError||new Error('Die Supabase-Bibliothek konnte nicht geladen werden.');
+ })();
+
+ try{
+  return await supabaseLibraryPromise;
+ }catch(error){
+  supabaseLibraryPromise=null;
+  throw error;
+ }
+}
 
 const status=(id,label,color,kind='active')=>({id,label,color,kind});
 const option=(id,label)=>({id,label});
@@ -732,6 +843,11 @@ let suppressCloudSave=false;
 let lastCloudUpdatedAt=null;
 let localChangesPending=false;
 let conflictInProgress=false;
+let supabaseLibraryPromise=null;
+let cloudInitializationPromise=null;
+let authSubscription=null;
+let dashboardStarted=false;
+const diagnostics=[];
 let viewMode=safeStorage.get(VIEW_MODE_KEY)||'auto';
 
 function saveLocalState(){safeStorage.set(STORAGE_KEY,JSON.stringify(state))}
@@ -770,9 +886,7 @@ function readCloudConfig(){
 function writeCloudConfig(config){
  safeStorage.set(CLOUD_CONFIG_KEY,JSON.stringify(config));
 }
-function clearCloudConfig(){
- try{localStorage.removeItem(CLOUD_CONFIG_KEY)}catch{}
-}
+function clearCloudConfig(){safeStorage.remove(CLOUD_CONFIG_KEY)}
 function readSyncMeta(){
  const raw=safeStorage.get(CLOUD_SYNC_META_KEY);
  if(!raw)return {};
@@ -796,9 +910,6 @@ function rememberCloudVersion(updatedAt){
  meta.lastSuccessfulSyncAt=lastCloudUpdatedAt?new Date().toISOString():meta.lastSuccessfulSyncAt;
  writeSyncMeta(meta);
 }
-function currentLocalSnapshot(){
- return JSON.stringify(state);
-}
 function applyCloudState(cloudState,updatedAt){
  suppressCloudSave=true;
  try{
@@ -821,6 +932,7 @@ function showAuthPanel(name){
   $(`#${id}`)?.classList.toggle('hidden',id!==name);
  });
  $('#auth-gate')?.classList.remove('hidden');
+ recordDiagnostic('Auth-Ansicht',name);
 }
 function hideAuthGate(){
  $('#auth-gate')?.classList.add('hidden');
@@ -1003,53 +1115,119 @@ async function loadCloudState(user){
   setSyncStatus(navigator.onLine?'Gespeichert':'Offline – lokal',navigator.onLine?'saved':'offline');
  }
 }
-async function initializeCloud(){
+async function performCloudInitialization(){
  const syncMeta=readSyncMeta();
  lastCloudUpdatedAt=syncMeta.lastCloudUpdatedAt||null;
  localChangesPending=readPendingChanges();
  const config=readCloudConfig();
+
  if(!config){
+  setAuthIntro('Supabase-Verbindung einmalig einrichten.');
   showAuthPanel('cloud-setup-panel');
   setSyncStatus('Einrichten','offline');
+  recordDiagnostic('Cloud-Start','keine Konfiguration gespeichert');
   return;
  }
+
+ setAuthIntro('Verbindung mit Supabase wird hergestellt …');
+ setLoadingText('Supabase-Bibliothek wird geladen …');
+ showAuthPanel('cloud-loading-panel');
+ setSyncStatus('Verbindet …','saving');
+
  try{
+  await ensureSupabaseLibrary();
+
+  setLoadingText('Gespeicherte Anmeldung wird geprüft …');
   supabaseClient=createSupabaseClient(config);
-  const {data,error}=await supabaseClient.auth.getSession();
+
+  const {data,error}=await withTimeout(
+   supabaseClient.auth.getSession(),
+   CLOUD_TIMEOUT_MS,
+   'Die Prüfung der Anmeldung dauert ungewöhnlich lange.'
+  );
   if(error)throw error;
 
-  supabaseClient.auth.onAuthStateChange(async(event,session)=>{
+  authSubscription?.unsubscribe?.();
+  const authListener=supabaseClient.auth.onAuthStateChange(async(event,session)=>{
+   recordDiagnostic('Auth-Ereignis',event);
+
    if(event==='SIGNED_OUT'){
     cloudUser=null;
     cloudReady=false;
     renderAccountInfo();
+    setAuthIntro('Bitte am Dashboard anmelden.');
     setSyncStatus('Abgemeldet','offline');
     showAuthPanel('login-panel');
    }
+
    if(event==='USER_UPDATED'){
     cloudUser=session?.user||cloudUser;
     renderAccountInfo();
    }
   });
+  authSubscription=authListener?.data?.subscription||null;
 
   if(data.session?.user){
-   await loadCloudState(data.session.user);
+   setAuthIntro('Dashboard-Daten werden geladen …');
+   setLoadingText('Cloud-Daten werden geladen …');
+   recordDiagnostic('Anmeldung gefunden',data.session.user.email||data.session.user.id);
+
+   const slowNotice=setTimeout(()=>{
+    setLoadingText('Die Daten werden weiterhin geladen. Die Verbindung ist möglicherweise langsam …');
+    recordDiagnostic('Cloud-Laden','dauert länger als 10 Sekunden');
+   },CLOUD_TIMEOUT_MS);
+
+   try{
+    await loadCloudState(data.session.user);
+   }finally{
+    clearTimeout(slowNotice);
+   }
   }else{
+   setAuthIntro('Bitte am Dashboard anmelden.');
+   authMessage('login-message','');
    showAuthPanel('login-panel');
    setSyncStatus('Abgemeldet','offline');
+   recordDiagnostic('Cloud-Start','keine aktive Anmeldung');
   }
  }catch(error){
   console.error('Cloud-Initialisierung fehlgeschlagen:',error);
-  showAuthPanel('cloud-setup-panel');
-  authMessage('setup-message',error.message||'Verbindung fehlgeschlagen.','error');
+  setAuthIntro('Die Verbindung konnte nicht hergestellt werden.');
+  setLoadingText(`${error.message||'Unbekannter Verbindungsfehler'} Erneut versuchen oder Verbindung ändern.`);
+  showAuthPanel('cloud-loading-panel');
   setSyncStatus('Fehler','error');
+  recordDiagnostic('Cloud-Fehler',error.message||String(error));
+ }
+}
+async function initializeCloud(){
+ if(cloudInitializationPromise)return cloudInitializationPromise;
+
+ cloudInitializationPromise=performCloudInitialization();
+ try{
+  return await cloudInitializationPromise;
+ }finally{
+  cloudInitializationPromise=null;
  }
 }
 async function signInToCloud(email,password){
  authMessage('login-message','Anmeldung läuft …');
- const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+ setAuthIntro('Anmeldung wird geprüft …');
+
+ if(!supabaseClient){
+  const config=readCloudConfig();
+  if(!config)throw new Error('Es ist keine Supabase-Verbindung eingerichtet.');
+  await ensureSupabaseLibrary();
+  supabaseClient=createSupabaseClient(config);
+ }
+
+ const {data,error}=await withTimeout(
+  supabaseClient.auth.signInWithPassword({email,password}),
+  CLOUD_TIMEOUT_MS,
+  'Die Anmeldung dauert ungewöhnlich lange.'
+ );
  if(error)throw error;
  if(!data.user)throw new Error('Die Anmeldung war nicht erfolgreich.');
+
+ setAuthIntro('Dashboard-Daten werden geladen …');
  await loadCloudState(data.user);
 }
 async function signOutFromCloud(){
@@ -1061,6 +1239,27 @@ async function signOutFromCloud(){
   setSyncStatus('Fehler','error');
   alert(`Abmeldung fehlgeschlagen: ${error.message}`);
  }
+}
+async function resetCloudConnection(){
+ authSubscription?.unsubscribe?.();
+ authSubscription=null;
+
+ if(supabaseClient){
+  try{await supabaseClient.auth.signOut()}catch(error){
+   recordDiagnostic('Abmeldung beim Verbindungswechsel',error.message||String(error));
+  }
+ }
+
+ cloudReady=false;
+ cloudUser=null;
+ supabaseClient=null;
+ clearCloudConfig();
+ $('#cloud-url').value='';
+ $('#cloud-key').value='';
+ authMessage('setup-message','');
+ setAuthIntro('Supabase-Verbindung einmalig einrichten.');
+ showAuthPanel('cloud-setup-panel');
+ setSyncStatus('Einrichten','offline');
 }
 function snapshot(){return JSON.stringify(state)}
 function checkpoint(){const value=snapshot();if(historyPast.at(-1)!==value)historyPast.push(value);if(historyPast.length>100)historyPast.shift();historyFuture=[];renderHistoryButtons()}
@@ -1404,11 +1603,14 @@ async function sendPasswordReset(){
 }
 
 // Cloud setup, login and status controls
-$('#cloud-setup-panel').addEventListener('submit',async event=>{
+bind('#cloud-setup-panel','submit',async event=>{
  event.preventDefault();
  authMessage('setup-message','Verbindung wird geprüft …');
+ setAuthIntro('Supabase-Verbindung wird geprüft …');
+
  const url=$('#cloud-url').value.trim().replace(/\/+$/,'');
  const key=$('#cloud-key').value.trim();
+
  if(!/^https:\/\/.+\.supabase\.co$/i.test(url)){
   authMessage('setup-message','Bitte eine gültige Supabase Project URL eingeben.','error');
   return;
@@ -1417,21 +1619,32 @@ $('#cloud-setup-panel').addEventListener('submit',async event=>{
   authMessage('setup-message','Der Publishable Key scheint unvollständig zu sein.','error');
   return;
  }
+
  try{
+  await ensureSupabaseLibrary();
   const testClient=createSupabaseClient({url,key});
-  const {error}=await testClient.auth.getSession();
+  const {error}=await withTimeout(
+   testClient.auth.getSession(),
+   CLOUD_TIMEOUT_MS,
+   'Die Prüfung der Supabase-Verbindung dauert ungewöhnlich lange.'
+  );
   if(error)throw error;
+
   writeCloudConfig({url,key});
   supabaseClient=testClient;
   authMessage('setup-message','Verbindung gespeichert.','success');
+  setAuthIntro('Bitte am Dashboard anmelden.');
   showAuthPanel('login-panel');
   setSyncStatus('Abgemeldet','offline');
+  recordDiagnostic('Supabase-Konfiguration','gespeichert und geprüft');
  }catch(error){
   console.error(error);
+  setAuthIntro('Supabase-Verbindung konnte nicht geprüft werden.');
   authMessage('setup-message',error.message||'Verbindung konnte nicht hergestellt werden.','error');
+  recordDiagnostic('Supabase-Konfiguration fehlgeschlagen',error.message||String(error));
  }
 });
-$('#login-panel').addEventListener('submit',async event=>{
+bind('#login-panel','submit',async event=>{
  event.preventDefault();
  const email=$('#login-email').value.trim();
  const password=$('#login-password').value;
@@ -1443,22 +1656,15 @@ $('#login-panel').addEventListener('submit',async event=>{
   authMessage('login-message',error.message||'Anmeldung fehlgeschlagen.','error');
  }
 });
-$('#change-cloud-config').addEventListener('click',async()=>{
- if(supabaseClient){
-  try{await supabaseClient.auth.signOut()}catch{}
- }
- cloudReady=false;
- cloudUser=null;
- supabaseClient=null;
- clearCloudConfig();
- $('#cloud-url').value='';
- $('#cloud-key').value='';
- authMessage('setup-message','');
- showAuthPanel('cloud-setup-panel');
- setSyncStatus('Einrichten','offline');
+bind('#change-cloud-config','click',resetCloudConnection);
+bind('#loading-change-config-btn','click',resetCloudConnection);
+bind('#retry-cloud-btn','click',async()=>{
+ setAuthIntro('Verbindung wird erneut hergestellt …');
+ setLoadingText('Neuer Verbindungsversuch …');
+ await initializeCloud();
 });
 
-$('#manual-sync-btn').addEventListener('click',async()=>{
+bind('#manual-sync-btn','click',async()=>{
  if(!cloudReady){
   alert('Du bist aktuell nicht mit der Cloud verbunden.');
   return;
@@ -1469,7 +1675,7 @@ $('#manual-sync-btn').addEventListener('click',async()=>{
  }
  await saveCloudState();
 });
-$('#logout-btn').addEventListener('click',()=>{
+bind('#logout-btn','click',()=>{
  if(!cloudUser){
   alert('Du bist aktuell nicht angemeldet.');
   return;
@@ -1478,26 +1684,26 @@ $('#logout-btn').addEventListener('click',()=>{
   signOutFromCloud();
  }
 });
-$('#change-password-btn').addEventListener('click',async()=>{
+bind('#change-password-btn','click',async()=>{
  try{await changeCurrentPassword()}
  catch(error){
   console.error(error);
   alert(`Passwort konnte nicht geändert werden: ${error.message}`);
  }
 });
-$('#reset-password-btn').addEventListener('click',async()=>{
+bind('#reset-password-btn','click',async()=>{
  try{await sendPasswordReset()}
  catch(error){
   console.error(error);
   alert(`E-Mail konnte nicht versendet werden: ${error.message}`);
  }
 });
-$('#export-backup-btn').addEventListener('click',downloadBackup);
-$('#import-backup-btn').addEventListener('click',()=>{
+bind('#export-backup-btn','click',downloadBackup);
+bind('#import-backup-btn','click',()=>{
  $('#backup-file-input').value='';
  $('#backup-file-input').click();
 });
-$('#backup-file-input').addEventListener('change',async event=>{
+bind('#backup-file-input','change',async event=>{
  const file=event.target.files?.[0];
  if(!file)return;
  try{await importBackupFile(file)}
@@ -1510,30 +1716,31 @@ $('#backup-file-input').addEventListener('change',async event=>{
 
 
 // Direct controls
-$('#new-note-btn').addEventListener('click',createNote);
+bind('#new-note-btn','click',createNote);
 
 
 
 
-$('#add-subtask-btn').addEventListener('click',addSubtask);
-$('#undo-btn').addEventListener('click',undo);$('#redo-btn').addEventListener('click',redo);
-$('#settings-btn').addEventListener('click',()=>openOverlay('settings'));
-$('#view-toggle').addEventListener('click',toggleViewMode);
-$('#app-title').addEventListener('click',()=>{const value=prompt('Name der Übersicht:',state.meta.title)?.trim();if(value)commit(()=>state.meta.title=value)});
-$('#app-subtitle').addEventListener('click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
-$('#delete-note-detail').addEventListener('click',()=>current.noteId&&deleteNote(current.noteId));
-$('#delete-todo-detail').addEventListener('click',()=>current.todoId&&deleteTodo(current.todoId,current.todoType));
-$('#delete-project-detail').addEventListener('click',()=>current.projectId&&deleteProject(current.projectId));
+bind('#add-subtask-btn','click',addSubtask);
+bind('#undo-btn','click',undo);bind('#redo-btn','click',redo);
+bind('#settings-btn','click',()=>openOverlay('settings'));
+bind('#view-toggle','click',toggleViewMode);
+bind('#app-title','click',()=>{const value=prompt('Name der Übersicht:',state.meta.title)?.trim();if(value)commit(()=>state.meta.title=value)});
+bind('#app-subtitle','click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
+bind('#delete-note-detail','click',()=>current.noteId&&deleteNote(current.noteId));
+bind('#delete-todo-detail','click',()=>current.todoId&&deleteTodo(current.todoId,current.todoType));
+bind('#delete-project-detail','click',()=>current.projectId&&deleteProject(current.projectId));
 $$('[data-note-command]').forEach(button=>{button.addEventListener('mousedown',event=>event.preventDefault());button.addEventListener('click',()=>noteCommand(button.dataset.noteCommand))});
-$('#note-font-size').addEventListener('change',event=>{if(!event.target.value)return;restoreNoteSelection();document.execCommand('fontSize',false,'7');$$('font[size="7"]',$('#note-editor')).forEach(font=>{const span=document.createElement('span');span.style.fontSize=`${event.target.value}px`;span.innerHTML=font.innerHTML;font.replaceWith(span)});event.target.value='';saveCurrentNote()});
-$('#note-checkbox-btn').addEventListener('click',insertCheckboxLine);
-$('#note-editor').addEventListener('mouseup',saveNoteSelection);$('#note-editor').addEventListener('keyup',saveNoteSelection);
+bind('#note-font-size','change',event=>{if(!event.target.value)return;restoreNoteSelection();document.execCommand('fontSize',false,'7');$$('font[size="7"]',$('#note-editor')).forEach(font=>{const span=document.createElement('span');span.style.fontSize=`${event.target.value}px`;span.innerHTML=font.innerHTML;font.replaceWith(span)});event.target.value='';saveCurrentNote()});
+bind('#note-checkbox-btn','click',insertCheckboxLine);
+bind('#note-editor','mouseup',saveNoteSelection);bind('#note-editor','keyup',saveNoteSelection);
 window.addEventListener('resize',()=>{applyMobileMode();closeFilters()});window.addEventListener('scroll',()=>closeFilters(),true);
 
 
 
 window.addEventListener('error',event=>{
  console.error('Dashboard-Laufzeitfehler:',event.error||event.message);
+ recordDiagnostic('Laufzeitfehler',event.message||String(event.error));
  const gate=$('#auth-gate');
  const setup=$('#cloud-setup-panel');
  const login=$('#login-panel');
@@ -1548,6 +1755,7 @@ window.addEventListener('error',event=>{
 });
 window.addEventListener('unhandledrejection',event=>{
  console.error('Nicht behandelter Dashboard-Fehler:',event.reason);
+ recordDiagnostic('Nicht behandelter Fehler',event.reason?.message||String(event.reason));
 });
 
 window.addEventListener('offline',()=>{
@@ -1575,17 +1783,38 @@ window.addEventListener('beforeunload',()=>{
  saveLocalState();
 });
 
-function startDashboard(){
- state=normalizeState(state);
- suppressCloudSave=true;
- saveLocalState();
- suppressCloudSave=false;
- applyMobileMode();
- renderNoteColors();
- renderAll();
- growAll();
- if(!navigator.onLine)setSyncStatus('Offline – lokal','offline');
- initializeCloud();
+async function startDashboard(){
+ if(dashboardStarted)return;
+ dashboardStarted=true;
+
+ recordDiagnostic('Start','HTML und JavaScript geladen');
+ setAuthIntro('Dashboard wird vorbereitet …');
+ showAuthPanel('cloud-loading-panel');
+ setLoadingText('Lokale Daten werden vorbereitet …');
+
+ try{
+  state=normalizeState(state);
+  suppressCloudSave=true;
+  saveLocalState();
+  suppressCloudSave=false;
+
+  applyMobileMode();
+  renderNoteColors();
+  renderAll();
+  growAll();
+
+  recordDiagnostic('Lokale Oberfläche','bereit');
+  if(!navigator.onLine)setSyncStatus('Offline – lokal','offline');
+
+  await initializeCloud();
+ }catch(error){
+  console.error('Dashboard-Start fehlgeschlagen:',error);
+  setAuthIntro('Das Dashboard konnte nicht vollständig gestartet werden.');
+  setLoadingText(`${error.message||'Unbekannter Startfehler'} Bitte erneut versuchen.`);
+  showAuthPanel('cloud-loading-panel');
+  setSyncStatus('Fehler','error');
+  recordDiagnostic('Startfehler',error.message||String(error));
+ }
 }
 if(document.readyState==='loading'){
  document.addEventListener('DOMContentLoaded',startDashboard,{once:true});
@@ -1597,7 +1826,9 @@ window.__dashboardTest={
  createDefaults,
  getState:()=>clone(state),
  saveCloudState,
- initializeCloud
+ initializeCloud,
+ ensureSupabaseLibrary,
+ getDiagnostics:()=>[...diagnostics]
 };
 })();
 </script>
