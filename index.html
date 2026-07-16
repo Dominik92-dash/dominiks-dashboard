@@ -203,6 +203,8 @@
 const STORAGE_KEY='dominik_dashboard_v26';
 const LEGACY_KEYS=['dominik_dashboard_v23','dominik_dashboard_v24','dominik_dashboard_v25'];
 const CLOUD_CONFIG_KEY='dominik_dashboard_supabase_config';
+const CLOUD_SYNC_META_KEY='dominik_dashboard_cloud_sync_meta';
+const CLOUD_PENDING_KEY='dominik_dashboard_cloud_pending';
 const CLOUD_TABLE='user_dashboards';
 const $=(selector,root=document)=>root.querySelector(selector);
 const $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
@@ -354,11 +356,16 @@ let cloudSaveTimer=null;
 let cloudSaveRunning=false;
 let cloudSaveQueued=false;
 let suppressCloudSave=false;
+let lastCloudUpdatedAt=null;
+let localChangesPending=false;
+let conflictInProgress=false;
 
 function saveLocalState(){safeStorage.set(STORAGE_KEY,JSON.stringify(state))}
 function saveState(){
  saveLocalState();
- if(cloudReady&&!suppressCloudSave)scheduleCloudSave();
+ if(suppressCloudSave)return;
+ markLocalChange();
+ if(cloudReady&&navigator.onLine)scheduleCloudSave();
 }
 function setSyncStatus(text,status='offline'){
  const button=$('#sync-status-btn');
@@ -381,6 +388,49 @@ function writeCloudConfig(config){
 }
 function clearCloudConfig(){
  try{localStorage.removeItem(CLOUD_CONFIG_KEY)}catch{}
+}
+function readSyncMeta(){
+ const raw=safeStorage.get(CLOUD_SYNC_META_KEY);
+ if(!raw)return {};
+ try{return JSON.parse(raw)||{}}
+ catch{return {}}
+}
+function writeSyncMeta(meta){
+ safeStorage.set(CLOUD_SYNC_META_KEY,JSON.stringify(meta||{}));
+}
+function setPendingChanges(value){
+ localChangesPending=Boolean(value);
+ safeStorage.set(CLOUD_PENDING_KEY,localChangesPending?'1':'0');
+}
+function readPendingChanges(){
+ return safeStorage.get(CLOUD_PENDING_KEY)==='1';
+}
+function rememberCloudVersion(updatedAt){
+ lastCloudUpdatedAt=updatedAt||null;
+ const meta=readSyncMeta();
+ meta.lastCloudUpdatedAt=lastCloudUpdatedAt;
+ meta.lastSuccessfulSyncAt=lastCloudUpdatedAt?new Date().toISOString():meta.lastSuccessfulSyncAt;
+ writeSyncMeta(meta);
+}
+function currentLocalSnapshot(){
+ return JSON.stringify(state);
+}
+function applyCloudState(cloudState,updatedAt){
+ suppressCloudSave=true;
+ try{
+  state=normalizeState(cloudState);
+  saveLocalState();
+  setPendingChanges(false);
+  rememberCloudVersion(updatedAt);
+ }finally{
+  suppressCloudSave=false;
+ }
+}
+function markLocalChange(){
+ setPendingChanges(true);
+ if(!navigator.onLine){
+  setSyncStatus('Offline – lokal','offline');
+ }
 }
 function showAuthPanel(name){
  ['cloud-setup-panel','login-panel','cloud-loading-panel'].forEach(id=>{
@@ -407,75 +457,172 @@ function createSupabaseClient(config){
 }
 function scheduleCloudSave(){
  clearTimeout(cloudSaveTimer);
+ if(!navigator.onLine){
+  setSyncStatus('Offline – lokal','offline');
+  return;
+ }
  setSyncStatus('Speichert …','saving');
  cloudSaveTimer=setTimeout(()=>saveCloudState(),650);
 }
+async function fetchCloudRecord(){
+ const {data,error}=await supabaseClient
+  .from(CLOUD_TABLE)
+  .select('dashboard_data,updated_at')
+  .eq('user_id',cloudUser.id)
+  .maybeSingle();
+ if(error)throw error;
+ return data||null;
+}
+async function resolveCloudConflict(cloudRecord){
+ if(conflictInProgress)return false;
+ conflictInProgress=true;
+ try{
+  const useLocal=confirm(
+   'Auf einem anderen Gerät wurde zwischenzeitlich ein neuerer Stand gespeichert.\n\n'+
+   'OK = Diesen lokalen Stand in die Cloud übernehmen\n'+
+   'Abbrechen = Den neueren Cloud-Stand laden'
+  );
+
+  if(useLocal){
+   lastCloudUpdatedAt=cloudRecord?.updated_at||lastCloudUpdatedAt;
+   return true;
+  }
+
+  if(cloudRecord?.dashboard_data){
+   applyCloudState(cloudRecord.dashboard_data,cloudRecord.updated_at);
+   renderAll();
+   growAll();
+   setSyncStatus('Cloud-Stand geladen','saved');
+  }
+  return false;
+ }finally{
+  conflictInProgress=false;
+ }
+}
 async function saveCloudState(){
  if(!cloudReady||!cloudUser||!supabaseClient)return;
+ if(!navigator.onLine){
+  setSyncStatus('Offline – lokal','offline');
+  return;
+ }
  if(cloudSaveRunning){
   cloudSaveQueued=true;
   return;
  }
+
  cloudSaveRunning=true;
  cloudSaveQueued=false;
- setSyncStatus('Speichert …','saving');
+ setSyncStatus('Prüft …','saving');
+
  try{
-  const {error}=await supabaseClient
+  const cloudRecord=await fetchCloudRecord();
+
+  if(
+   cloudRecord?.updated_at &&
+   lastCloudUpdatedAt &&
+   cloudRecord.updated_at!==lastCloudUpdatedAt
+  ){
+   const continueWithLocal=await resolveCloudConflict(cloudRecord);
+   if(!continueWithLocal)return;
+  }
+
+  setSyncStatus('Speichert …','saving');
+  const updatedAt=new Date().toISOString();
+  const {data,error}=await supabaseClient
    .from(CLOUD_TABLE)
    .upsert({
     user_id:cloudUser.id,
     dashboard_data:state,
-    updated_at:new Date().toISOString()
-   },{onConflict:'user_id'});
+    updated_at:updatedAt
+   },{onConflict:'user_id'})
+   .select('updated_at')
+   .single();
+
   if(error)throw error;
+
+  rememberCloudVersion(data?.updated_at||updatedAt);
+  setPendingChanges(false);
   setSyncStatus('Gespeichert','saved');
  }catch(error){
   console.error('Cloud-Speicherung fehlgeschlagen:',error);
-  setSyncStatus('Nur lokal','error');
+  setSyncStatus(navigator.onLine?'Sync-Fehler':'Offline – lokal',navigator.onLine?'error':'offline');
  }finally{
   cloudSaveRunning=false;
-  if(cloudSaveQueued)scheduleCloudSave();
+  if(cloudSaveQueued&&navigator.onLine)scheduleCloudSave();
  }
 }
 async function loadCloudState(user){
  showAuthPanel('cloud-loading-panel');
  $('#cloud-loading-text').textContent='Cloud-Daten werden geladen …';
  setSyncStatus('Lädt …','saving');
+
+ cloudUser=user;
  const {data,error}=await supabaseClient
   .from(CLOUD_TABLE)
   .select('dashboard_data,updated_at')
   .eq('user_id',user.id)
   .maybeSingle();
+
  if(error)throw error;
 
- suppressCloudSave=true;
- try{
-  if(data?.dashboard_data&&typeof data.dashboard_data==='object'){
-   state=normalizeState(data.dashboard_data);
-   saveLocalState();
+ const pending=readPendingChanges();
+ const syncMeta=readSyncMeta();
+ const knownCloudVersion=syncMeta.lastCloudUpdatedAt||null;
+
+ if(data?.dashboard_data&&typeof data.dashboard_data==='object'){
+  const cloudChangedSinceLastSync=
+   Boolean(knownCloudVersion&&data.updated_at&&data.updated_at!==knownCloudVersion);
+
+  if(pending&&cloudChangedSinceLastSync){
+   const keepLocal=confirm(
+    'Es gibt ungespeicherte lokale Änderungen und zugleich einen neueren Cloud-Stand.\n\n'+
+    'OK = Lokale Änderungen behalten und in die Cloud übertragen\n'+
+    'Abbrechen = Cloud-Stand laden und lokale Änderungen verwerfen'
+   );
+
+   if(keepLocal){
+    lastCloudUpdatedAt=data.updated_at||knownCloudVersion;
+   }else{
+    applyCloudState(data.dashboard_data,data.updated_at);
+   }
+  }else if(pending){
+   lastCloudUpdatedAt=data.updated_at||knownCloudVersion;
   }else{
-   await supabaseClient
-    .from(CLOUD_TABLE)
-    .upsert({
-     user_id:user.id,
-     dashboard_data:state,
-     updated_at:new Date().toISOString()
-    },{onConflict:'user_id'})
-    .then(({error:uploadError})=>{
-     if(uploadError)throw uploadError;
-    });
+   applyCloudState(data.dashboard_data,data.updated_at);
   }
- }finally{
-  suppressCloudSave=false;
+ }else{
+  const updatedAt=new Date().toISOString();
+  const {data:created,error:createError}=await supabaseClient
+   .from(CLOUD_TABLE)
+   .upsert({
+    user_id:user.id,
+    dashboard_data:state,
+    updated_at:updatedAt
+   },{onConflict:'user_id'})
+   .select('updated_at')
+   .single();
+
+  if(createError)throw createError;
+  rememberCloudVersion(created?.updated_at||updatedAt);
+  setPendingChanges(false);
  }
- cloudUser=user;
+
  cloudReady=true;
  renderAll();
  growAll();
  hideAuthGate();
- setSyncStatus('Gespeichert','saved');
+
+ if(readPendingChanges()&&navigator.onLine){
+  setSyncStatus('Synchronisiert …','saving');
+  await saveCloudState();
+ }else{
+  setSyncStatus(navigator.onLine?'Gespeichert':'Offline – lokal',navigator.onLine?'saved':'offline');
+ }
 }
 async function initializeCloud(){
+ const syncMeta=readSyncMeta();
+ lastCloudUpdatedAt=syncMeta.lastCloudUpdatedAt||null;
+ localChangesPending=readPendingChanges();
  const config=readCloudConfig();
  if(!config){
   showAuthPanel('cloud-setup-panel');
@@ -814,6 +961,14 @@ $('#change-cloud-config').addEventListener('click',async()=>{
 });
 $('#sync-status-btn').addEventListener('click',()=>{
  if(cloudUser){
+  if(readPendingChanges()||$('#sync-status-btn').dataset.state==='error'){
+   if(navigator.onLine){
+    saveCloudState();
+   }else{
+    alert('Aktuell besteht keine Internetverbindung. Änderungen bleiben lokal gespeichert und werden später automatisch synchronisiert.');
+   }
+   return;
+  }
   if(confirm(`Angemeldet als ${cloudUser.email||'Benutzer'}.\n\nMöchtest du dich abmelden?`)){
    signOutFromCloud();
   }
@@ -844,6 +999,32 @@ $('#note-checkbox-btn').addEventListener('click',insertCheckboxLine);
 $('#note-editor').addEventListener('mouseup',saveNoteSelection);$('#note-editor').addEventListener('keyup',saveNoteSelection);
 window.addEventListener('resize',()=>{applyMobileMode();closeFilters()});window.addEventListener('scroll',()=>closeFilters(),true);
 
+
+window.addEventListener('offline',()=>{
+ setSyncStatus('Offline – lokal','offline');
+});
+window.addEventListener('online',()=>{
+ if(cloudReady&&readPendingChanges()){
+  setSyncStatus('Synchronisiert …','saving');
+  saveCloudState();
+ }else if(cloudReady){
+  setSyncStatus('Gespeichert','saved');
+ }
+});
+document.addEventListener('visibilitychange',()=>{
+ if(
+  document.visibilityState==='visible' &&
+  cloudReady &&
+  navigator.onLine &&
+  readPendingChanges()
+ ){
+  saveCloudState();
+ }
+});
+window.addEventListener('beforeunload',()=>{
+ saveLocalState();
+});
+
 state=normalizeState(state);
 suppressCloudSave=true;
 saveLocalState();
@@ -852,6 +1033,7 @@ applyMobileMode();
 renderNoteColors();
 renderAll();
 growAll();
+if(!navigator.onLine)setSyncStatus('Offline – lokal','offline');
 initializeCloud();
 window.__dashboardTest={
  normalizeState,
