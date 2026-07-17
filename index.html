@@ -15,7 +15,7 @@
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-nav-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
-.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:#eef1f4;border:1px solid #d7dce1;border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{font-size:12px;font-weight:700;color:var(--muted)}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
+.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--group-bg);border:1px solid var(--group-bg);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{font-size:12px;font-weight:700;color:var(--muted)}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
 .note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid var(--note);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.delegated-group{background:var(--delegated);border-color:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
@@ -55,13 +55,16 @@
 .project-actions{
  display:grid;
  grid-template-columns:1fr 1fr;
- gap:7px;
- align-content:start
+ grid-template-rows:repeat(2,minmax(0,1fr));
+ gap:5px;
+ align-content:stretch;
+ height:61px
 }
-.project-actions .icon{width:100%;height:38px}
+.project-actions .icon{width:100%;height:100%;min-height:0}
 .project-expand-btn{
  grid-column:1/-1;
- min-height:35px;
+ min-height:0;
+ height:100%;
  padding:0 9px;
  border:0;
  border-radius:8px;
@@ -86,7 +89,7 @@
  gap:8px;
  align-items:center;
  padding:9px;
- border:1px solid var(--border);
+ border:1px solid #b8c1ca;
  border-radius:9px;
  background:#fafbfc
 }
@@ -478,10 +481,11 @@ body.mobile .project-note{
 body.mobile .project-actions{
  grid-column:2;
  grid-row:2;
- width:96px
+ width:96px;
+ height:96px
 }
-body.mobile .project-actions .icon{height:42px}
-body.mobile .project-expand-btn{min-height:42px}
+body.mobile .project-actions .icon{height:100%;min-height:0}
+body.mobile .project-expand-btn{height:100%;min-height:0}
 body.mobile .project-expanded{padding:0 10px 10px}
 body.mobile .project-inline-subtask{
  grid-template-columns:minmax(0,1fr)
@@ -566,13 +570,13 @@ body.mobile .sidebar-patch{
 
 
 /* Notizarchiv */
-.notes-archive{margin-top:22px;border:1px solid var(--border);border-radius:var(--radius);background:#eef1f4;overflow:hidden}
+.notes-archive{margin-top:22px;border:1px solid #c8ced4;border-radius:var(--radius);background:#d9dee3;overflow:hidden}
 .archive-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border:0;background:transparent;text-align:left;cursor:pointer;font-weight:700}
 .archive-toggle:hover{background:rgba(255,255,255,.45)}
 .archive-toggle-meta{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:12px;font-weight:400}
 .archive-notes-list{display:grid;gap:10px;padding:0 12px 12px}
 .archive-notes-list[hidden]{display:none}
-.note-card.archived{background:#eef0f2;border-color:#d3d8dd;box-shadow:none}
+.note-card.archived{background:#eef0f2;border-color:#c8ced4;box-shadow:none}
 .archive-btn{background:#edf0f3;color:#4e6172;font-size:16px}
 .restore-btn{background:#e8f3eb;color:#2f7040;font-size:17px}
 
@@ -585,7 +589,7 @@ body.mobile .sidebar-patch{
 
 /* Sidebar-Reiter auf blauem Untergrund */
 .sidebar .nav button:hover{background:rgba(255,255,255,.48)}
-.sidebar .nav button.active{background:rgba(255,255,255,.72)}
+.sidebar .nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text)}
 
 /* Native Datumsfelder stabil innerhalb des Rasters halten */
 .subtask-deadline{width:100%;max-width:100%;box-sizing:border-box;color-scheme:light}
@@ -699,6 +703,10 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 body.mobile .theme-grid{grid-template-columns:1fr}
 body.mobile .theme-control.font-control{grid-template-columns:1fr}
 
+
+.filter-trigger{font-size:13px}
+.filter-option,.filter-reset,.filter-info{font-size:12px}
+
 </style>
 </head>
 <body>
@@ -773,7 +781,7 @@ body.mobile .theme-control.font-control{grid-template-columns:1fr}
     </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-patch" aria-label="Letzter Patch">
-      Patch: 17.07.2026 · 12:44
+      Patch: 17.07.2026 · 13:34
     </div>
   </aside>
 
