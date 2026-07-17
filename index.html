@@ -8,11 +8,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--own:#bfd6e9;--project:#bfd6e9;--delegated:#bfd6e9;--note:#d9dee3;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3}
+:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--own:#bfd6e9;--project:#bfd6e9;--delegated:#bfd6e9;--note:#d9dee3;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-subtitle-color:#66717d;--sidebar-nav-color:#315d8a}
 *{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
-.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:30px;line-height:1;cursor:pointer;font-family:'Jolly Lodger',Arial,Helvetica,sans-serif;letter-spacing:.025em;font-weight:400}.brand p{margin:7px 0 0;font-size:13px;color:var(--muted);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:30px;line-height:1;cursor:pointer;font-family:'Jolly Lodger',Arial,Helvetica,sans-serif;letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-subtitle-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
 .tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
-.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
+.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-nav-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:rgba(255,255,255,.72);color:var(--sidebar-nav-color);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
 .quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:#eef1f4;border:1px solid #d7dce1;border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{font-size:12px;font-weight:700;color:var(--muted)}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
@@ -20,10 +20,158 @@
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.delegated-group{background:var(--delegated);border-color:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
 .todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}
-.project-row{display:grid;grid-template-columns:minmax(138px,.66fr) minmax(264px,1.56fr) 170px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.project-current{display:grid;grid-template-columns:155px 1fr;gap:10px;align-items:center;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}.current-label{font-size:12px;color:var(--muted)}.current-item{display:flex;gap:7px;align-items:flex-start;font-size:13px;margin:3px 0}.current-bullet{flex:0 0 auto;line-height:1.25}.project-status{padding:8px 9px;border:1px solid var(--border);border-radius:7px;font-weight:600;text-align:center}
+.project-card{
+ display:block;
+ overflow:hidden;
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:10px
+}
+.project-card+.project-card{margin-top:10px}
+.project-preview{
+ display:grid;
+ grid-template-columns:minmax(138px,.66fr) minmax(280px,1.6fr) 118px;
+ gap:10px;
+ align-items:stretch;
+ padding:11px
+}
+.project-meta{min-width:0}
+.project-note{
+ width:100%;
+ height:61px;
+ min-height:61px;
+ max-height:61px;
+ padding:8px 9px;
+ resize:none;
+ overflow-y:auto;
+ overflow-x:hidden;
+ border:1px solid var(--border);
+ border-radius:7px;
+ background:#fff;
+ font-size:12px;
+ line-height:1.35;
+ white-space:pre-wrap
+}
+.project-actions{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:7px;
+ align-content:start
+}
+.project-actions .icon{width:100%;height:38px}
+.project-expand-btn{
+ grid-column:1/-1;
+ min-height:35px;
+ padding:0 9px;
+ border:0;
+ border-radius:8px;
+ background:var(--accent-soft);
+ color:var(--accent);
+ font-size:12px;
+ font-weight:700;
+ cursor:pointer
+}
+.project-expand-btn:hover{background:#dbe8f3}
+.project-expanded{
+ display:none;
+ gap:8px;
+ padding:0 11px 11px
+}
+.project-card.expanded .project-expanded{display:grid}
+.project-card.item-dragging{opacity:.38}
+.project-card.item-drop-target{outline:2px dashed var(--accent);outline-offset:2px}
+.project-inline-subtask{
+ display:grid;
+ grid-template-columns:minmax(150px,.9fr) minmax(210px,1.25fr) 160px 145px 155px auto;
+ gap:8px;
+ align-items:center;
+ padding:9px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ background:#fafbfc
+}
+.project-inline-subtask input,
+.project-inline-subtask select,
+.project-inline-subtask textarea{
+ width:100%;
+ min-width:0;
+ padding:8px 9px;
+ border:1px solid var(--border);
+ border-radius:7px;
+ background:#fff
+}
+.project-inline-subtask textarea{
+ min-height:38px;
+ max-height:54px;
+ resize:vertical;
+ font-size:12px;
+ line-height:1.35
+}
+.project-inline-title{
+ font-size:12px;
+ font-weight:700
+}
+.project-inline-subtask select,
+.project-inline-subtask input[type="date"]{
+ font-size:12px;
+ font-weight:400
+}
+.project-inline-add{
+ justify-self:start;
+ padding:8px 11px;
+ border:1px dashed var(--accent);
+ border-radius:7px;
+ background:#fff;
+ color:var(--accent);
+ font-size:12px;
+ cursor:pointer
+}
 .overlay{display:none;position:fixed;z-index:100;inset:0 0 0 var(--sidebar);padding:29px;background:var(--bg);overflow:auto}.overlay.open{display:block}.shell{width:min(1100px,100%);min-height:calc(100vh - 58px);margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}.editor-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;padding:21px 23px 15px;border-bottom:1px solid var(--border)}.editor-head h2{margin:0}.title-large{width:100%;border:0;outline:0;background:transparent;font-size:27px;font-weight:700}.close-btn{width:36px;height:36px;border:0;border-radius:8px;background:transparent;font-size:25px;cursor:pointer}.close-btn:hover{background:#f0f2f4}.detail-body{padding:23px;display:grid;gap:19px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:grid;gap:7px}.field[hidden]{display:none!important}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#fff}.field textarea{min-height:100px;resize:vertical}.details-text{min-height:235px}.editor-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 23px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
 .toolbar{display:flex;flex-wrap:wrap;gap:7px;padding:11px 23px;border-bottom:1px solid var(--border);background:#fafbfc}.toolbar-group{display:flex;gap:5px;align-items:center;padding-right:8px;border-right:1px solid var(--border)}.toolbar-btn{height:34px;padding:0 9px;border:1px solid transparent;border-radius:7px;background:transparent;cursor:pointer}.toolbar-btn:hover{background:#edf0f3}.color-btn{width:27px;height:27px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px var(--border);cursor:pointer}.rich-editor{flex:1;min-height:420px;padding:27px 31px 48px;outline:0;line-height:1.65}.rich-editor ol ol{list-style-type:lower-alpha}.check-line{display:flex;gap:9px;align-items:flex-start;margin:5px 0}.check-line.checked .check-text{text-decoration:line-through;color:var(--muted)}
-.subtask-head{display:flex;justify-content:space-between;align-items:center}.subtask-row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) 165px 145px 170px auto;gap:8px;align-items:start;padding:10px;background:#fafbfc;border:1px solid var(--border);border-radius:10px}.subtask-row input,.subtask-row select,.subtask-row textarea{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}.subtask-row textarea{min-height:38px;resize:none;overflow:hidden;line-height:1.4}.subtask-row .subtask-summary{font-size:12px;line-height:1.35}.subtask-row .subtask-deadline{min-width:0;font-variant-numeric:tabular-nums}
+.subtask-head{display:flex;justify-content:space-between;align-items:center}
+.subtask-row{
+ display:grid;
+ grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) 165px 145px 170px auto;
+ gap:8px;
+ align-items:start;
+ padding:10px;
+ background:#fafbfc;
+ border:1px solid var(--border);
+ border-radius:10px
+}
+.subtask-row input,
+.subtask-row select,
+.subtask-row textarea{
+ width:100%;
+ min-width:0;
+ padding:8px 9px;
+ border:1px solid var(--border);
+ border-radius:7px;
+ background:#fff
+}
+.subtask-row textarea{
+ min-height:38px;
+ resize:none;
+ overflow:hidden;
+ line-height:1.35
+}
+.subtask-row .subtask-title{
+ font-size:12px;
+ font-weight:700
+}
+.subtask-row .subtask-summary{
+ font-size:12px;
+ line-height:1.35
+}
+.subtask-row select,
+.subtask-row .subtask-deadline{
+ font-size:12px;
+ font-weight:400
+}
+.subtask-row .subtask-deadline{
+ min-width:0;
+ font-variant-numeric:tabular-nums
+}
 .settings-shell{width:min(1180px,100%)}.settings-body{display:grid;gap:18px;padding:23px}.settings-section{padding:15px;border:1px solid var(--border);border-radius:12px}.settings-section h3{margin:0 0 13px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(290px,1fr));gap:15px}.settings-group{padding:12px;border:1px solid var(--border);border-radius:10px}.settings-group h4{margin:0 0 9px}.settings-hint{margin:-3px 0 10px;color:var(--muted);font-size:11px}.option-list{display:grid;gap:7px}.option-row{display:grid;grid-template-columns:23px minmax(120px,1fr) auto;gap:7px;align-items:center;padding:7px;background:#f7f8fa;border:1px solid var(--border);border-radius:8px}.option-row.status-option{grid-template-columns:23px minmax(110px,1fr) 42px 105px auto}.option-row.dragging{opacity:.35}.option-row.drop-target{outline:2px dashed var(--accent)}.drag-handle{cursor:grab;text-align:center;color:var(--muted)}.option-row input[type=text],.option-row select{width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;background:#fff}.option-row input[type=color]{width:38px;height:30px;border:0;background:transparent}.option-delete{width:30px;height:30px;border:0;border-radius:7px;background:#f7e5e5;color:var(--danger);cursor:pointer}.add-option{margin-top:9px;padding:7px 10px;border:1px dashed var(--accent);border-radius:7px;background:#fff;color:var(--accent);cursor:pointer}
 @media(max-width:1080px){.todo-row,.todo-row.delegated,.project-row{grid-template-columns:1fr}.todo-row>*,.project-row>*{grid-column:1}.subtask-row{grid-template-columns:1fr 1fr}}
 /* Mobile layout is class-based so the toolbar toggle works on every viewport. */
@@ -150,13 +298,6 @@ body.mobile .priority-select,
 body.mobile .person-select{min-height:40px}
 body.mobile .todo-row>.actions,
 body.mobile .project-row>.actions{justify-content:flex-end}
-body.mobile .project-current{
- grid-template-columns:1fr;
- gap:6px;
- padding:5px 0
-}
-body.mobile .current-label{font-weight:700}
-body.mobile .project-status{text-align:left}
 body.mobile .overlay{
  inset:0;
  z-index:1200;
@@ -294,53 +435,6 @@ body.mobile .todo-row>.actions .icon{
 }
 
 
-/* Mobile Projektkarte: gleiche Linkskante und gemeinsame Status-/Aktionszeile. */
-body.mobile .project-row{
- grid-template-columns:minmax(0,1fr) auto;
- column-gap:9px;
- row-gap:8px
-}
-body.mobile .project-row>div:first-child{
- grid-column:1/-1;
- width:100%;
- min-width:0
-}
-body.mobile .project-row .title-input-inline,
-body.mobile .project-row .mini-select{
- display:block;
- width:100%;
- margin-left:0;
- padding-left:8px
-}
-body.mobile .project-row .mini-select{
- height:32px;
- padding-top:4px;
- padding-bottom:4px
-}
-body.mobile .project-row>.project-current{
- grid-column:1/-1;
- width:100%;
- min-width:0;
- padding-left:8px
-}
-body.mobile .project-row>.project-status{
- grid-column:1;
- width:100%;
- min-width:0;
- min-height:42px;
- display:flex;
- align-items:center
-}
-body.mobile .project-row>.actions{
- grid-column:2;
- align-self:stretch;
- justify-content:flex-end;
- gap:7px
-}
-body.mobile .project-row>.actions .icon{
- width:42px;
- height:42px
-}
 
 
 body.mobile #project-overlay .detail-grid{grid-template-columns:minmax(0,1fr)}
@@ -348,6 +442,53 @@ body.mobile #project-overlay .field,
 body.mobile #project-overlay .field input,
 body.mobile #project-overlay .field select,
 body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:100%}
+
+body.mobile .project-card{overflow:hidden}
+body.mobile .project-preview{
+ grid-template-columns:minmax(0,1fr) auto;
+ column-gap:9px;
+ row-gap:8px;
+ padding:10px
+}
+body.mobile .project-meta{
+ grid-column:1/-1;
+ width:100%;
+ min-width:0
+}
+body.mobile .project-meta .title-input-inline,
+body.mobile .project-meta .mini-select,
+body.mobile .project-note{
+ display:block;
+ width:100%;
+ margin-left:0;
+ padding-left:8px
+}
+body.mobile .project-meta .mini-select{
+ max-width:100%;
+ height:32px;
+ padding-top:4px;
+ padding-bottom:4px
+}
+body.mobile .project-note{
+ grid-column:1;
+ height:96px;
+ min-height:96px;
+ max-height:96px
+}
+body.mobile .project-actions{
+ grid-column:2;
+ grid-row:2;
+ width:96px
+}
+body.mobile .project-actions .icon{height:42px}
+body.mobile .project-expand-btn{min-height:42px}
+body.mobile .project-expanded{padding:0 10px 10px}
+body.mobile .project-inline-subtask{
+ grid-template-columns:minmax(0,1fr)
+}
+body.mobile .project-inline-subtask>*{grid-column:1}
+body.mobile .theme-grid{grid-template-columns:1fr}
+
 @media(max-width:480px){
  body.mobile .page-header{flex-direction:column}
  body.mobile .page-header>.primary,
@@ -458,6 +599,32 @@ body.mobile .sidebar-patch{
 /* Native Datumsfelder stabil innerhalb des Rasters halten */
 .subtask-deadline{width:100%;max-width:100%;box-sizing:border-box;color-scheme:light}
 
+
+.theme-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(180px,1fr));
+ gap:10px
+}
+.theme-control{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) 46px;
+ gap:10px;
+ align-items:center;
+ padding:9px 10px;
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#f7f8fa
+}
+.theme-control label{font-size:12px;font-weight:700}
+.theme-control input[type="color"]{
+ width:42px;
+ height:32px;
+ padding:0;
+ border:0;
+ background:transparent
+}
+.sidebar .tool{background:#fff!important}
+
 </style>
 </head>
 <body>
@@ -532,7 +699,7 @@ body.mobile .sidebar-patch{
     </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-patch" aria-label="Letzter Patch">
-      Patch: 17.07.2026 · 11:06
+      Patch: 17.07.2026 · 11:36
     </div>
   </aside>
 
@@ -613,7 +780,6 @@ body.mobile .sidebar-patch{
     <div class="detail-grid">
       <div class="field full"><label>Anmerkungen</label><textarea id="project-summary"></textarea></div>
       <div class="field"><label>Aufgabenbereich</label><select id="project-area"></select></div>
-      <div class="field"><label>Aktueller Stand</label><input id="project-status" readonly></div>
       <div class="field"><label>Priorität</label><select id="project-priority"></select></div>
       <div class="field"><label>Deadline</label><input id="project-deadline" type="date"></div>
     </div>
@@ -650,6 +816,34 @@ body.mobile .sidebar-patch{
             <input id="backup-file-input" class="file-input" type="file" accept=".json,application/json">
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3>Darstellung der Seitenleiste</h3>
+      <div class="settings-group">
+        <div class="settings-hint">Die Werkzeugbuttons bleiben unabhängig von der Auswahl weiß.</div>
+        <div class="theme-grid">
+          <div class="theme-control">
+            <label for="theme-sidebar-bg">Hintergrund</label>
+            <input id="theme-sidebar-bg" type="color" data-theme-field="sidebarBg">
+          </div>
+          <div class="theme-control">
+            <label for="theme-title-color">Titel</label>
+            <input id="theme-title-color" type="color" data-theme-field="titleColor">
+          </div>
+          <div class="theme-control">
+            <label for="theme-subtitle-color">Untertitel</label>
+            <input id="theme-subtitle-color" type="color" data-theme-field="subtitleColor">
+          </div>
+          <div class="theme-control">
+            <label for="theme-nav-color">Reiter</label>
+            <input id="theme-nav-color" type="color" data-theme-field="navColor">
+          </div>
+        </div>
+        <button id="reset-sidebar-theme" class="secondary" type="button" style="margin-top:10px">
+          Standardfarben wiederherstellen
+        </button>
       </div>
     </section>
     <div id="settings-options-body"></div>
@@ -783,6 +977,7 @@ function createDefaults(){
   meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:''},
   config:{
    navOrder:['notes','projects','own','delegated'],
+   appearance:{sidebarBg:'#dbe8f3',titleColor:'#1f2933',subtitleColor:'#66717d',navColor:'#315d8a'},
    noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
    projects:{
     statuses:[status('project-open','Offen','#fff7d6','open'),status('project-active','In Bearbeitung','#fff0df','active'),status('project-done','Erledigt','#e6f1e8','done')],
@@ -863,6 +1058,13 @@ function normalizeState(raw){
  result.config.subtasks=normalizeSection(source.config?.subtasks,defaults.config.subtasks);
  result.config.own=normalizeSection(source.config?.own,defaults.config.own);
  result.config.delegated=normalizeSection(source.config?.delegated,defaults.config.delegated);
+ result.config.appearance={...defaults.config.appearance,...(source.config?.appearance||{})};
+ for(const key of Object.keys(defaults.config.appearance)){
+  const value=String(result.config.appearance[key]||'');
+  if(!/^#[0-9a-f]{6}$/i.test(value)){
+   result.config.appearance[key]=defaults.config.appearance[key];
+  }
+ }
  result.config.projects.priorities=result.config.projects.priorities.filter(item=>item.id!=='project-very-high'&&item.label!=='Sehr hohe Priorität');
  result.config.own.priorities=result.config.own.priorities.filter(item=>item.id!=='own-very-high'&&item.label!=='Sehr hohe Priorität');
  result.config.delegated.priorities=result.config.delegated.priorities.filter(item=>item.id!=='delegated-very-high'&&item.label!=='Sehr hohe Priorität');
@@ -910,6 +1112,7 @@ function loadState(){
 let state=loadState();
 let activePage='notes';
 let archiveOpen=false;
+const expandedProjectIds=new Set();
 let current={noteId:null,todoId:null,todoType:'own',projectId:null};
 let filters={own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set(),person:new Set()},projects:{status:new Set(),area:new Set()}};
 let historyPast=[],historyFuture=[],editKey=null,noteRange=null,quickNoteRange=null;
@@ -1429,6 +1632,21 @@ function richTextValueToHtml(value){
  if(/<\/?[a-z][\s\S]*>/i.test(source))return source;
  return esc(source).replace(/\r?\n/g,'<br>');
 }
+function renderTheme(){
+ const appearance=state.config.appearance||createDefaults().config.appearance;
+ const root=document.documentElement;
+ root?.style?.setProperty('--sidebar-bg',appearance.sidebarBg);
+ root?.style?.setProperty('--sidebar-title-color',appearance.titleColor);
+ root?.style?.setProperty('--sidebar-subtitle-color',appearance.subtitleColor);
+ root?.style?.setProperty('--sidebar-nav-color',appearance.navColor);
+}
+function renderThemeSettings(){
+ const appearance=state.config.appearance||createDefaults().config.appearance;
+ $$('[data-theme-field]').forEach(input=>{
+  const value=appearance[input.dataset.themeField];
+  if(value&&input.value!==value)input.value=value;
+ });
+}
 function renderBrand(){
  $('#app-title').textContent=state.meta.title;
  $('#app-subtitle').textContent=state.meta.subtitle;
@@ -1577,35 +1795,117 @@ function renderDelegated(){
 }
 
 function subtaskKind(task){return optionKind('subtasks',task.statusId)}
-function projectStatusKind(project){const tasks=project.subtasks||[];if(!tasks.length)return'open';if(tasks.every(task=>subtaskKind(task)==='done'))return'done';if(tasks.some(task=>subtaskKind(task)==='active'))return'active';return'open'}
-function projectStatusOption(project){const kind=projectStatusKind(project);return options('projects','statuses').find(item=>item.kind===kind)||options('projects','statuses')[0]||status('missing','Unbekannt','#eeeeee','open')}
-function projectMatches(project){const statusId=projectStatusOption(project).id;return(!filters.projects.status.size||filters.projects.status.has(statusId))&&(!filters.projects.area.size||filters.projects.area.has(project.areaId))}
-function renderProjectRow(project){
- const statusOption=projectStatusOption(project);
- const nextTasks=(project.subtasks||[]).filter(task=>subtaskKind(task)!=='done');
+function projectStatusKind(project){
+ const tasks=project.subtasks||[];
+ if(!tasks.length)return'open';
+ if(tasks.every(task=>subtaskKind(task)==='done'))return'done';
+ if(tasks.some(task=>subtaskKind(task)==='active'))return'active';
+ return'open';
+}
+function projectStatusOption(project){
+ const kind=projectStatusKind(project);
+ return options('projects','statuses').find(item=>item.kind===kind)
+  ||options('projects','statuses')[0]
+  ||status('missing','Unbekannt','#eeeeee','open');
+}
+function projectMatches(project){
+ const statusId=projectStatusOption(project).id;
+ return(!filters.projects.status.size||filters.projects.status.has(statusId))
+  &&(!filters.projects.area.size||filters.projects.area.has(project.areaId));
+}
+function renderProjectSubtask(task,{detail=false}={}){
+ const rowClass=detail?'subtask-row':'project-inline-subtask';
+ const titleClass=detail?'subtask-title':'project-inline-title';
 
- return`<div class="project-row" data-project-id="${project.id}" draggable="true">
-  <div>
-   <input class="inline title-input-inline" data-project-field="title" value="${esc(project.title)}" placeholder="Bezeichnung">
-   <select class="mini-select" data-project-field="areaId">${selectOptions('projects','areas',project.areaId,{custom:true})}</select>
-  </div>
-  <div class="project-current">
-   <div class="current-label">Nächste Schritte:</div>
-   <div>${nextTasks.length
-    ?nextTasks.map(task=>`<div class="current-item"><span class="current-bullet">•</span><span>${esc(task.title||'Ohne Bezeichnung')} <span class="small">${task.personId?`– ${esc(optionLabel('subtasks','people',task.personId))}`:''}</span></span></div>`).join('')
-    :'<span class="small">Keine offenen Schritte</span>'
-   }</div>
-  </div>
-  <div class="project-status" style="${statusStyle('projects',statusOption.id)}">${esc(statusOption.label)}</div>
-  <div class="actions">
-   <button type="button" class="icon open-btn" data-action="open-project">⛶</button>
-   <button type="button" class="icon delete-btn" data-action="delete-project">×</button>
-  </div>
+ return`<div class="${rowClass}" data-subtask-id="${task.id}">
+  <textarea class="${titleClass}" data-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea>
+  <textarea class="subtask-summary" data-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea>
+  <select data-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select>
+  <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31" step="1"
+         data-subtask-field="deadline" value="${esc(task.deadline)}" aria-label="Deadline">
+  <select class="status-select" data-subtask-field="statusId"
+          style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select>
+  <button type="button" class="icon delete-btn" data-action="delete-subtask" title="Unteraufgabe löschen">×</button>
  </div>`;
 }
-function renderProjects(){renderFilter('#project-filters','projects',['status','area']);const active=filters.projects.status.size||filters.projects.area.size;if(active){const items=state.projects.filter(projectMatches);$('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#project-filters .filter-info').textContent=`${items.length} Treffer`;return}$('#project-filters .filter-info').textContent='';const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];$('#project-groups').innerHTML=groups.map(group=>{const items=state.projects.filter(project=>group.id==='__completed__'?projectStatusKind(project)==='done':projectStatusKind(project)!=='done'&&project.priorityId===group.id);return`<section class="group project ${group.id==='__completed__'?'completed-group':''}" data-project-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${group.id!=='__completed__'?`<button type="button" class="quick-add" data-action="quick-project" data-priority-id="${group.id}">+</button>`:''}</div></div><div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div></section>`}).join('')}
+function renderProjectRow(project){
+ const expanded=expandedProjectIds.has(project.id);
 
-function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-options-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button type="button" class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
+ return`<article class="project-card project-row ${expanded?'expanded':''}"
+                 data-project-id="${project.id}" draggable="true">
+  <div class="project-preview">
+   <div class="project-meta">
+    <input class="inline title-input-inline" data-project-field="title"
+           value="${esc(project.title)}" placeholder="Bezeichnung">
+    <select class="mini-select" data-project-field="areaId">${selectOptions('projects','areas',project.areaId,{custom:true})}</select>
+   </div>
+
+   <textarea class="project-note" data-project-field="summary"
+             placeholder="Anmerkungen">${esc(project.summary)}</textarea>
+
+   <div class="project-actions">
+    <button type="button" class="icon open-btn" data-action="open-project" title="Projekt öffnen">⛶</button>
+    <button type="button" class="icon delete-btn" data-action="delete-project" title="Projekt löschen">×</button>
+    <button type="button" class="project-expand-btn" data-action="toggle-project-expand">
+     ${expanded?'Zuklappen':'Aufklappen'}
+    </button>
+   </div>
+  </div>
+
+  <div class="project-expanded">
+   ${(project.subtasks||[]).length
+    ?project.subtasks.map(task=>renderProjectSubtask(task)).join('')
+    :'<div class="empty">Noch keine Unteraufgaben.</div>'
+   }
+   <button type="button" class="project-inline-add" data-action="add-inline-subtask">
+    + Unteraufgabe hinzufügen
+   </button>
+  </div>
+ </article>`;
+}
+function renderProjects(){
+ renderFilter('#project-filters','projects',['status','area']);
+ const filtersActive=filters.projects.status.size||filters.projects.area.size;
+
+ if(filtersActive){
+  const items=state.projects.filter(projectMatches);
+  $('#project-groups').innerHTML=`<div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;
+  $('#project-filters .filter-info').textContent=`${items.length} Treffer`;
+  growAll();
+  return;
+ }
+
+ $('#project-filters .filter-info').textContent='';
+ const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];
+
+ $('#project-groups').innerHTML=groups.map(group=>{
+  const items=state.projects.filter(project=>
+   group.id==='__completed__'
+    ?projectStatusKind(project)==='done'
+    :projectStatusKind(project)!=='done'&&project.priorityId===group.id
+  );
+
+  return`<section class="group project ${group.id==='__completed__'?'completed-group':''}"
+                  data-project-drop="${group.id}">
+   <div class="group-head">
+    <h3>${esc(group.label)}</h3>
+    <div class="group-meta">
+     <span class="count">${items.length}</span>
+     ${group.id!=='__completed__'
+      ?`<button type="button" class="quick-add" data-action="quick-project"
+                 data-priority-id="${group.id}">+</button>`
+      :''
+     }
+    </div>
+   </div>
+   <div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div>
+  </section>`;
+ }).join('');
+
+ growAll();
+}
+
+function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Automatischer Projektstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-options-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button type="button" class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
 function renderOptionRow(section,group,item){return`<div class="option-row ${group==='statuses'?'status-option':''}" draggable="true" data-option-id="${item.id}" data-option-section="${section}" data-option-group="${group}"><span class="drag-handle">⋮⋮</span><input type="text" data-setting-field="label" value="${esc(item.label)}">${group==='statuses'?`<input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}"><select data-setting-field="kind"><option value="open" ${item.kind==='open'?'selected':''}>Offen</option><option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option><option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option></select>`:''}<button type="button" class="option-delete" data-action="delete-option">×</button></div>`}
 function renderAccountInfo(){
  const target=$('#account-email');
@@ -1615,7 +1915,7 @@ function renderAccountInfo(){
    : 'Nicht angemeldet';
  }
 }
-function renderAll(){renderBrand();renderNav();renderNotes();renderOwn();renderDelegated();renderProjects();renderSettings();renderAccountInfo();renderHistoryButtons()}
+function renderAll(){renderTheme();renderBrand();renderNav();renderNotes();renderOwn();renderDelegated();renderProjects();renderSettings();renderThemeSettings();renderAccountInfo();renderHistoryButtons()}
 
 function createNote(){const note={id:uid(),title:'',area:'',content:'',archived:false,updatedAt:now()};commit(()=>state.notes.unshift(note));openNote(note.id)}
 function openNote(id){const note=state.notes.find(item=>item.id===id);if(!note)return;current.noteId=id;$('#note-title').value=note.title;$('#note-area').value=note.area;$('#note-editor').innerHTML=note.content;openOverlay('note')}
@@ -1641,29 +1941,106 @@ function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:st
 function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});closeOverlays()}
 function toggleTodo(id,type){commit(()=>{const todo=(type==='own'?state.ownTodos:state.delegatedTodos).find(item=>item.id===id);if(!todo)return;const next=todoIsCompleted(todo,type)?todoOpenStatus(type):todoDoneStatus(type);if(next)setTodoStatus(todo,type,next.id);todo.updatedAt=now()})}
 
-function createProject({open=true,priorityId=null}={}){const project={id:uid(),title:'',summary:'',areaId:options('projects','areas')[0]?.id||'',priorityId:priorityId||options('projects','priorities')[0]?.id||'',deadline:'',subtasks:[],updatedAt:now()};commit(()=>state.projects.unshift(project));if(open)openProject(project.id)}
-function openProject(id){const project=state.projects.find(item=>item.id===id);if(!project)return;current.projectId=id;$('#project-title').value=project.title;$('#project-summary').value=project.summary;$('#project-area').innerHTML=selectOptions('projects','areas',project.areaId,{custom:true});$('#project-priority').innerHTML=selectOptions('projects','priorities',project.priorityId);$('#project-deadline').value=project.deadline;updateProjectStatusField(project);renderSubtasks();openOverlay('project')}
-function updateProjectStatusField(project){const selected=projectStatusOption(project);const input=$('#project-status');input.value=selected.label;input.style.cssText=statusStyle('projects',selected.id)}
-function saveCurrentProject(){const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.title=$('#project-title').value.trim();project.summary=$('#project-summary').value;project.areaId=$('#project-area').value;project.priorityId=$('#project-priority').value;project.deadline=$('#project-deadline').value;project.updatedAt=now();saveState();updateProjectStatusField(project)}
-function deleteProject(id){const project=state.projects.find(item=>item.id===id);if(!project||!confirm(`Soll „${project.title||'dieses Projekt'}“ wirklich gelöscht werden? Alle Unteraufgaben werden ebenfalls gelöscht.`))return;commit(()=>state.projects=state.projects.filter(item=>item.id!==id));closeOverlays()}
+function createProject({open=true,priorityId=null}={}){
+ const project={
+  id:uid(),
+  title:'',
+  summary:'',
+  areaId:options('projects','areas')[0]?.id||'',
+  priorityId:priorityId||options('projects','priorities')[0]?.id||'',
+  deadline:'',
+  subtasks:[],
+  updatedAt:now()
+ };
+ commit(()=>state.projects.unshift(project));
+ if(open)openProject(project.id);
+}
+function openProject(id){
+ const project=state.projects.find(item=>item.id===id);
+ if(!project)return;
+
+ current.projectId=id;
+ $('#project-title').value=project.title;
+ $('#project-summary').value=project.summary;
+ $('#project-area').innerHTML=selectOptions('projects','areas',project.areaId,{custom:true});
+ $('#project-priority').innerHTML=selectOptions('projects','priorities',project.priorityId);
+ $('#project-deadline').value=project.deadline;
+ renderSubtasks();
+ openOverlay('project');
+}
+function saveCurrentProject(){
+ const project=state.projects.find(item=>item.id===current.projectId);
+ if(!project)return;
+
+ project.title=$('#project-title').value.trim();
+ project.summary=$('#project-summary').value;
+ project.areaId=$('#project-area').value;
+ project.priorityId=$('#project-priority').value;
+ project.deadline=$('#project-deadline').value;
+ project.updatedAt=now();
+ saveState();
+}
+function deleteProject(id){
+ const project=state.projects.find(item=>item.id===id);
+ if(!project||!confirm(`Soll „${project.title||'dieses Projekt'}“ wirklich gelöscht werden? Alle Unteraufgaben werden ebenfalls gelöscht.`))return;
+ expandedProjectIds.delete(id);
+ commit(()=>state.projects=state.projects.filter(item=>item.id!==id));
+ closeOverlays();
+}
+function resolveSubtaskContext(element){
+ const projectId=element.closest('[data-project-id]')?.dataset.projectId||current.projectId;
+ const project=state.projects.find(item=>item.id===projectId);
+ const subtaskId=element.closest('[data-subtask-id]')?.dataset.subtaskId;
+ const task=project?.subtasks.find(item=>item.id===subtaskId);
+ return{projectId,project,task};
+}
 function renderSubtasks(){
  const project=state.projects.find(item=>item.id===current.projectId);
  const list=$('#subtask-list');
+
  list.innerHTML=project?.subtasks?.length
-  ?project.subtasks.map(task=>`<div class="subtask-row" data-subtask-id="${task.id}">
-    <textarea data-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea>
-    <textarea class="subtask-summary" data-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea>
-    <select data-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select>
-    <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31" step="1"
-           data-subtask-field="deadline" value="${esc(task.deadline)}" aria-label="Deadline">
-    <select data-subtask-field="statusId" style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select>
-    <button type="button" class="icon delete-btn" data-action="delete-subtask">×</button>
-   </div>`).join('')
+  ?project.subtasks.map(task=>renderProjectSubtask(task,{detail:true})).join('')
   :'<div class="empty">Noch keine Unteraufgaben.</div>';
+
  growAll();
 }
-function addSubtask(){commit(()=>{const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.subtasks.push({id:uid(),title:'',summary:'',personId:options('subtasks','people')[0]?.id||'',deadline:'',statusId:options('subtasks','statuses')[0]?.id||'',updatedAt:now()});project.updatedAt=now()});renderSubtasks();const project=state.projects.find(item=>item.id===current.projectId);if(project)updateProjectStatusField(project)}
-function deleteSubtask(id){commit(()=>{const project=state.projects.find(item=>item.id===current.projectId);if(!project)return;project.subtasks=project.subtasks.filter(item=>item.id!==id);project.updatedAt=now()});renderSubtasks();const project=state.projects.find(item=>item.id===current.projectId);if(project)updateProjectStatusField(project)}
+function addSubtask(projectId=current.projectId){
+ const project=state.projects.find(item=>item.id===projectId);
+ if(!project)return;
+
+ commit(()=>{
+  project.subtasks.push({
+   id:uid(),
+   title:'',
+   summary:'',
+   personId:options('subtasks','people')[0]?.id||'',
+   deadline:'',
+   statusId:options('subtasks','statuses')[0]?.id||'',
+   updatedAt:now()
+  });
+  project.updatedAt=now();
+ });
+
+ if(projectId===current.projectId&&$('#project-overlay').classList.contains('open')){
+  renderSubtasks();
+ }
+ expandedProjectIds.add(projectId);
+ renderProjects();
+}
+function deleteSubtask(id,projectId=current.projectId){
+ const project=state.projects.find(item=>item.id===projectId);
+ if(!project)return;
+
+ commit(()=>{
+  project.subtasks=project.subtasks.filter(item=>item.id!==id);
+  project.updatedAt=now();
+ });
+
+ if(projectId===current.projectId&&$('#project-overlay').classList.contains('open')){
+  renderSubtasks();
+ }
+ renderProjects();
+}
 
 function usageCount(section,group,id){let count=0;if(section==='own'){state.ownTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===id)count++;if(group==='priorities'&&(todo.priorityId===id||todo.previousPriorityId===id))count++;if(group==='areas'&&todo.areaId===id)count++})}if(section==='delegated'){state.delegatedTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===id)count++;if(group==='priorities'&&(todo.priorityId===id||todo.previousPriorityId===id))count++;if(group==='areas'&&todo.areaId===id)count++;if(group==='people'&&todo.personId===id)count++})}if(section==='projects'){state.projects.forEach(project=>{if(group==='priorities'&&project.priorityId===id)count++;if(group==='areas'&&project.areaId===id)count++})}if(section==='subtasks'){state.projects.flatMap(project=>project.subtasks||[]).forEach(task=>{if(group==='statuses'&&task.statusId===id)count++;if(group==='people'&&task.personId===id)count++})}return count}
 function replaceUsage(section,group,oldId,newId){if(section==='own')state.ownTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===oldId)todo.statusId=newId;if(group==='priorities'){if(todo.priorityId===oldId)todo.priorityId=newId;if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId}if(group==='areas'&&todo.areaId===oldId)todo.areaId=newId});if(section==='delegated')state.delegatedTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===oldId)todo.statusId=newId;if(group==='priorities'){if(todo.priorityId===oldId)todo.priorityId=newId;if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId}if(group==='areas'&&todo.areaId===oldId)todo.areaId=newId;if(group==='people'&&todo.personId===oldId)todo.personId=newId});if(section==='projects')state.projects.forEach(project=>{if(group==='priorities'&&project.priorityId===oldId)project.priorityId=newId;if(group==='areas'&&project.areaId===oldId)project.areaId=newId});if(section==='subtasks')state.projects.flatMap(project=>project.subtasks||[]).forEach(task=>{if(group==='statuses'&&task.statusId===oldId)task.statusId=newId;if(group==='people'&&task.personId===oldId)task.personId=newId})}
@@ -1759,8 +2136,18 @@ document.addEventListener('click',event=>{
    case'quick-delegated':createTodo('delegated',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
    case'open-project':openProject(projectRow.dataset.projectId);break;
    case'delete-project':deleteProject(projectRow.dataset.projectId);break;
+   case'toggle-project-expand':{
+    const id=projectRow.dataset.projectId;
+    expandedProjectIds.has(id)?expandedProjectIds.delete(id):expandedProjectIds.add(id);
+    renderProjects();
+    break;
+   }
+   case'add-inline-subtask':addSubtask(projectRow.dataset.projectId);break;
    case'quick-project':createProject({open:false,priorityId:action.dataset.priorityId});break;
-   case'delete-subtask':deleteSubtask(subtaskRow.dataset.subtaskId);break;
+   case'delete-subtask':deleteSubtask(
+    subtaskRow.dataset.subtaskId,
+    projectRow?.dataset.projectId||current.projectId
+   );break;
    case'add-option':addSettingOption(action.dataset.optionSection,action.dataset.optionGroup);break;
    case'delete-option':{const row=action.closest('[data-option-id]');deleteSettingOption(row.dataset.optionSection,row.dataset.optionGroup,row.dataset.optionId);break}
   }
@@ -1774,20 +2161,30 @@ document.addEventListener('click',event=>{
 document.addEventListener('change',event=>{
  const filterInput=event.target.closest('[data-filter-section]');if(filterInput){const set=filters[filterInput.dataset.filterSection][filterInput.dataset.filterGroup];filterInput.checked?set.add(filterInput.value):set.delete(filterInput.value);renderAll();return}
  const todoField=event.target.closest('[data-todo-field]');if(todoField){beginEdit(`todo:${todoField.closest('[data-todo-id]').dataset.todoId}:${todoField.dataset.todoField}`);updateInlineTodo(todoField);endEdit();renderAll();return}
- const projectField=event.target.closest('[data-project-field]');if(projectField){beginEdit(`project:${projectField.closest('[data-project-id]').dataset.projectId}:${projectField.dataset.projectField}`);updateInlineProject(projectField);endEdit();renderAll();return}
+ const projectField=event.target.closest('[data-project-field]');
+ if(projectField){
+  beginEdit(`project:${projectField.closest('[data-project-id]').dataset.projectId}:${projectField.dataset.projectField}`);
+  updateInlineProject(projectField);
+  endEdit();
+  renderProjects();
+  return;
+ }
  const subtaskField=event.target.closest('[data-subtask-field]');
  if(subtaskField){
-  const project=state.projects.find(item=>item.id===current.projectId);
-  const task=project?.subtasks.find(item=>item.id===subtaskField.closest('[data-subtask-id]').dataset.subtaskId);
-  if(!task)return;
+  const{projectId,project,task}=resolveSubtaskContext(subtaskField);
+  if(!project||!task)return;
 
-  beginEdit(`subtask:${task.id}:${subtaskField.dataset.subtaskField}`);
+  beginEdit(`subtask:${projectId}:${task.id}:${subtaskField.dataset.subtaskField}`);
   const field=subtaskField.dataset.subtaskField;
-  let rerenderSubtasks=field==='personId'||field==='statusId';
 
   if(field==='personId'){
    const value=handleCustomSelect(subtaskField,'subtasks','people');
-   if(value===null){renderSubtasks();endEdit();return}
+   if(value===null){
+    if(projectId===current.projectId&&$('#project-overlay').classList.contains('open'))renderSubtasks();
+    renderProjects();
+    endEdit();
+    return;
+   }
    task.personId=value;
   }else{
    task[field]=subtaskField.value;
@@ -1798,9 +2195,28 @@ document.addEventListener('change',event=>{
   saveState();
   endEdit();
 
-  if(rerenderSubtasks)renderSubtasks();
-  updateProjectStatusField(project);
-  renderProjects();
+  if(field==='statusId'){
+   subtaskField.style.cssText=statusStyle('subtasks',task.statusId);
+   renderProjects();
+  }
+
+  if(
+   projectId===current.projectId
+   &&$('#project-overlay').classList.contains('open')
+   &&field==='personId'
+  ){
+   renderSubtasks();
+  }
+  return;
+ }
+ const themeInput=event.target.closest('[data-theme-field]');
+ if(themeInput){
+  const field=themeInput.dataset.themeField;
+  if(field in state.config.appearance){
+   state.config.appearance[field]=themeInput.value;
+   saveState();
+   renderTheme();
+  }
   return;
  }
  const setting=event.target.closest('[data-setting-field]');if(setting){const row=setting.closest('[data-option-id]');const section=row.dataset.optionSection,group=row.dataset.optionGroup;const item=options(section,group).find(entry=>entry.id===row.dataset.optionId);if(!item)return;beginEdit(`setting:${section}:${group}:${row.dataset.optionId}`);if(setting.dataset.settingField==='kind'&&item.kind!==setting.value&&options(section,'statuses').filter(entry=>entry.kind===item.kind).length<=1){alert('Für jede Einordnung muss mindestens ein Status erhalten bleiben. Lege zuerst einen weiteren Status mit dieser Einordnung an.');setting.value=item.kind;endEdit();return}item[setting.dataset.settingField]=setting.dataset.settingField==='label'?(setting.value.trim()||'Neue Auswahl'):setting.value;saveState();endEdit();renderAll();return}
@@ -1816,18 +2232,20 @@ document.addEventListener('change',event=>{
 document.addEventListener('input',event=>{
  if(event.target.id==='quick-note-editor'){state.meta.quickNote=event.target.innerHTML;saveState();return}
  const todoField=event.target.closest('[data-todo-field]');if(todoField&&['title','summary'].includes(todoField.dataset.todoField)){updateInlineTodo(todoField);return}
- const projectField=event.target.closest('[data-project-field]');if(projectField&&projectField.dataset.projectField==='title'){updateInlineProject(projectField);return}
+ const projectField=event.target.closest('[data-project-field]');
+ if(projectField&&['title','summary'].includes(projectField.dataset.projectField)){
+  updateInlineProject(projectField);
+  return;
+ }
  const subtaskField=event.target.closest('[data-subtask-field]');
  if(subtaskField&&['title','summary','deadline'].includes(subtaskField.dataset.subtaskField)){
-  const project=state.projects.find(item=>item.id===current.projectId);
-  const task=project?.subtasks.find(item=>item.id===subtaskField.closest('[data-subtask-id]').dataset.subtaskId);
-  if(task){
+  const{project,task}=resolveSubtaskContext(subtaskField);
+  if(task&&project){
    task[subtaskField.dataset.subtaskField]=subtaskField.value;
    task.updatedAt=now();
    project.updatedAt=now();
    saveState();
    if(['title','summary'].includes(subtaskField.dataset.subtaskField))autoGrow(subtaskField);
-   renderProjects();
   }
   return;
  }
@@ -1905,6 +2323,10 @@ document.addEventListener('dragstart',event=>{
 
  const projectRow=event.target.closest('.project-row[draggable="true"]');
  if(projectRow){
+  if(event.target.closest('input,textarea,select,button,[contenteditable="true"]')){
+   event.preventDefault();
+   return;
+  }
   projectRow.classList.add('item-dragging');
   event.dataTransfer.effectAllowed='move';
   event.dataTransfer.setData('application/x-dashboard-item',JSON.stringify({
@@ -2235,7 +2657,7 @@ bind('#archive-toggle','click',()=>{
 
 
 
-bind('#add-subtask-btn','click',addSubtask);
+bind('#add-subtask-btn','click',()=>addSubtask(current.projectId));
 bind('#undo-btn','mousedown',event=>{
  if($('#note-overlay').classList.contains('open')||document.activeElement===$('#quick-note-editor'))event.preventDefault();
 });
@@ -2245,6 +2667,9 @@ bind('#redo-btn','mousedown',event=>{
 bind('#undo-btn','click',performUndo);
 bind('#redo-btn','click',performRedo);
 bind('#settings-btn','click',()=>openOverlay('settings'));
+bind('#reset-sidebar-theme','click',()=>{
+ commit(()=>state.config.appearance=clone(createDefaults().config.appearance));
+});
 bind('#view-toggle','click',toggleViewMode);
 bind('#app-title','click',()=>{const value=prompt('Name der Übersicht:',state.meta.title)?.trim();if(value)commit(()=>state.meta.title=value)});
 bind('#app-subtitle','click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
@@ -2357,7 +2782,9 @@ window.__dashboardTest={
  initializeCloud,
  ensureSupabaseLibrary,
  getDiagnostics:()=>[...diagnostics],
- ensureTodoDoneStatus
+ ensureTodoDoneStatus,
+ projectStatusKind,
+ renderProjectRow
 };
 })();
 </script>
