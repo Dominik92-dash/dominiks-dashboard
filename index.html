@@ -532,7 +532,7 @@ body.mobile .sidebar-patch{
     </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-patch" aria-label="Letzter Patch">
-      Patch: 17.07.2026 · 10:52
+      Patch: 17.07.2026 · 11:06
     </div>
   </aside>
 
@@ -1517,6 +1517,19 @@ function renderNotes(){
   ?archivedNotes.map(note=>renderNoteCard(note,{archived:true})).join('')
   :'<div class="empty">Das Archiv ist leer.</div>';
 }
+function ensureTodoDoneStatus(type){
+ const section=sectionConfig(type);
+ if(!section)return null;
+ if(!Array.isArray(section.statuses))section.statuses=[];
+
+ let done=section.statuses.find(item=>item?.kind==='done');
+ if(done)return done;
+
+ const fallback=createDefaults().config[type]?.statuses?.find(item=>item.kind==='done');
+ done=clone(fallback||status(`${type}-done`,'Erledigt','#e6f1e8','done'));
+ section.statuses.push(done);
+ return done;
+}
 function todoDoneStatus(type){return ensureTodoDoneStatus(type)}
 function todoOpenStatus(type){return options(type,'statuses').find(item=>item.kind!=='done')||options(type,'statuses')[0]||null}
 function todoIsCompleted(todo,type){return Boolean(todo.completed)||optionKind(type,todo.statusId)==='done'}
@@ -2343,7 +2356,8 @@ window.__dashboardTest={
  saveCloudState,
  initializeCloud,
  ensureSupabaseLibrary,
- getDiagnostics:()=>[...diagnostics]
+ getDiagnostics:()=>[...diagnostics],
+ ensureTodoDoneStatus
 };
 })();
 </script>
