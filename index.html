@@ -6,17 +6,17 @@
 <title>Dominik's Übersicht</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Cinzel:wght@400;600&family=Inter:wght@400;600;700&family=Jolly+Lodger&family=Lobster&family=Oswald:wght@400;600&family=Pacifico&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--own:#bfd6e9;--project:#bfd6e9;--delegated:#bfd6e9;--note:#d9dee3;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-subtitle-color:#66717d;--sidebar-nav-color:#315d8a}
+:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--group-bg:#bfd6e9;--own:var(--group-bg);--project:var(--group-bg);--delegated:var(--group-bg);--note:var(--group-bg);--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-subtitle-color:#66717d;--sidebar-nav-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif}
 *{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
-.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:30px;line-height:1;cursor:pointer;font-family:'Jolly Lodger',Arial,Helvetica,sans-serif;letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-subtitle-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:30px;line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-subtitle-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
 .tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
-.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-nav-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:rgba(255,255,255,.72);color:var(--sidebar-nav-color);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
+.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-nav-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
 .quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:#eef1f4;border:1px solid #d7dce1;border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{font-size:12px;font-weight:700;color:var(--muted)}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
-.note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid #c7cdd3;border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid var(--note);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.delegated-group{background:var(--delegated);border-color:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
 .todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}
@@ -545,13 +545,6 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  word-break:break-word
 }
 .rich-editor img,#note-editor img{max-width:100%;height:auto}
-.preview{
- white-space:normal;
- overflow:hidden;
- display:-webkit-box;
- -webkit-box-orient:vertical;
- -webkit-line-clamp:2
-}
 
 
 .sidebar{display:flex;flex-direction:column}
@@ -583,8 +576,6 @@ body.mobile .sidebar-patch{
 .archive-btn{background:#edf0f3;color:#4e6172;font-size:16px}
 .restore-btn{background:#e8f3eb;color:#2f7040;font-size:17px}
 
-/* Vorschau mit echten Zeilen statt zusammengeklebter Listeneinträge */
-.preview{white-space:pre-line!important;display:block!important;line-height:1.4;max-height:4.2em;overflow:hidden}
 
 /* Drag-and-drop innerhalb der Prioritätsgruppen */
 .todo-row[draggable="true"],.project-row[draggable="true"]{cursor:grab}
@@ -624,6 +615,89 @@ body.mobile .sidebar-patch{
  background:transparent
 }
 .sidebar .tool{background:#fff!important}
+
+
+/* Statusanzeige in Aufgaben etwas kompakter */
+.todo-row>.status-select{font-size:13px}
+
+/* Notizvorschau: echte Umbrüche statt zusammenhängender Zeile */
+.preview{
+ white-space:normal!important;
+ display:block!important;
+ line-height:1.4;
+ max-height:5.6em;
+ overflow:hidden
+}
+.preview br{display:block}
+
+/* Mobile Unteraufgaben: native Datumsfelder niemals über den Rand hinaus */
+body.mobile .project-expanded,
+body.mobile .project-inline-subtask{min-width:0;max-width:100%;overflow:hidden}
+body.mobile .project-inline-subtask>*{min-width:0;max-width:100%}
+body.mobile .project-inline-subtask .subtask-deadline{
+ display:block;
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ inline-size:100%;
+ min-inline-size:0;
+ max-inline-size:100%;
+ padding-right:5px
+}
+body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-value{
+ min-width:0;
+ text-align:left
+}
+
+/* Kompaktere Einstellungen */
+.settings-body{gap:12px;padding:16px}
+.settings-section{padding:11px;border-radius:10px}
+.settings-section h3{margin:0 0 9px;font-size:15px}
+.settings-grid{gap:10px}
+.settings-group{padding:9px;border-radius:8px}
+.settings-group h4{margin:0 0 7px;font-size:13px}
+.settings-hint{margin:-2px 0 7px;font-size:10px;line-height:1.35}
+.option-list{gap:5px}
+.option-row{gap:5px;padding:5px;font-size:12px}
+.option-row input[type=text],.option-row select{padding:5px;font-size:12px}
+.option-row input[type=color]{width:34px;height:27px}
+.option-delete{width:27px;height:27px}
+.add-option{margin-top:6px;padding:6px 8px;font-size:11px}
+.account-panel{gap:8px}
+.account-row{gap:6px}
+.account-row button{padding:8px 10px;font-size:12px}
+.account-info{padding:8px 9px;font-size:12px}
+
+/* Kompakte Darstellungsoptionen */
+.theme-grid{
+ grid-template-columns:repeat(3,minmax(150px,1fr));
+ gap:7px
+}
+.theme-control{
+ grid-template-columns:minmax(0,1fr) 38px;
+ gap:7px;
+ padding:7px 8px
+}
+.theme-control.font-control{
+ grid-template-columns:110px minmax(0,1fr);
+ grid-column:1/-1
+}
+.theme-control label{font-size:11px}
+.theme-control input[type="color"]{width:35px;height:28px}
+.theme-control select{
+ width:100%;
+ min-width:0;
+ padding:6px 7px;
+ border:1px solid var(--border);
+ border-radius:6px;
+ background:#fff;
+ font-size:12px
+}
+@media(max-width:900px){
+ .theme-grid{grid-template-columns:repeat(2,minmax(150px,1fr))}
+}
+body.mobile .theme-grid{grid-template-columns:1fr}
+body.mobile .theme-control.font-control{grid-template-columns:1fr}
 
 </style>
 </head>
@@ -699,7 +773,7 @@ body.mobile .sidebar-patch{
     </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-patch" aria-label="Letzter Patch">
-      Patch: 17.07.2026 · 11:36
+      Patch: 17.07.2026 · 12:44
     </div>
   </aside>
 
@@ -824,9 +898,29 @@ body.mobile .sidebar-patch{
       <div class="settings-group">
         <div class="settings-hint">Die Werkzeugbuttons bleiben unabhängig von der Auswahl weiß.</div>
         <div class="theme-grid">
+          <div class="theme-control font-control">
+            <label for="theme-title-font">Titelschrift</label>
+            <select id="theme-title-font" data-theme-field="titleFont">
+              <option value="Jolly Lodger">Jolly Lodger</option>
+              <option value="Bebas Neue">Bebas Neue</option>
+              <option value="Oswald">Oswald</option>
+              <option value="Bungee">Bungee</option>
+              <option value="Cinzel">Cinzel</option>
+              <option value="Lobster">Lobster</option>
+              <option value="Pacifico">Pacifico</option>
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Inter">Inter</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Arial">Arial</option>
+            </select>
+          </div>
           <div class="theme-control">
-            <label for="theme-sidebar-bg">Hintergrund</label>
+            <label for="theme-sidebar-bg">Seitenleiste</label>
             <input id="theme-sidebar-bg" type="color" data-theme-field="sidebarBg">
+          </div>
+          <div class="theme-control">
+            <label for="theme-group-color">Kategorien &amp; Notizen</label>
+            <input id="theme-group-color" type="color" data-theme-field="groupColor">
           </div>
           <div class="theme-control">
             <label for="theme-title-color">Titel</label>
@@ -866,6 +960,21 @@ const SUPABASE_CDN_URLS=[
  'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
 ];
 const CLOUD_TIMEOUT_MS=10000;
+
+const TITLE_FONT_OPTIONS=[
+ 'Jolly Lodger',
+ 'Bebas Neue',
+ 'Oswald',
+ 'Bungee',
+ 'Cinzel',
+ 'Lobster',
+ 'Pacifico',
+ 'Playfair Display',
+ 'Inter',
+ 'Poppins',
+ 'Arial'
+];
+
 const DEBUG_MODE=new URLSearchParams(location.search).get('debug')==='1';
 const VIEW_MODE_KEY='dominik_dashboard_view_mode';
 const $=(selector,root=document)=>root.querySelector(selector);
@@ -977,7 +1086,7 @@ function createDefaults(){
   meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:''},
   config:{
    navOrder:['notes','projects','own','delegated'],
-   appearance:{sidebarBg:'#dbe8f3',titleColor:'#1f2933',subtitleColor:'#66717d',navColor:'#315d8a'},
+   appearance:{sidebarBg:'#dbe8f3',titleColor:'#1f2933',subtitleColor:'#66717d',navColor:'#315d8a',groupColor:'#bfd6e9',titleFont:'Jolly Lodger'},
    noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
    projects:{
     statuses:[status('project-open','Offen','#fff7d6','open'),status('project-active','In Bearbeitung','#fff0df','active'),status('project-done','Erledigt','#e6f1e8','done')],
@@ -1059,11 +1168,15 @@ function normalizeState(raw){
  result.config.own=normalizeSection(source.config?.own,defaults.config.own);
  result.config.delegated=normalizeSection(source.config?.delegated,defaults.config.delegated);
  result.config.appearance={...defaults.config.appearance,...(source.config?.appearance||{})};
- for(const key of Object.keys(defaults.config.appearance)){
+ const appearanceColorKeys=['sidebarBg','titleColor','subtitleColor','navColor','groupColor'];
+ for(const key of appearanceColorKeys){
   const value=String(result.config.appearance[key]||'');
   if(!/^#[0-9a-f]{6}$/i.test(value)){
    result.config.appearance[key]=defaults.config.appearance[key];
   }
+ }
+ if(!TITLE_FONT_OPTIONS.includes(result.config.appearance.titleFont)){
+  result.config.appearance.titleFont=defaults.config.appearance.titleFont;
  }
  result.config.projects.priorities=result.config.projects.priorities.filter(item=>item.id!=='project-very-high'&&item.label!=='Sehr hohe Priorität');
  result.config.own.priorities=result.config.own.priorities.filter(item=>item.id!=='own-very-high'&&item.label!=='Sehr hohe Priorität');
@@ -1635,10 +1748,24 @@ function richTextValueToHtml(value){
 function renderTheme(){
  const appearance=state.config.appearance||createDefaults().config.appearance;
  const root=document.documentElement;
+ const titleFont=TITLE_FONT_OPTIONS.includes(appearance.titleFont)
+  ?appearance.titleFont
+  :createDefaults().config.appearance.titleFont;
+ const activeText=readableTextColor(appearance.groupColor);
+
  root?.style?.setProperty('--sidebar-bg',appearance.sidebarBg);
  root?.style?.setProperty('--sidebar-title-color',appearance.titleColor);
  root?.style?.setProperty('--sidebar-subtitle-color',appearance.subtitleColor);
  root?.style?.setProperty('--sidebar-nav-color',appearance.navColor);
+ root?.style?.setProperty('--group-bg',appearance.groupColor);
+ root?.style?.setProperty('--sidebar-active-bg',appearance.groupColor);
+ root?.style?.setProperty('--sidebar-active-text',activeText);
+ root?.style?.setProperty(
+  '--sidebar-title-font',
+  titleFont==='Arial'
+   ?'Arial,Helvetica,sans-serif'
+   :`"${titleFont}",Arial,Helvetica,sans-serif`
+ );
 }
 function renderThemeSettings(){
  const appearance=state.config.appearance||createDefaults().config.appearance;
@@ -1668,36 +1795,64 @@ function previewTextFromHtml(html){
  const root=document.createElement('div');
  root.innerHTML=html||'';
 
- $$('br',root).forEach(node=>node.replaceWith(document.createTextNode('\n')));
+ const lines=[];
+ let buffer='';
+ const blockTags=new Set(['P','DIV','H1','H2','H3','H4','H5','H6','BLOCKQUOTE']);
 
- $$('li',root).forEach(item=>{
-  const parent=item.parentElement;
-  const siblings=parent?[...parent.children].filter(child=>child.tagName==='LI'):[item];
-  const prefix=parent?.tagName==='OL'?`${siblings.indexOf(item)+1}. `:'• ';
-  item.insertBefore(document.createTextNode(prefix),item.firstChild);
-  item.append(document.createTextNode('\n'));
- });
+ const flush=()=>{
+  const line=buffer.replace(/\s+/g,' ').trim();
+  if(line)lines.push(line);
+  buffer='';
+ };
 
- $$('p,div,h1,h2,h3,h4,h5,h6',root).forEach(block=>{
-  block.append(document.createTextNode('\n'));
- });
+ const walk=(node,listType=null,listIndex=0)=>{
+  if(node.nodeType===3){
+   buffer+=node.nodeValue||'';
+   return;
+  }
+  if(node.nodeType!==1)return;
 
- return(root.textContent||'')
-  .split(/\n+/)
-  .map(line=>line.replace(/\s+/g,' ').trim())
-  .filter(Boolean)
-  .join('\n');
+  const tag=node.tagName;
+  if(tag==='BR'){
+   flush();
+   return;
+  }
+
+  if(tag==='LI'){
+   flush();
+   buffer+=listType==='OL'?`${listIndex+1}. `:'• ';
+   [...node.childNodes].forEach(child=>walk(child));
+   flush();
+   return;
+  }
+
+  const isBlock=blockTags.has(tag);
+  if(isBlock)flush();
+
+  if(tag==='OL'||tag==='UL'){
+   [...node.children].forEach((child,index)=>walk(child,tag,index));
+  }else{
+   [...node.childNodes].forEach(child=>walk(child,listType,listIndex));
+  }
+
+  if(isBlock)flush();
+ };
+
+ [...root.childNodes].forEach(node=>walk(node));
+ flush();
+ return lines.join('\n');
 }
 function autoGrow(element){if(!element)return;element.style.height='auto';element.style.height=`${Math.max(38,element.scrollHeight)}px`}
 function growAll(){$$('.subtask-row textarea').forEach(autoGrow)}
 
 function renderNoteCard(note,{archived=false}={}){
  const preview=previewTextFromHtml(note.content)||'Leere Notiz';
+ const previewHtml=esc(preview).replace(/\n/g,'<br>');
  return`<article class="note-card ${archived?'archived':''}" data-note-id="${note.id}">
   <div class="note-main">
    <h3>${esc(note.title||'Ohne Überschrift')}</h3>
    <div class="small">${esc(note.area||'Kein Bereich')}</div>
-   <div class="preview">${esc(preview)}</div>
+   <div class="preview">${previewHtml}</div>
   </div>
   <div class="card-footer">
    <span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span>
@@ -2213,9 +2368,11 @@ document.addEventListener('change',event=>{
  if(themeInput){
   const field=themeInput.dataset.themeField;
   if(field in state.config.appearance){
+   if(field==='titleFont'&&!TITLE_FONT_OPTIONS.includes(themeInput.value))return;
    state.config.appearance[field]=themeInput.value;
    saveState();
    renderTheme();
+   renderThemeSettings();
   }
   return;
  }
@@ -2784,7 +2941,10 @@ window.__dashboardTest={
  getDiagnostics:()=>[...diagnostics],
  ensureTodoDoneStatus,
  projectStatusKind,
- renderProjectRow
+ renderProjectRow,
+ previewTextFromHtml,
+ renderNoteCard,
+ renderTheme
 };
 })();
 </script>
