@@ -4,10 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dominik's Übersicht</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--own:#bfd6e9;--project:#bfd6e9;--delegated:#bfd6e9;--note:#d9dee3;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px}
 *{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
-.sidebar{position:relative;z-index:80;background:var(--panel);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:22px;line-height:1.15;cursor:pointer;font-family:'Alasassy Caps',Arial,Helvetica,sans-serif;letter-spacing:.02em}.brand p{margin:7px 0 0;font-size:13px;color:var(--muted);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.sidebar{position:relative;z-index:80;background:var(--panel);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:30px;line-height:1;cursor:pointer;font-family:'Jolly Lodger',Arial,Helvetica,sans-serif;letter-spacing:.025em;font-weight:400}.brand p{margin:7px 0 0;font-size:13px;color:var(--muted);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
 .tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
@@ -48,8 +51,8 @@ body.mobile .brand h1{
  overflow:visible;
  text-overflow:clip;
  white-space:normal;
- font-size:22px;
- line-height:1.15
+ font-size:30px;
+ line-height:1
 }
 body.mobile .brand p{display:none}
 body.mobile .tools{
@@ -384,6 +387,49 @@ body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:10
 .debug-panel.hidden{display:none}
 .debug-panel pre{max-height:180px;margin:7px 0 0;overflow:auto;white-space:pre-wrap;font:11px/1.4 Consolas,monospace}
 
+
+.rich-editor,.note-card,.note-main,.preview,#note-editor{
+ min-width:0;
+ max-width:100%;
+ overflow-wrap:anywhere;
+ word-break:break-word
+}
+.rich-editor,#note-editor{
+ white-space:pre-wrap;
+ overflow-x:hidden
+}
+.rich-editor *,#note-editor *,.note-card *,.note-main *{
+ max-width:100%;
+ overflow-wrap:anywhere;
+ word-break:break-word
+}
+.rich-editor img,#note-editor img{max-width:100%;height:auto}
+.preview{
+ white-space:normal;
+ overflow:hidden;
+ display:-webkit-box;
+ -webkit-box-orient:vertical;
+ -webkit-line-clamp:2
+}
+
+
+.sidebar{display:flex;flex-direction:column}
+.sidebar .nav{flex:0 0 auto}
+.sidebar-patch{
+ margin-top:auto;
+ padding-top:18px;
+ color:var(--muted);
+ font-size:10px;
+ line-height:1.3;
+ opacity:.85
+}
+body.mobile .sidebar-patch{
+ margin-top:8px;
+ padding-top:0;
+ text-align:right;
+ font-size:9px
+}
+
 </style>
 </head>
 <body>
@@ -457,6 +503,9 @@ body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:10
       <button type="button" id="sync-status-btn" class="tool sync-indicator" data-state="offline" title="Cloud-Status" aria-label="Cloud-Status">○</button>
     </div>
     <nav id="nav" class="nav"></nav>
+    <div class="sidebar-patch" aria-label="Letzter Patch">
+      Patch: 17.07.2026 · 10:06
+    </div>
   </aside>
 
   <main class="main">
