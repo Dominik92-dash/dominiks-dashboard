@@ -6,11 +6,10 @@
 <title>Dominik's Übersicht</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Cinzel:wght@400;600&family=Inter:wght@400;600;700&family=Jolly+Lodger&family=Lobster&family=Oswald:wght@400;600&family=Pacifico&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--group-bg:#bfd6e9;--own:var(--group-bg);--project:var(--group-bg);--delegated:var(--group-bg);--note:var(--group-bg);--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-subtitle-color:#66717d;--sidebar-nav-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif}
+:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--group-bg:#bfd6e9;--own:var(--group-bg);--project:var(--group-bg);--delegated:var(--group-bg);--note:var(--group-bg);--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-subtitle-color:#66717d;--sidebar-nav-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif;--sidebar-title-size:30px}
 *{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
-.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:30px;line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-subtitle-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:var(--sidebar-title-size);line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-subtitle-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
 .tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-nav-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
@@ -19,7 +18,7 @@
 .note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid var(--note);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.delegated-group{background:var(--delegated);border-color:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
-.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 155px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.priority-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}
+.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.todo-row.delegated>.person-select{font-size:13px}
 .project-card{
  display:block;
  overflow:hidden;
@@ -202,7 +201,7 @@ body.mobile .brand h1{
  overflow:visible;
  text-overflow:clip;
  white-space:normal;
- font-size:30px;
+ font-size:var(--sidebar-title-size);
  line-height:1
 }
 body.mobile .brand p{display:none}
@@ -297,7 +296,6 @@ body.mobile .summary-input{
 }
 body.mobile .mini-select{max-width:100%;margin-left:0}
 body.mobile .status-select,
-body.mobile .priority-select,
 body.mobile .person-select{min-height:40px}
 body.mobile .todo-row>.actions,
 body.mobile .project-row>.actions{justify-content:flex-end}
@@ -415,8 +413,7 @@ body.mobile .todo-row .mini-select{
 body.mobile .todo-row>.summary-input{
  grid-column:1/-1
 }
-body.mobile .todo-row>.person-select,
-body.mobile .todo-row>.priority-select{
+body.mobile .todo-row>.person-select{
  grid-column:1/-1
 }
 body.mobile .todo-row>.status-select{
@@ -635,23 +632,6 @@ body.mobile .sidebar-patch{
 .preview br{display:block}
 
 /* Mobile Unteraufgaben: native Datumsfelder niemals über den Rand hinaus */
-body.mobile .project-expanded,
-body.mobile .project-inline-subtask{min-width:0;max-width:100%;overflow:hidden}
-body.mobile .project-inline-subtask>*{min-width:0;max-width:100%}
-body.mobile .project-inline-subtask .subtask-deadline{
- display:block;
- width:100%;
- min-width:0;
- max-width:100%;
- inline-size:100%;
- min-inline-size:0;
- max-inline-size:100%;
- padding-right:5px
-}
-body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-value{
- min-width:0;
- text-align:left
-}
 
 /* Kompaktere Einstellungen */
 .settings-body{gap:12px;padding:16px}
@@ -707,6 +687,67 @@ body.mobile .theme-control.font-control{grid-template-columns:1fr}
 .filter-trigger{font-size:13px}
 .filter-option,.filter-reset,.filter-info{font-size:12px}
 
+
+.subtask-date-wrap{
+ display:block;
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ overflow:hidden;
+ contain:inline-size
+}
+.subtask-date-wrap .subtask-deadline{
+ display:block;
+ box-sizing:border-box;
+ width:100%;
+ min-width:0;
+ max-width:100%
+}
+body.mobile .project-inline-subtask{
+ grid-template-columns:minmax(0,1fr)!important;
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ overflow:hidden
+}
+body.mobile .project-inline-subtask>*{
+ min-width:0;
+ max-width:100%
+}
+body.mobile .project-inline-subtask .subtask-date-wrap{
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ overflow:hidden
+}
+body.mobile .project-inline-subtask .subtask-deadline{
+ box-sizing:border-box!important;
+ width:calc(100% - 1px)!important;
+ min-width:0!important;
+ max-width:calc(100% - 1px)!important;
+ inline-size:calc(100% - 1px)!important;
+ min-inline-size:0!important;
+ max-inline-size:calc(100% - 1px)!important;
+ padding-left:6px;
+ padding-right:3px;
+ font-size:11px
+}
+body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-value{
+ min-width:0;
+ padding:0;
+ text-align:left
+}
+
+
+.theme-control input[type="number"]{
+ width:100%;
+ min-width:0;
+ padding:6px 7px;
+ border:1px solid var(--border);
+ border-radius:6px;
+ background:#fff;
+ font-size:12px
+}
 </style>
 </head>
 <body>
@@ -773,7 +814,7 @@ body.mobile .theme-control.font-control{grid-template-columns:1fr}
       <p id="app-subtitle" title="Zum Ändern anklicken">Notizen, Projekte und Aufgaben</p>
     </div>
     <div class="tools">
-      <button type="button" id="view-toggle" class="tool" title="Handy-/Desktopansicht">M</button>
+      <button type="button" id="refresh-page-btn" class="tool" title="Seite aktualisieren" aria-label="Seite aktualisieren">↻</button>
       <button type="button" id="undo-btn" class="tool" title="Rückgängig">↶</button>
       <button type="button" id="redo-btn" class="tool" title="Wiederholen">↷</button>
       <button type="button" id="settings-btn" class="tool" title="Einstellungen">⚙</button>
@@ -781,7 +822,7 @@ body.mobile .theme-control.font-control{grid-template-columns:1fr}
     </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-patch" aria-label="Letzter Patch">
-      Patch: 17.07.2026 · 13:34
+      Patch: 20.07.2026 · 12:39
     </div>
   </aside>
 
@@ -910,17 +951,42 @@ body.mobile .theme-control.font-control{grid-template-columns:1fr}
             <label for="theme-title-font">Titelschrift</label>
             <select id="theme-title-font" data-theme-field="titleFont">
               <option value="Jolly Lodger">Jolly Lodger</option>
+              <option value="Abril Fatface">Abril Fatface</option>
+              <option value="Alfa Slab One">Alfa Slab One</option>
+              <option value="Anton">Anton</option>
+              <option value="Archivo Black">Archivo Black</option>
+              <option value="Baloo 2">Baloo 2</option>
               <option value="Bebas Neue">Bebas Neue</option>
-              <option value="Oswald">Oswald</option>
               <option value="Bungee">Bungee</option>
               <option value="Cinzel">Cinzel</option>
-              <option value="Lobster">Lobster</option>
-              <option value="Pacifico">Pacifico</option>
-              <option value="Playfair Display">Playfair Display</option>
+              <option value="Cormorant Garamond">Cormorant Garamond</option>
+              <option value="DM Sans">DM Sans</option>
+              <option value="Fredoka">Fredoka</option>
               <option value="Inter">Inter</option>
+              <option value="Lobster">Lobster</option>
+              <option value="Manrope">Manrope</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Nunito">Nunito</option>
+              <option value="Orbitron">Orbitron</option>
+              <option value="Oswald">Oswald</option>
+              <option value="Pacifico">Pacifico</option>
+              <option value="Permanent Marker">Permanent Marker</option>
+              <option value="Playfair Display">Playfair Display</option>
               <option value="Poppins">Poppins</option>
+              <option value="Righteous">Righteous</option>
+              <option value="Roboto Slab">Roboto Slab</option>
+              <option value="Rubik">Rubik</option>
+              <option value="Space Grotesk">Space Grotesk</option>
+              <option value="Special Elite">Special Elite</option>
+              <option value="Ubuntu">Ubuntu</option>
+              <option value="Yeseva One">Yeseva One</option>
               <option value="Arial">Arial</option>
             </select>
+          </div>
+          <div class="theme-control">
+            <label for="theme-title-size">Titelgröße</label>
+            <input id="theme-title-size" type="number" min="20" max="56" step="1"
+                   data-theme-field="titleSize">
           </div>
           <div class="theme-control">
             <label for="theme-sidebar-bg">Seitenleiste</label>
@@ -970,21 +1036,40 @@ const SUPABASE_CDN_URLS=[
 const CLOUD_TIMEOUT_MS=10000;
 
 const TITLE_FONT_OPTIONS=[
- 'Jolly Lodger',
- 'Bebas Neue',
- 'Oswald',
- 'Bungee',
- 'Cinzel',
- 'Lobster',
- 'Pacifico',
- 'Playfair Display',
- 'Inter',
- 'Poppins',
- 'Arial'
+ "Jolly Lodger",
+ "Abril Fatface",
+ "Alfa Slab One",
+ "Anton",
+ "Archivo Black",
+ "Baloo 2",
+ "Bebas Neue",
+ "Bungee",
+ "Cinzel",
+ "Cormorant Garamond",
+ "DM Sans",
+ "Fredoka",
+ "Inter",
+ "Lobster",
+ "Manrope",
+ "Montserrat",
+ "Nunito",
+ "Orbitron",
+ "Oswald",
+ "Pacifico",
+ "Permanent Marker",
+ "Playfair Display",
+ "Poppins",
+ "Righteous",
+ "Roboto Slab",
+ "Rubik",
+ "Space Grotesk",
+ "Special Elite",
+ "Ubuntu",
+ "Yeseva One",
+ "Arial"
 ];
 
 const DEBUG_MODE=new URLSearchParams(location.search).get('debug')==='1';
-const VIEW_MODE_KEY='dominik_dashboard_view_mode';
 const $=(selector,root=document)=>root.querySelector(selector);
 const $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -1094,7 +1179,7 @@ function createDefaults(){
   meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:''},
   config:{
    navOrder:['notes','projects','own','delegated'],
-   appearance:{sidebarBg:'#dbe8f3',titleColor:'#1f2933',subtitleColor:'#66717d',navColor:'#315d8a',groupColor:'#bfd6e9',titleFont:'Jolly Lodger'},
+   appearance:{sidebarBg:'#dbe8f3',titleColor:'#1f2933',subtitleColor:'#66717d',navColor:'#315d8a',groupColor:'#bfd6e9',titleFont:'Jolly Lodger',titleSize:30},
    noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
    projects:{
     statuses:[status('project-open','Offen','#fff7d6','open'),status('project-active','In Bearbeitung','#fff0df','active'),status('project-done','Erledigt','#e6f1e8','done')],
@@ -1186,6 +1271,10 @@ function normalizeState(raw){
  if(!TITLE_FONT_OPTIONS.includes(result.config.appearance.titleFont)){
   result.config.appearance.titleFont=defaults.config.appearance.titleFont;
  }
+ const parsedTitleSize=Number.parseInt(result.config.appearance.titleSize,10);
+ result.config.appearance.titleSize=Number.isFinite(parsedTitleSize)
+  ?Math.min(56,Math.max(20,parsedTitleSize))
+  :defaults.config.appearance.titleSize;
  result.config.projects.priorities=result.config.projects.priorities.filter(item=>item.id!=='project-very-high'&&item.label!=='Sehr hohe Priorität');
  result.config.own.priorities=result.config.own.priorities.filter(item=>item.id!=='own-very-high'&&item.label!=='Sehr hohe Priorität');
  result.config.delegated.priorities=result.config.delegated.priorities.filter(item=>item.id!=='delegated-very-high'&&item.label!=='Sehr hohe Priorität');
@@ -1252,7 +1341,6 @@ let cloudInitializationPromise=null;
 let authSubscription=null;
 let dashboardStarted=false;
 const diagnostics=[];
-let viewMode=safeStorage.get(VIEW_MODE_KEY)||'auto';
 
 function saveLocalState(){safeStorage.set(STORAGE_KEY,JSON.stringify(state))}
 function saveState(){
@@ -1753,6 +1841,28 @@ function richTextValueToHtml(value){
  if(/<\/?[a-z][\s\S]*>/i.test(source))return source;
  return esc(source).replace(/\r?\n/g,'<br>');
 }
+
+function ensureTitleFontLoaded(fontName){
+ const linkId='dashboard-title-font';
+ let link=document.getElementById(linkId);
+
+ if(fontName==='Arial'){
+  link?.remove();
+  return;
+ }
+ if(!TITLE_FONT_OPTIONS.includes(fontName))return;
+
+ const family=encodeURIComponent(fontName).replace(/%20/g,'+');
+ const href=`https://fonts.googleapis.com/css2?family=${family}&display=swap`;
+
+ if(!link){
+  link=document.createElement('link');
+  link.id=linkId;
+  link.rel='stylesheet';
+  document.head.appendChild(link);
+ }
+ if(link.href!==href)link.href=href;
+}
 function renderTheme(){
  const appearance=state.config.appearance||createDefaults().config.appearance;
  const root=document.documentElement;
@@ -1760,6 +1870,8 @@ function renderTheme(){
   ?appearance.titleFont
   :createDefaults().config.appearance.titleFont;
  const activeText=readableTextColor(appearance.groupColor);
+ const titleSize=Math.min(56,Math.max(20,Number.parseInt(appearance.titleSize,10)||30));
+ ensureTitleFontLoaded(titleFont);
 
  root?.style?.setProperty('--sidebar-bg',appearance.sidebarBg);
  root?.style?.setProperty('--sidebar-title-color',appearance.titleColor);
@@ -1768,6 +1880,7 @@ function renderTheme(){
  root?.style?.setProperty('--group-bg',appearance.groupColor);
  root?.style?.setProperty('--sidebar-active-bg',appearance.groupColor);
  root?.style?.setProperty('--sidebar-active-text',activeText);
+ root?.style?.setProperty('--sidebar-title-size',`${titleSize}px`);
  root?.style?.setProperty(
   '--sidebar-title-font',
   titleFont==='Arial'
@@ -1931,7 +2044,31 @@ function setTodoStatus(todo,type,statusId){
 }
 function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button type="button" class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button type="button" class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
 function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))&&(type!=='delegated'||!selected.person.size||selected.person.has(todo.personId))}
-function renderTodoRow(todo,type,{draggable=false}={}){ensureTodoDoneStatus(type);const completed=todoIsCompleted(todo,type);return`<div class="todo-row ${type==='delegated'?'delegated':''} ${completed?'completed':''}" data-todo-id="${todo.id}" data-todo-type="${type}" draggable="${draggable}"><div><input class="inline title-input-inline" data-todo-field="title" value="${esc(todo.title)}" placeholder="Bezeichnung"><select class="mini-select" data-todo-field="areaId">${selectOptions(type,'areas',todo.areaId,{custom:true})}</select></div><textarea class="inline summary-input" data-todo-field="summary" rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>${type==='delegated'?`<select class="person-select" data-todo-field="personId">${selectOptions(type,'people',todo.personId,{custom:true})}</select><select class="priority-select" data-todo-field="priorityId">${selectOptions(type,'priorities',todo.priorityId)}</select>`:''}<select class="status-select" data-todo-field="statusId" style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select><div class="actions"><button type="button" class="icon open-btn" data-action="open-todo">⛶</button><button type="button" class="icon delete-btn" data-action="delete-todo">×</button></div></div>`}
+function renderTodoRow(todo,type,{draggable=false}={}){
+ ensureTodoDoneStatus(type);
+ const completed=todoIsCompleted(todo,type);
+ const delegatedPerson=type==='delegated'
+  ?`<select class="person-select" data-todo-field="personId">${selectOptions(type,'people',todo.personId,{custom:true})}</select>`
+  :'';
+
+ return`<div class="todo-row ${type==='delegated'?'delegated':''} ${completed?'completed':''}"
+             data-todo-id="${todo.id}" data-todo-type="${type}" draggable="${draggable}">
+  <div>
+   <input class="inline title-input-inline" data-todo-field="title"
+          value="${esc(todo.title)}" placeholder="Bezeichnung">
+   <select class="mini-select" data-todo-field="areaId">${selectOptions(type,'areas',todo.areaId,{custom:true})}</select>
+  </div>
+  <textarea class="inline summary-input" data-todo-field="summary"
+            rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>
+  ${delegatedPerson}
+  <select class="status-select" data-todo-field="statusId"
+          style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select>
+  <div class="actions">
+   <button type="button" class="icon open-btn" data-action="open-todo" title="Aufgabe öffnen">⛶</button>
+   <button type="button" class="icon delete-btn" data-action="delete-todo" title="Aufgabe löschen">×</button>
+  </div>
+ </div>`;
+}
 function renderOwn(){renderFilter('#own-filters','own',['status','area']);const active=filters.own.status.size||filters.own.area.size;if(active){const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));$('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#own-filters .filter-info').textContent=`${items.length} Treffer`;growAll();return}$('#own-filters .filter-info').textContent='';const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];$('#own-groups').innerHTML=groups.map(group=>{const items=state.ownTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'own'):!todoIsCompleted(todo,'own')&&todo.priorityId===group.id);return`<section class="group own ${group.id==='__completed__'?'completed-group':''}" data-own-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span><button type="button" class="quick-add" data-action="quick-own" data-priority-id="${group.id}">+</button></div></div><div class="list">${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div></section>`}).join('');growAll()}
 function renderDelegated(){
  renderFilter('#delegated-filters','delegated',['status','area','person']);
@@ -1984,8 +2121,10 @@ function renderProjectSubtask(task,{detail=false}={}){
   <textarea class="${titleClass}" data-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea>
   <textarea class="subtask-summary" data-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea>
   <select data-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select>
-  <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31" step="1"
-         data-subtask-field="deadline" value="${esc(task.deadline)}" aria-label="Deadline">
+  <div class="subtask-date-wrap">
+   <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31" step="1"
+          data-subtask-field="deadline" value="${esc(task.deadline)}" aria-label="Deadline">
+  </div>
   <select class="status-select" data-subtask-field="statusId"
           style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select>
   <button type="button" class="icon delete-btn" data-action="delete-subtask" title="Unteraufgabe löschen">×</button>
@@ -2250,34 +2389,13 @@ function updateInlineTodo(element){const row=element.closest('[data-todo-id]');c
 function updateInlineProject(element){const row=element.closest('[data-project-id]');const project=state.projects.find(item=>item.id===row.dataset.projectId);if(!project)return;const field=element.dataset.projectField;if(field==='areaId'){const value=handleCustomSelect(element,'projects','areas');if(value===null){renderAll();return}project.areaId=value}else project[field]=element.value;project.updatedAt=now();saveState()}
 
 function renderNoteColors(){$('#note-color-buttons').innerHTML=state.config.noteColors.map(color=>`<button type="button" class="color-btn" data-note-color="${esc(color)}" style="background:${esc(color)}"></button>`).join('')}
-function prefersMobileLayout(){
- if(viewMode==='mobile')return true;
- if(viewMode==='desktop')return false;
- return window.innerWidth<=760;
-}
 function applyMobileMode(){
- const mobile=prefersMobileLayout();
+ const mobile=window.innerWidth<=760;
  document.body.classList.toggle('mobile',mobile);
- document.body.classList.toggle('desktop-mode',!mobile);
-
- const button=$('#view-toggle');
- if(button){
-  button.textContent=mobile?'D':'M';
-  button.title=mobile
-   ? 'Zur Desktopansicht wechseln'
-   : 'Zur Handyansicht wechseln';
-  button.setAttribute(
-   'aria-label',
-   mobile?'Zur Desktopansicht wechseln':'Zur Handyansicht wechseln'
-  );
- }
  closeFilters();
 }
-function toggleViewMode(){
- const currentlyMobile=document.body.classList.contains('mobile');
- viewMode=currentlyMobile?'desktop':'mobile';
- safeStorage.set(VIEW_MODE_KEY,viewMode);
- applyMobileMode();
+function reloadDashboardPage(){
+ location.reload();
 }
 
 // Click handling
@@ -2377,7 +2495,15 @@ document.addEventListener('change',event=>{
   const field=themeInput.dataset.themeField;
   if(field in state.config.appearance){
    if(field==='titleFont'&&!TITLE_FONT_OPTIONS.includes(themeInput.value))return;
-   state.config.appearance[field]=themeInput.value;
+
+   if(field==='titleSize'){
+    const size=Number.parseInt(themeInput.value,10);
+    if(!Number.isFinite(size))return;
+    state.config.appearance.titleSize=Math.min(56,Math.max(20,size));
+   }else{
+    state.config.appearance[field]=themeInput.value;
+   }
+
    saveState();
    renderTheme();
    renderThemeSettings();
@@ -2835,7 +2961,7 @@ bind('#settings-btn','click',()=>openOverlay('settings'));
 bind('#reset-sidebar-theme','click',()=>{
  commit(()=>state.config.appearance=clone(createDefaults().config.appearance));
 });
-bind('#view-toggle','click',toggleViewMode);
+bind('#refresh-page-btn','click',reloadDashboardPage);
 bind('#app-title','click',()=>{const value=prompt('Name der Übersicht:',state.meta.title)?.trim();if(value)commit(()=>state.meta.title=value)});
 bind('#app-subtitle','click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
 bind('#delete-note-detail','click',()=>current.noteId&&deleteNote(current.noteId));
@@ -2952,7 +3078,10 @@ window.__dashboardTest={
  renderProjectRow,
  previewTextFromHtml,
  renderNoteCard,
- renderTheme
+ renderTheme,
+ renderTodoRow,
+ applyMobileMode,
+ ensureTitleFontLoaded
 };
 })();
 </script>
