@@ -7,17 +7,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
-:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--group-bg:#bfd6e9;--own:var(--group-bg);--project:var(--group-bg);--delegated:var(--group-bg);--note:var(--group-bg);--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-subtitle-color:#66717d;--sidebar-nav-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif;--sidebar-title-size:30px}
+:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--work-group-bg:#bfd6e9;--work-group-title:#1c4668;--own:var(--work-group-bg);--project:var(--work-group-bg);--delegated:var(--work-group-bg);--note-bg:#bfd6e9;--note:var(--note-bg);--note-title:#1c4668;--note-category:#66717d;--note-preview:#66717d;--quick-note-bg:#bfd6e9;--quick-note-title:#66717d;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-text-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif;--sidebar-title-size:30px}
 *{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
-.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:var(--sidebar-title-size);line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-subtitle-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:var(--sidebar-title-size);line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-text-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
 .tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
-.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-nav-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
+.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
-.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--group-bg);border:1px solid var(--group-bg);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{font-size:12px;font-weight:700;color:var(--muted)}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
-.note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note);border:1px solid var(--note);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--quick-note-bg);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{font-size:12px;font-weight:700;color:var(--quick-note-title)}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
+.note-list,.list,.groups,.subtask-list{display:grid;gap:11px}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--note-bg);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:17px;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
-.group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.delegated-group{background:var(--delegated);border-color:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:#1c4668}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
+.group{padding:14px;border:1px solid transparent;border-radius:var(--radius)}.group.own{background:var(--own);border-color:var(--own)}.group.project{background:var(--project);border-color:var(--project)}.group.delegated-group{background:var(--delegated);border-color:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
 .todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:#fff;border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 170px auto}.todo-row.completed{opacity:.62;background:#f0f2f4}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.todo-row.delegated>.person-select{font-size:13px}
 .project-card{
  display:block;
@@ -748,6 +748,69 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  background:#fff;
  font-size:12px
 }
+
+.note-category{color:var(--note-category)!important}
+.note-preview{color:var(--note-preview)!important}
+.group.completed-group .group-head h3{color:#374151}
+.completed-list[hidden]{display:none}
+.completed-toggle{
+ width:30px;height:30px;border:0;border-radius:7px;background:rgba(255,255,255,.58);
+ color:#4b5563;cursor:pointer;font-size:14px
+}
+.completed-toggle:hover{background:#fff}
+.settings-accordion{
+ border:1px solid var(--border);
+ border-radius:11px;
+ background:#fff;
+ overflow:hidden
+}
+.settings-accordion>summary{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ padding:14px 16px;
+ cursor:pointer;
+ list-style:none;
+ font-size:16px;
+ font-weight:700
+}
+.settings-accordion>summary::-webkit-details-marker{display:none}
+.settings-accordion>summary::after{content:'▾';color:var(--muted)}
+.settings-accordion[open]>summary::after{content:'▴'}
+.settings-accordion[open]>summary{border-bottom:1px solid var(--border)}
+.settings-accordion-content{display:grid;gap:12px;padding:13px}
+.settings-subsection{
+ padding:10px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ background:#fafbfc
+}
+.settings-subsection h4{margin:0 0 8px;font-size:13px}
+.selection-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(280px,1fr));
+ gap:10px
+}
+.daily-toggle{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ margin-top:9px;
+ padding:9px 10px;
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#fff;
+ font-size:12px;
+ font-weight:700
+}
+.option-row.locked .option-delete{visibility:hidden}
+@media(max-width:760px){
+ .selection-grid{grid-template-columns:1fr}
+ .settings-accordion>summary{padding:13px;font-size:15px}
+ .settings-accordion-content{padding:10px}
+}
+
 </style>
 </head>
 <body>
@@ -822,7 +885,7 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
     </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-patch" aria-label="Letzter Patch">
-      Patch: 20.07.2026 · 12:39
+      Patch: 20.07.2026 · 15:10
     </div>
   </aside>
 
@@ -912,45 +975,61 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 </div></section>
 
 <section id="settings-overlay" class="overlay"><div class="shell settings-shell">
-  <header class="editor-head"><div><h2>Einstellungen</h2><p style="margin:6px 0 0;color:var(--muted)">Dropdown-Werte, Statusfarben und Reihenfolgen verwalten.</p></div><button type="button" class="close-btn" data-close-overlay="settings">×</button></header>
-  <div class="settings-body">
-    <section class="settings-section">
-      <h3>Konto und Datensicherung</h3>
-      <div class="settings-grid">
-        <div class="settings-group account-panel">
-          <h4>Supabase-Konto</h4>
-          <div id="account-email" class="account-info">Nicht angemeldet</div>
-          <div class="account-row">
-            <button id="manual-sync-btn" class="secondary" type="button">Jetzt synchronisieren</button>
-            <button id="change-password-btn" class="secondary" type="button">Passwort ändern</button>
-            <button id="reset-password-btn" class="secondary" type="button">Passwort-Link senden</button>
-            <button id="logout-btn" class="danger" type="button">Abmelden</button>
-          </div>
-        </div>
+  <header class="editor-head">
+    <div>
+      <h2>Einstellungen</h2>
+      <p style="margin:6px 0 0;color:var(--muted)">Darstellung, Auswahllisten und Datensicherung verwalten.</p>
+    </div>
+    <button type="button" class="close-btn" data-close-overlay="settings">×</button>
+  </header>
 
-        <div class="settings-group account-panel">
-          <h4>Backup</h4>
-          <div class="settings-hint">
-            Exportiert alle Notizen, Projekte, Aufgaben und Einstellungen als JSON-Datei.
+  <div class="settings-body">
+    <details class="settings-accordion">
+      <summary>Konto und Datensicherung</summary>
+      <div class="settings-accordion-content">
+        <div class="settings-grid">
+          <div class="settings-group account-panel">
+            <h4>Supabase-Konto</h4>
+            <div id="account-email" class="account-info">Nicht angemeldet</div>
+            <div class="account-row">
+              <button id="manual-sync-btn" class="secondary" type="button">Jetzt synchronisieren</button>
+              <button id="change-password-btn" class="secondary" type="button">Passwort ändern</button>
+              <button id="reset-password-btn" class="secondary" type="button">Passwort-Link senden</button>
+              <button id="logout-btn" class="danger" type="button">Abmelden</button>
+            </div>
           </div>
-          <div class="account-row">
-            <button id="export-backup-btn" class="secondary" type="button">Backup exportieren</button>
-            <button id="import-backup-btn" class="secondary" type="button">Backup importieren</button>
-            <input id="backup-file-input" class="file-input" type="file" accept=".json,application/json">
+
+          <div class="settings-group account-panel">
+            <h4>Backup</h4>
+            <div class="settings-hint">Exportiert alle Notizen, Projekte, Aufgaben und Einstellungen als JSON-Datei.</div>
+            <div class="account-row">
+              <button id="export-backup-btn" class="secondary" type="button">Backup exportieren</button>
+              <button id="import-backup-btn" class="secondary" type="button">Backup importieren</button>
+              <input id="backup-file-input" class="file-input" type="file" accept=".json,application/json">
+            </div>
           </div>
         </div>
       </div>
-    </section>
+    </details>
 
-    <section class="settings-section">
-      <h3>Darstellung der Seitenleiste</h3>
-      <div class="settings-group">
-        <div class="settings-hint">Die Werkzeugbuttons bleiben unabhängig von der Auswahl weiß.</div>
-        <div class="theme-grid">
-          <div class="theme-control font-control">
-            <label for="theme-title-font">Titelschrift</label>
-            <select id="theme-title-font" data-theme-field="titleFont">
-              <option value="Jolly Lodger">Jolly Lodger</option>
+    <details class="settings-accordion">
+      <summary>Darstellung</summary>
+      <div class="settings-accordion-content">
+        <section class="settings-subsection">
+          <h4>Seitenleiste</h4>
+          <div class="theme-grid">
+            <div class="theme-control">
+              <label for="theme-sidebar-bg">Farbe der Seitenleiste</label>
+              <input id="theme-sidebar-bg" type="color" data-theme-field="sidebarBg">
+            </div>
+            <div class="theme-control">
+              <label for="theme-sidebar-title-color">Farbe des Titels</label>
+              <input id="theme-sidebar-title-color" type="color" data-theme-field="sidebarTitleColor">
+            </div>
+            <div class="theme-control font-control">
+              <label for="theme-title-font">Schriftart des Titels</label>
+              <select id="theme-title-font" data-theme-field="titleFont">
+                <option value="Jolly Lodger">Jolly Lodger</option>
               <option value="Abril Fatface">Abril Fatface</option>
               <option value="Alfa Slab One">Alfa Slab One</option>
               <option value="Anton">Anton</option>
@@ -981,44 +1060,86 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
               <option value="Ubuntu">Ubuntu</option>
               <option value="Yeseva One">Yeseva One</option>
               <option value="Arial">Arial</option>
-            </select>
+              </select>
+            </div>
+            <div class="theme-control">
+              <label for="theme-title-size">Größe des Titels</label>
+              <input id="theme-title-size" type="number" min="20" max="56" step="1" data-theme-field="titleSize">
+            </div>
+            <div class="theme-control">
+              <label for="theme-sidebar-text-color">Restliche Schrift</label>
+              <input id="theme-sidebar-text-color" type="color" data-theme-field="sidebarTextColor">
+            </div>
+            <div class="theme-control">
+              <label for="theme-active-nav-bg">Markierung des Reiters</label>
+              <input id="theme-active-nav-bg" type="color" data-theme-field="sidebarActiveBg">
+            </div>
+            <div class="theme-control">
+              <label for="theme-active-nav-text">Schrift des ausgewählten Reiters</label>
+              <input id="theme-active-nav-text" type="color" data-theme-field="sidebarActiveText">
+            </div>
           </div>
-          <div class="theme-control">
-            <label for="theme-title-size">Titelgröße</label>
-            <input id="theme-title-size" type="number" min="20" max="56" step="1"
-                   data-theme-field="titleSize">
-          </div>
-          <div class="theme-control">
-            <label for="theme-sidebar-bg">Seitenleiste</label>
-            <input id="theme-sidebar-bg" type="color" data-theme-field="sidebarBg">
-          </div>
-          <div class="theme-control">
-            <label for="theme-group-color">Kategorien &amp; Notizen</label>
-            <input id="theme-group-color" type="color" data-theme-field="groupColor">
-          </div>
-          <div class="theme-control">
-            <label for="theme-title-color">Titel</label>
-            <input id="theme-title-color" type="color" data-theme-field="titleColor">
-          </div>
-          <div class="theme-control">
-            <label for="theme-subtitle-color">Untertitel</label>
-            <input id="theme-subtitle-color" type="color" data-theme-field="subtitleColor">
-          </div>
-          <div class="theme-control">
-            <label for="theme-nav-color">Reiter</label>
-            <input id="theme-nav-color" type="color" data-theme-field="navColor">
-          </div>
-        </div>
-        <button id="reset-sidebar-theme" class="secondary" type="button" style="margin-top:10px">
-          Standardfarben wiederherstellen
-        </button>
-      </div>
-    </section>
-    <div id="settings-options-body"></div>
-  </div>
-  <footer class="editor-foot"><span>Änderungen werden automatisch gespeichert.</span><button type="button" class="primary" data-close-overlay="settings">Fertig</button></footer>
-</div></section>
+        </section>
 
+        <section class="settings-subsection">
+          <h4>Aufgaben und Projekte</h4>
+          <div class="theme-grid">
+            <div class="theme-control">
+              <label for="theme-work-bg">Hintergrund der Blöcke</label>
+              <input id="theme-work-bg" type="color" data-theme-field="workGroupBg">
+            </div>
+            <div class="theme-control">
+              <label for="theme-work-title">Schrift der Überschriften</label>
+              <input id="theme-work-title" type="color" data-theme-field="workGroupTitle">
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-subsection">
+          <h4>Notizen</h4>
+          <div class="theme-grid">
+            <div class="theme-control">
+              <label for="theme-note-bg">Hintergrund der Notizblöcke</label>
+              <input id="theme-note-bg" type="color" data-theme-field="noteBg">
+            </div>
+            <div class="theme-control">
+              <label for="theme-note-title">Schrift der Überschrift</label>
+              <input id="theme-note-title" type="color" data-theme-field="noteTitle">
+            </div>
+            <div class="theme-control">
+              <label for="theme-note-category">Schrift der Kategorie</label>
+              <input id="theme-note-category" type="color" data-theme-field="noteCategory">
+            </div>
+            <div class="theme-control">
+              <label for="theme-note-preview">Schrift der Vorschau</label>
+              <input id="theme-note-preview" type="color" data-theme-field="notePreview">
+            </div>
+            <div class="theme-control">
+              <label for="theme-quick-bg">Hintergrund schnelle Notizen</label>
+              <input id="theme-quick-bg" type="color" data-theme-field="quickNoteBg">
+            </div>
+            <div class="theme-control">
+              <label for="theme-quick-title">Schrift „Schnelle Notizen“</label>
+              <input id="theme-quick-title" type="color" data-theme-field="quickNoteTitle">
+            </div>
+          </div>
+        </section>
+
+        <button id="reset-sidebar-theme" class="secondary" type="button">Darstellung zurücksetzen</button>
+      </div>
+    </details>
+
+    <details class="settings-accordion">
+      <summary>Auswahlmöglichkeiten</summary>
+      <div id="settings-options-body" class="settings-accordion-content"></div>
+    </details>
+  </div>
+
+  <footer class="editor-foot">
+    <span>Änderungen werden automatisch gespeichert.</span>
+    <button type="button" class="primary" data-close-overlay="settings">Fertig</button>
+  </footer>
+</div></section>
 <script>
 (()=>{
 'use strict';
@@ -1173,38 +1294,146 @@ async function ensureSupabaseLibrary(){
 const status=(id,label,color,kind='active')=>({id,label,color,kind});
 const option=(id,label)=>({id,label});
 
+function createLegacySelectionDefaults(){
+ const areas=[
+  option('area-general','Allgemeines'),
+  option('area-finance','Finanzen'),
+  option('area-controlling','Controlling'),
+  option('area-hr','Personal'),
+  option('area-forecast','Forecasting'),
+  option('area-cleaning','Reinigung'),
+  option('area-kitchen','Küche'),
+  option('area-canteen','Mensa'),
+  option('area-catering','Catering'),
+  option('area-station','Stationsservice'),
+  option('area-supply','Versorgungsassistenz'),
+  option('area-temp','Arbeitnehmerüberlassung'),
+  option('area-other','Sonstiges')
+ ];
+ const people=['M. Dawid','D. Schauer','N. Weitz','N. Schauer','V. Dindelegan',
+  'H. Mytilinakis','S. Liebsch','S. Hegitsch','B. Morosan','M. Bulgur','T. Janßen']
+  .map((name,index)=>option(`person-${index+1}`,name));
+
+ return{
+  projects:{
+   statuses:[
+    status('project-open','Offen','#fff7d6','open'),
+    status('project-active','In Bearbeitung','#fff0df','active'),
+    status('project-done','Erledigt','#e6f1e8','done')
+   ],
+   priorities:[
+    option('project-high','Hohe Priorität'),
+    option('project-medium','Mittlere Priorität'),
+    option('project-low','Geringe Priorität')
+   ],
+   areas:clone(areas)
+  },
+  subtasks:{
+   statuses:[
+    status('sub-open','Offen','#fff7d6','open'),
+    status('sub-active','In Bearbeitung','#fff0df','active'),
+    status('sub-support','Zuarbeit erforderlich','#f1e8fb','active'),
+    status('sub-appointment','Termin vereinbart','#ece8fb','active'),
+    status('sub-done','Erledigt','#e6f1e8','done')
+   ],
+   people:clone(people)
+  },
+  own:{
+   statuses:[
+    status('own-open','Offen','#fff7d6','open'),
+    status('own-active','In Bearbeitung','#fff0df','active'),
+    status('own-support','Zuarbeit erforderlich','#f1e8fb','active'),
+    status('own-appointment','Termin vereinbart','#ece8fb','active'),
+    status('own-done','Erledigt','#e6f1e8','done')
+   ],
+   priorities:[
+    option('own-daily','Tagesgeschäft'),
+    option('own-high','Hohe Priorität'),
+    option('own-medium','Mittlere Priorität'),
+    option('own-low','Geringe Priorität')
+   ],
+   areas:clone(areas)
+  },
+  delegated:{
+   statuses:[
+    status('delegated-open','Offen','#fff7d6','open'),
+    status('delegated-active','In Bearbeitung','#fff0df','active'),
+    status('delegated-support','Zuarbeit erforderlich','#f1e8fb','active'),
+    status('delegated-appointment','Termin vereinbart','#ece8fb','active'),
+    status('delegated-done','Erledigt','#e6f1e8','done')
+   ],
+   priorities:[
+    option('delegated-high','Hohe Priorität'),
+    option('delegated-medium','Mittlere Priorität'),
+    option('delegated-low','Geringe Priorität')
+   ],
+   areas:clone(areas),
+   people:clone(people)
+  }
+ };
+}
 function createDefaults(){
- return {
+ const legacy=createLegacySelectionDefaults();
+ return{
   version:26,
   meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:''},
   config:{
    navOrder:['notes','projects','own','delegated'],
-   appearance:{sidebarBg:'#dbe8f3',titleColor:'#1f2933',subtitleColor:'#66717d',navColor:'#315d8a',groupColor:'#bfd6e9',titleFont:'Jolly Lodger',titleSize:30},
+   appearance:{
+    sidebarBg:'#dbe8f3',
+    sidebarTitleColor:'#1f2933',
+    sidebarTextColor:'#315d8a',
+    sidebarActiveBg:'#bfd6e9',
+    sidebarActiveText:'#1f2933',
+    titleFont:'Jolly Lodger',
+    titleSize:30,
+    workGroupBg:'#bfd6e9',
+    workGroupTitle:'#1c4668',
+    noteBg:'#bfd6e9',
+    noteTitle:'#1c4668',
+    noteCategory:'#66717d',
+    notePreview:'#66717d',
+    quickNoteBg:'#bfd6e9',
+    quickNoteTitle:'#66717d'
+   },
    noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
-   projects:{
-    statuses:[status('project-open','Offen','#fff7d6','open'),status('project-active','In Bearbeitung','#fff0df','active'),status('project-done','Erledigt','#e6f1e8','done')],
-    priorities:[option('project-high','Hohe Priorität'),option('project-medium','Mittlere Priorität'),option('project-low','Geringe Priorität')],
-    areas:[option('area-general','Allgemeines'),option('area-finance','Finanzen'),option('area-controlling','Controlling'),option('area-hr','Personal'),option('area-forecast','Forecasting'),option('area-cleaning','Reinigung'),option('area-kitchen','Küche'),option('area-canteen','Mensa'),option('area-catering','Catering'),option('area-station','Stationsservice'),option('area-supply','Versorgungsassistenz'),option('area-temp','Arbeitnehmerüberlassung'),option('area-other','Sonstiges')]
+   shared:{
+    areas:clone(legacy.projects.areas),
+    statuses:[
+     status('status-open','Offen','#fff7d6','open'),
+     status('status-active','In Bearbeitung','#fff0df','active'),
+     status('status-support','Zuarbeit erforderlich','#f1e8fb','active'),
+     status('status-appointment','Termin vereinbart','#ece8fb','active'),
+     status('status-done','Erledigt','#e6f1e8','done')
+    ],
+    people:clone(legacy.subtasks.people),
+    priorities:[
+     option('priority-high','Hohe Priorität'),
+     option('priority-medium','Mittlere Priorität'),
+     option('priority-low','Geringe Priorität')
+    ],
+    showDailyOwn:true
    },
-   subtasks:{
-    statuses:[status('sub-open','Offen','#fff7d6','open'),status('sub-active','In Bearbeitung','#fff0df','active'),status('sub-support','Zuarbeit erforderlich','#f1e8fb','active'),status('sub-appointment','Termin vereinbart','#ece8fb','active'),status('sub-done','Erledigt','#e6f1e8','done')],
-    people:['M. Dawid','D. Schauer','N. Weitz','N. Schauer','V. Dindelegan','H. Mytilinakis','S. Liebsch','S. Hegitsch','B. Morosan','M. Bulgur','T. Janßen'].map((name,index)=>option(`person-${index+1}`,name))
-   },
-   own:{
-    statuses:[status('own-open','Offen','#fff7d6','open'),status('own-active','In Bearbeitung','#fff0df','active'),status('own-support','Zuarbeit erforderlich','#f1e8fb','active'),status('own-appointment','Termin vereinbart','#ece8fb','active'),status('own-done','Erledigt','#e6f1e8','done')],
-    priorities:[option('own-daily','Tagesgeschäft'),option('own-high','Hohe Priorität'),option('own-medium','Mittlere Priorität'),option('own-low','Geringe Priorität')],
-    areas:[]
-   },
-   delegated:{
-    statuses:[status('delegated-open','Offen','#fff7d6','open'),status('delegated-active','In Bearbeitung','#fff0df','active'),status('delegated-support','Zuarbeit erforderlich','#f1e8fb','active'),status('delegated-appointment','Termin vereinbart','#ece8fb','active'),status('delegated-done','Erledigt','#e6f1e8','done')],
-    priorities:[option('delegated-high','Hohe Priorität'),option('delegated-medium','Mittlere Priorität'),option('delegated-low','Geringe Priorität')],
-    areas:[],people:[]
-   }
+   projects:{statuses:clone(legacy.projects.statuses)}
   },
-  notes:[{id:uid(),title:'Erste Notiz',area:'Allgemeines',content:'<p>Hier können wichtige Gedanken und Informationen festgehalten werden.</p>',updatedAt:now()}],
-  ownTodos:[{id:uid(),title:'Ersten Entwurf prüfen',summary:'Aufbau und Funktionen prüfen.',details:'',statusId:'own-open',areaId:'area-general',priorityId:'own-high',previousPriorityId:'own-high',completed:false,updatedAt:now()}],
+  notes:[{
+   id:uid(),title:'Erste Notiz',area:'Allgemeines',
+   content:'<p>Hier können wichtige Gedanken und Informationen festgehalten werden.</p>',
+   archived:false,updatedAt:now()
+  }],
+  ownTodos:[{
+   id:uid(),title:'Ersten Entwurf prüfen',summary:'Aufbau und Funktionen prüfen.',
+   details:'',statusId:'status-open',areaId:'area-general',
+   priorityId:'priority-high',previousPriorityId:'priority-high',
+   completed:false,updatedAt:now()
+  }],
   delegatedTodos:[],
-  projects:[{id:uid(),title:'Persönliches Organisationstool',summary:'Weiterentwicklung der Oberfläche und Funktionen.',areaId:'area-general',priorityId:'project-high',deadline:'',subtasks:[],updatedAt:now()}]
+  projects:[{
+   id:uid(),title:'Persönliches Organisationstool',
+   summary:'Weiterentwicklung der Oberfläche und Funktionen.',
+   areaId:'area-general',priorityId:'priority-high',
+   deadline:'',subtasks:[],updatedAt:now()
+  }]
  };
 }
 
@@ -1251,17 +1480,196 @@ function resolveOrAdd(config,section,group,value,fallbackId){
  }
  return fallbackId||list[0]?.id||'';
 }
+function mergeLegacyOptions(defaultList,sourceLists,{statusGroup=false,prefix='shared'}={}){
+ const result=clone(defaultList);
+ const usedIds=new Set(result.map(item=>item.id));
+
+ for(const source of sourceLists){
+  if(!Array.isArray(source))continue;
+  const normalized=normalizeOptions(source,[],{statusGroup});
+  for(const item of normalized){
+   const existing=result.find(entry=>
+    entry.label.toLowerCase()===item.label.toLowerCase()
+    &&(!statusGroup||entry.kind===item.kind)
+   );
+   if(existing)continue;
+
+   let id=`${prefix}-${slug(item.label)}`;
+   let suffix=2;
+   while(usedIds.has(id))id=`${prefix}-${slug(item.label)}-${suffix++}`;
+   usedIds.add(id);
+
+   result.push(statusGroup
+    ?status(id,item.label,item.color||'#eeeeee',item.kind||inferKind(id,item.label))
+    :option(id,item.label)
+   );
+  }
+ }
+ return result;
+}
+function priorityIdFromValue(value,legacyList,{allowDaily=false}={}){
+ const legacy=findOption(legacyList,value);
+ const raw=typeof value==='object'
+  ?String(value?.id||value?.label||value?.name||'')
+  :String(value??'');
+ const text=`${raw} ${legacy?.id||''} ${legacy?.label||''}`.toLowerCase();
+
+ if(allowDaily&&(text.includes('daily')||text.includes('tagesgeschäft')||text.includes('tagesgeschaft'))){
+  return'priority-daily';
+ }
+ if(text.includes('high')||text.includes('hoch'))return'priority-high';
+ if(text.includes('low')||text.includes('gering'))return'priority-low';
+ if(text.includes('medium')||text.includes('mittel'))return'priority-medium';
+ return'priority-medium';
+}
+function resolveMigratedOption(list,value,legacyList,fallbackId,{statusGroup=false}={}){
+ const direct=findOption(list,value);
+ if(direct)return direct.id;
+
+ const legacy=findOption(legacyList,value);
+ const raw=typeof value==='object'
+  ?value?.label||value?.name||value?.id
+  :value;
+ const label=String(legacy?.label||raw||'').replace(/^custom:/,'').trim();
+
+ if(label){
+  const byLabel=list.find(item=>item.label.toLowerCase()===label.toLowerCase());
+  if(byLabel)return byLabel.id;
+
+  let id=`shared-${slug(label)}`;
+  let suffix=2;
+  while(list.some(item=>item.id===id))id=`shared-${slug(label)}-${suffix++}`;
+  const created=statusGroup
+   ?status(id,label,legacy?.color||'#eeeeee',legacy?.kind||inferKind(id,label))
+   :option(id,label);
+  list.push(created);
+  return id;
+ }
+ return fallbackId||list[0]?.id||'';
+}
 function normalizeState(raw){
  const defaults=createDefaults();
+ const legacyDefaults=createLegacySelectionDefaults();
  const source=raw&&typeof raw==='object'?raw:{};
- const result={version:26,meta:{...defaults.meta,...(source.meta||{})},config:{},notes:[],ownTodos:[],delegatedTodos:[],projects:[]};
- result.meta.title=String(result.meta.title||defaults.meta.title);result.meta.subtitle=String(result.meta.subtitle||defaults.meta.subtitle);result.meta.quickNote=String(result.meta.quickNote||'');
- result.config.projects=normalizeSection(source.config?.projects,defaults.config.projects);
- result.config.subtasks=normalizeSection(source.config?.subtasks,defaults.config.subtasks);
- result.config.own=normalizeSection(source.config?.own,defaults.config.own);
- result.config.delegated=normalizeSection(source.config?.delegated,defaults.config.delegated);
- result.config.appearance={...defaults.config.appearance,...(source.config?.appearance||{})};
- const appearanceColorKeys=['sidebarBg','titleColor','subtitleColor','navColor','groupColor'];
+ const result={
+  version:26,
+  meta:{...defaults.meta,...(source.meta||{})},
+  config:{},
+  notes:[],
+  ownTodos:[],
+  delegatedTodos:[],
+  projects:[]
+ };
+
+ result.meta.title=String(result.meta.title||defaults.meta.title);
+ result.meta.subtitle=String(result.meta.subtitle||defaults.meta.subtitle);
+ result.meta.quickNote=String(result.meta.quickNote||'');
+
+ const legacy={
+  projects:normalizeSection(source.config?.projects,legacyDefaults.projects),
+  subtasks:normalizeSection(source.config?.subtasks,legacyDefaults.subtasks),
+  own:normalizeSection(source.config?.own,legacyDefaults.own),
+  delegated:normalizeSection(source.config?.delegated,legacyDefaults.delegated)
+ };
+
+ if(source.config?.shared){
+  result.config.shared={
+   areas:normalizeOptions(source.config.shared.areas,defaults.config.shared.areas),
+   statuses:normalizeOptions(
+    source.config.shared.statuses,
+    defaults.config.shared.statuses,
+    {statusGroup:true}
+   ),
+   people:normalizeOptions(source.config.shared.people,defaults.config.shared.people),
+   priorities:normalizeOptions(
+    source.config.shared.priorities,
+    defaults.config.shared.priorities
+   ).filter(item=>item.id!=='priority-daily'&&item.label!=='Tagesgeschäft'),
+   showDailyOwn:source.config.shared.showDailyOwn!==false
+  };
+ }else{
+  result.config.shared={
+   areas:mergeLegacyOptions(
+    defaults.config.shared.areas,
+    [legacy.projects.areas,legacy.own.areas,legacy.delegated.areas],
+    {prefix:'area'}
+   ),
+   statuses:mergeLegacyOptions(
+    defaults.config.shared.statuses,
+    [legacy.own.statuses,legacy.delegated.statuses,legacy.subtasks.statuses],
+    {statusGroup:true,prefix:'status'}
+   ),
+   people:mergeLegacyOptions(
+    defaults.config.shared.people,
+    [legacy.delegated.people,legacy.subtasks.people],
+    {prefix:'person'}
+   ),
+   priorities:clone(defaults.config.shared.priorities),
+   showDailyOwn:Array.isArray(source.config?.own?.priorities)
+    ?source.config.own.priorities.some(item=>{
+      const text=`${item?.id||''} ${item?.label||item||''}`.toLowerCase();
+      return text.includes('daily')||text.includes('tagesgeschäft')||text.includes('tagesgeschaft');
+     })
+    :defaults.config.shared.showDailyOwn
+  };
+ }
+
+ if(!result.config.shared.statuses.some(item=>item.kind==='done')){
+  result.config.shared.statuses.push(
+   clone(defaults.config.shared.statuses.find(item=>item.kind==='done'))
+  );
+ }
+ if(!result.config.shared.statuses.some(item=>item.kind==='open')){
+  result.config.shared.statuses.unshift(
+   clone(defaults.config.shared.statuses.find(item=>item.kind==='open'))
+  );
+ }
+ if(!result.config.shared.priorities.length){
+  result.config.shared.priorities=clone(defaults.config.shared.priorities);
+ }
+
+ result.config.projects={
+  statuses:normalizeOptions(
+   source.config?.projects?.statuses,
+   defaults.config.projects.statuses,
+   {statusGroup:true}
+  )
+ };
+
+ const oldAppearance=source.config?.appearance||{};
+ result.config.appearance={
+  ...defaults.config.appearance,
+  ...oldAppearance,
+  sidebarTitleColor:oldAppearance.sidebarTitleColor
+   ||oldAppearance.titleColor
+   ||defaults.config.appearance.sidebarTitleColor,
+  sidebarTextColor:oldAppearance.sidebarTextColor
+   ||oldAppearance.navColor
+   ||oldAppearance.subtitleColor
+   ||defaults.config.appearance.sidebarTextColor,
+  sidebarActiveBg:oldAppearance.sidebarActiveBg
+   ||oldAppearance.groupColor
+   ||defaults.config.appearance.sidebarActiveBg,
+  sidebarActiveText:oldAppearance.sidebarActiveText
+   ||readableTextColor(oldAppearance.groupColor||defaults.config.appearance.sidebarActiveBg),
+  workGroupBg:oldAppearance.workGroupBg
+   ||oldAppearance.groupColor
+   ||defaults.config.appearance.workGroupBg,
+  noteBg:oldAppearance.noteBg
+   ||oldAppearance.groupColor
+   ||defaults.config.appearance.noteBg,
+  quickNoteBg:oldAppearance.quickNoteBg
+   ||oldAppearance.groupColor
+   ||defaults.config.appearance.quickNoteBg
+ };
+
+ const appearanceColorKeys=[
+  'sidebarBg','sidebarTitleColor','sidebarTextColor',
+  'sidebarActiveBg','sidebarActiveText',
+  'workGroupBg','workGroupTitle',
+  'noteBg','noteTitle','noteCategory','notePreview',
+  'quickNoteBg','quickNoteTitle'
+ ];
  for(const key of appearanceColorKeys){
   const value=String(result.config.appearance[key]||'');
   if(!/^#[0-9a-f]{6}$/i.test(value)){
@@ -1275,44 +1683,182 @@ function normalizeState(raw){
  result.config.appearance.titleSize=Number.isFinite(parsedTitleSize)
   ?Math.min(56,Math.max(20,parsedTitleSize))
   :defaults.config.appearance.titleSize;
- result.config.projects.priorities=result.config.projects.priorities.filter(item=>item.id!=='project-very-high'&&item.label!=='Sehr hohe Priorität');
- result.config.own.priorities=result.config.own.priorities.filter(item=>item.id!=='own-very-high'&&item.label!=='Sehr hohe Priorität');
- result.config.delegated.priorities=result.config.delegated.priorities.filter(item=>item.id!=='delegated-very-high'&&item.label!=='Sehr hohe Priorität');
- if(!result.config.own.statuses.some(item=>item.kind==='done')){
-  result.config.own.statuses.push(clone(defaults.config.own.statuses.find(item=>item.kind==='done')));
- }
- if(!result.config.delegated.statuses.some(item=>item.kind==='done')){
-  result.config.delegated.statuses.push(clone(defaults.config.delegated.statuses.find(item=>item.kind==='done')));
- }
- if(!result.config.own.areas.length)result.config.own.areas=clone(result.config.projects.areas);
- if(!result.config.delegated.areas.length)result.config.delegated.areas=clone(result.config.projects.areas);
- if(!result.config.delegated.people.length)result.config.delegated.people=clone(result.config.subtasks.people);
- result.config.noteColors=Array.isArray(source.config?.noteColors)&&source.config.noteColors.length?source.config.noteColors.map(String):clone(defaults.config.noteColors);
+
+ result.config.noteColors=Array.isArray(source.config?.noteColors)
+  &&source.config.noteColors.length
+  ?source.config.noteColors.map(String)
+  :clone(defaults.config.noteColors);
+
  const allowed=['notes','projects','own','delegated'];
- result.config.navOrder=Array.isArray(source.config?.navOrder)?source.config.navOrder.filter(item=>allowed.includes(item)):clone(defaults.config.navOrder);
- allowed.forEach(item=>{if(!result.config.navOrder.includes(item))result.config.navOrder.push(item)});
+ result.config.navOrder=Array.isArray(source.config?.navOrder)
+  ?source.config.navOrder.filter(item=>allowed.includes(item))
+  :clone(defaults.config.navOrder);
+ allowed.forEach(item=>{
+  if(!result.config.navOrder.includes(item))result.config.navOrder.push(item);
+ });
+
  const noteSource=Array.isArray(source.notes)?source.notes:defaults.notes;
- result.notes=noteSource.filter(item=>item&&typeof item==='object').map(item=>({id:String(item.id||uid()),title:String(item.title??item.name??''),area:String(item.area??item.category??''),content:String(item.content??item.body??item.text??''),archived:Boolean(item.archived),updatedAt:String(item.updatedAt||item.modifiedAt||now())}));
- const ownSource=Array.isArray(source.ownTodos)?source.ownTodos:(Array.isArray(source.todos)?source.todos:defaults.ownTodos);
- result.ownTodos=ownSource.filter(item=>item&&typeof item==='object').map(item=>{
-  const priorityId=resolveOrAdd(result.config,'own','priorities',(item.priorityId==='own-very-high'?'own-high':item.priorityId)??item.priority,'own-daily');
-  const resolvedStatusId=resolveOrAdd(result.config,'own','statuses',item.statusId??item.status,'own-open');
-  const migratedDone=Boolean(item.completed||item.done)||result.config.own.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
-  const doneStatusId=result.config.own.statuses.find(entry=>entry.kind==='done')?.id||resolvedStatusId;
-  return{id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),details:String(item.details??item.description??item.notes??''),statusId:migratedDone?doneStatusId:resolvedStatusId,areaId:resolveOrAdd(result.config,'own','areas',item.areaId??item.area,'area-general'),priorityId,previousPriorityId:resolveOrAdd(result.config,'own','priorities',item.previousPriorityId??item.previousPriority??item.priorityId??item.priority,priorityId),completed:migratedDone,updatedAt:String(item.updatedAt||item.modifiedAt||now())};
- });
- const delegatedSource=Array.isArray(source.delegatedTodos)?source.delegatedTodos:(Array.isArray(source.assignedTodos)?source.assignedTodos:defaults.delegatedTodos);
- result.delegatedTodos=delegatedSource.filter(item=>item&&typeof item==='object').map(item=>{
-  const priorityId=resolveOrAdd(result.config,'delegated','priorities',(item.priorityId==='delegated-very-high'?'delegated-high':item.priorityId)??item.priority,'delegated-high');
-  const resolvedStatusId=resolveOrAdd(result.config,'delegated','statuses',item.statusId??item.status,'delegated-open');
-  const migratedDone=Boolean(item.completed||item.done)||result.config.delegated.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
-  const doneStatusId=result.config.delegated.statuses.find(entry=>entry.kind==='done')?.id||resolvedStatusId;
-  return{id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),details:String(item.details??item.description??item.notes??''),statusId:migratedDone?doneStatusId:resolvedStatusId,areaId:resolveOrAdd(result.config,'delegated','areas',item.areaId??item.area,'area-general'),personId:resolveOrAdd(result.config,'delegated','people',item.personId??item.person??item.responsible,result.config.delegated.people[0]?.id),priorityId,previousPriorityId:resolveOrAdd(result.config,'delegated','priorities',item.previousPriorityId??item.previousPriority??item.priorityId??item.priority,priorityId),completed:migratedDone,updatedAt:String(item.updatedAt||item.modifiedAt||now())};
- });
+ result.notes=noteSource
+  .filter(item=>item&&typeof item==='object')
+  .map(item=>({
+   id:String(item.id||uid()),
+   title:String(item.title??item.name??''),
+   area:String(item.area??item.category??''),
+   content:String(item.content??item.body??item.text??''),
+   archived:Boolean(item.archived),
+   updatedAt:String(item.updatedAt||item.modifiedAt||now())
+  }));
+
+ const shared=result.config.shared;
+ const doneStatusId=shared.statuses.find(item=>item.kind==='done')?.id
+  ||shared.statuses[0]?.id||'';
+ const openStatusId=shared.statuses.find(item=>item.kind!=='done')?.id
+  ||shared.statuses[0]?.id||'';
+ const ownFallbackPriority=shared.showDailyOwn?'priority-daily':'priority-high';
+
+ const ownSource=Array.isArray(source.ownTodos)
+  ?source.ownTodos
+  :(Array.isArray(source.todos)?source.todos:defaults.ownTodos);
+ result.ownTodos=ownSource
+  .filter(item=>item&&typeof item==='object')
+  .map(item=>{
+   let priorityId=priorityIdFromValue(
+    item.priorityId??item.priority,
+    legacy.own.priorities,
+    {allowDaily:shared.showDailyOwn}
+   );
+   if(priorityId==='priority-daily'&&!shared.showDailyOwn)priorityId='priority-medium';
+
+   const resolvedStatusId=resolveMigratedOption(
+    shared.statuses,
+    item.statusId??item.status,
+    legacy.own.statuses,
+    openStatusId,
+    {statusGroup:true}
+   );
+   const migratedDone=Boolean(item.completed||item.done)
+    ||shared.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
+
+   let previousPriorityId=priorityIdFromValue(
+    item.previousPriorityId??item.previousPriority??item.priorityId??item.priority,
+    legacy.own.priorities,
+    {allowDaily:shared.showDailyOwn}
+   );
+   if(previousPriorityId==='priority-daily'&&!shared.showDailyOwn){
+    previousPriorityId='priority-medium';
+   }
+
+   return{
+    id:String(item.id||uid()),
+    title:String(item.title??item.name??''),
+    summary:String(item.summary??item.annotation??item.note??''),
+    details:String(item.details??item.description??item.notes??''),
+    statusId:migratedDone?doneStatusId:resolvedStatusId,
+    areaId:resolveMigratedOption(
+     shared.areas,item.areaId??item.area,legacy.own.areas,'area-general'
+    ),
+    priorityId:priorityId||ownFallbackPriority,
+    previousPriorityId:previousPriorityId||priorityId||ownFallbackPriority,
+    completed:migratedDone,
+    updatedAt:String(item.updatedAt||item.modifiedAt||now())
+   };
+  });
+
+ const delegatedSource=Array.isArray(source.delegatedTodos)
+  ?source.delegatedTodos
+  :(Array.isArray(source.assignedTodos)?source.assignedTodos:defaults.delegatedTodos);
+ result.delegatedTodos=delegatedSource
+  .filter(item=>item&&typeof item==='object')
+  .map(item=>{
+   const priorityId=priorityIdFromValue(
+    item.priorityId??item.priority,
+    legacy.delegated.priorities
+   );
+   const resolvedStatusId=resolveMigratedOption(
+    shared.statuses,
+    item.statusId??item.status,
+    legacy.delegated.statuses,
+    openStatusId,
+    {statusGroup:true}
+   );
+   const migratedDone=Boolean(item.completed||item.done)
+    ||shared.statuses.find(entry=>entry.id===resolvedStatusId)?.kind==='done';
+
+   return{
+    id:String(item.id||uid()),
+    title:String(item.title??item.name??''),
+    summary:String(item.summary??item.annotation??item.note??''),
+    details:String(item.details??item.description??item.notes??''),
+    statusId:migratedDone?doneStatusId:resolvedStatusId,
+    areaId:resolveMigratedOption(
+     shared.areas,item.areaId??item.area,legacy.delegated.areas,'area-general'
+    ),
+    personId:resolveMigratedOption(
+     shared.people,
+     item.personId??item.person??item.responsible,
+     legacy.delegated.people,
+     shared.people[0]?.id
+    ),
+    priorityId,
+    previousPriorityId:priorityIdFromValue(
+     item.previousPriorityId??item.previousPriority??item.priorityId??item.priority,
+     legacy.delegated.priorities
+    ),
+    completed:migratedDone,
+    updatedAt:String(item.updatedAt||item.modifiedAt||now())
+   };
+  });
+
  const projectSource=Array.isArray(source.projects)?source.projects:defaults.projects;
- result.projects=projectSource.filter(item=>item&&typeof item==='object').map(item=>({id:String(item.id||uid()),title:String(item.title??item.name??''),summary:String(item.summary??item.annotation??item.note??''),areaId:resolveOrAdd(result.config,'projects','areas',item.areaId??item.area,'area-general'),priorityId:resolveOrAdd(result.config,'projects','priorities',(item.priorityId==='project-very-high'?'project-high':item.priorityId)??item.priority,'project-high'),deadline:String(item.deadline??item.dueDate??''),updatedAt:String(item.updatedAt||item.modifiedAt||now()),subtasks:(Array.isArray(item.subtasks)?item.subtasks:[]).filter(task=>task&&typeof task==='object').map(task=>({id:String(task.id||uid()),title:String(task.title??task.name??''),summary:String(task.summary??task.annotation??task.note??''),personId:resolveOrAdd(result.config,'subtasks','people',task.personId??task.person??task.responsible,result.config.subtasks.people[0]?.id),deadline:String(task.deadline??task.dueDate??''),statusId:resolveOrAdd(result.config,'subtasks','statuses',task.statusId??task.status,'sub-open'),updatedAt:String(task.updatedAt||task.modifiedAt||now())}))}));
+ result.projects=projectSource
+  .filter(item=>item&&typeof item==='object')
+  .map(item=>({
+   id:String(item.id||uid()),
+   title:String(item.title??item.name??''),
+   summary:String(item.summary??item.annotation??item.note??''),
+   areaId:resolveMigratedOption(
+    shared.areas,item.areaId??item.area,legacy.projects.areas,'area-general'
+   ),
+   priorityId:priorityIdFromValue(
+    item.priorityId??item.priority,
+    legacy.projects.priorities
+   ),
+   deadline:String(item.deadline??item.dueDate??''),
+   updatedAt:String(item.updatedAt||item.modifiedAt||now()),
+   subtasks:(Array.isArray(item.subtasks)?item.subtasks:[])
+    .filter(task=>task&&typeof task==='object')
+    .map(task=>({
+     id:String(task.id||uid()),
+     title:String(task.title??task.name??''),
+     summary:String(task.summary??task.annotation??task.note??''),
+     personId:resolveMigratedOption(
+      shared.people,
+      task.personId??task.person??task.responsible,
+      legacy.subtasks.people,
+      shared.people[0]?.id
+     ),
+     deadline:String(task.deadline??task.dueDate??''),
+     statusId:resolveMigratedOption(
+      shared.statuses,
+      task.statusId??task.status,
+      legacy.subtasks.statuses,
+      openStatusId,
+      {statusGroup:true}
+     ),
+     updatedAt:String(task.updatedAt||task.modifiedAt||now())
+    }))
+  }));
+
+ if(!shared.showDailyOwn){
+  result.ownTodos.forEach(todo=>{
+   if(todo.priorityId==='priority-daily')todo.priorityId='priority-medium';
+   if(todo.previousPriorityId==='priority-daily')todo.previousPriorityId='priority-medium';
+  });
+ }
+
  return result;
 }
+
 function loadState(){
  const current=safeStorage.get(STORAGE_KEY);if(current){try{return normalizeState(JSON.parse(current))}catch(error){console.error(error)}}
  for(const key of LEGACY_KEYS){const raw=safeStorage.get(key);if(raw){try{return normalizeState(JSON.parse(raw))}catch(error){console.error(error)}}}
@@ -1322,6 +1868,7 @@ function loadState(){
 let state=loadState();
 let activePage='notes';
 let archiveOpen=false;
+const completedGroupOpen={own:false,delegated:false,projects:false};
 const expandedProjectIds=new Set();
 let current={noteId:null,todoId:null,todoType:'own',projectId:null};
 let filters={own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set(),person:new Set()},projects:{status:new Set(),area:new Set()}};
@@ -1823,8 +2370,53 @@ function renderHistoryButtons(){$('#undo-btn').disabled=!historyPast.length;$('#
 function beginEdit(key){if(editKey!==key){checkpoint();editKey=key}}
 function endEdit(){editKey=null}
 
-function sectionConfig(section){return state.config[section]||{}}
-function options(section,group){return Array.isArray(sectionConfig(section)[group])?sectionConfig(section)[group]:[]}
+function ownPriorityOptions(){
+ const shared=state.config.shared||createDefaults().config.shared;
+ return shared.showDailyOwn
+  ?[option('priority-daily','Tagesgeschäft'),...shared.priorities]
+  :shared.priorities;
+}
+function sectionConfig(section){
+ const shared=state.config.shared||createDefaults().config.shared;
+
+ if(section==='shared')return shared;
+ if(section==='own'){
+  return{
+   statuses:shared.statuses,
+   priorities:ownPriorityOptions(),
+   areas:shared.areas,
+   people:shared.people
+  };
+ }
+ if(section==='delegated'){
+  return{
+   statuses:shared.statuses,
+   priorities:shared.priorities,
+   areas:shared.areas,
+   people:shared.people
+  };
+ }
+ if(section==='subtasks'){
+  return{
+   statuses:shared.statuses,
+   people:shared.people
+  };
+ }
+ if(section==='projects'){
+  return{
+   statuses:state.config.projects?.statuses||createDefaults().config.projects.statuses,
+   priorities:shared.priorities,
+   areas:shared.areas
+  };
+ }
+ return state.config[section]||{};
+}
+function options(section,group){
+ return Array.isArray(sectionConfig(section)[group])
+  ?sectionConfig(section)[group]
+  :[];
+}
+
 function optionById(section,group,id){return options(section,group).find(item=>item.id===id)||null}
 function optionLabel(section,group,id){return optionById(section,group,id)?.label||''}
 function optionColor(section,id){return optionById(section,'statuses',id)?.color||'#eeeeee'}
@@ -1869,18 +2461,23 @@ function renderTheme(){
  const titleFont=TITLE_FONT_OPTIONS.includes(appearance.titleFont)
   ?appearance.titleFont
   :createDefaults().config.appearance.titleFont;
- const activeText=readableTextColor(appearance.groupColor);
  const titleSize=Math.min(56,Math.max(20,Number.parseInt(appearance.titleSize,10)||30));
  ensureTitleFontLoaded(titleFont);
 
  root?.style?.setProperty('--sidebar-bg',appearance.sidebarBg);
- root?.style?.setProperty('--sidebar-title-color',appearance.titleColor);
- root?.style?.setProperty('--sidebar-subtitle-color',appearance.subtitleColor);
- root?.style?.setProperty('--sidebar-nav-color',appearance.navColor);
- root?.style?.setProperty('--group-bg',appearance.groupColor);
- root?.style?.setProperty('--sidebar-active-bg',appearance.groupColor);
- root?.style?.setProperty('--sidebar-active-text',activeText);
+ root?.style?.setProperty('--sidebar-title-color',appearance.sidebarTitleColor);
+ root?.style?.setProperty('--sidebar-text-color',appearance.sidebarTextColor);
+ root?.style?.setProperty('--sidebar-active-bg',appearance.sidebarActiveBg);
+ root?.style?.setProperty('--sidebar-active-text',appearance.sidebarActiveText);
  root?.style?.setProperty('--sidebar-title-size',`${titleSize}px`);
+ root?.style?.setProperty('--work-group-bg',appearance.workGroupBg);
+ root?.style?.setProperty('--work-group-title',appearance.workGroupTitle);
+ root?.style?.setProperty('--note-bg',appearance.noteBg);
+ root?.style?.setProperty('--note-title',appearance.noteTitle);
+ root?.style?.setProperty('--note-category',appearance.noteCategory);
+ root?.style?.setProperty('--note-preview',appearance.notePreview);
+ root?.style?.setProperty('--quick-note-bg',appearance.quickNoteBg);
+ root?.style?.setProperty('--quick-note-title',appearance.quickNoteTitle);
  root?.style?.setProperty(
   '--sidebar-title-font',
   titleFont==='Arial'
@@ -1888,6 +2485,7 @@ function renderTheme(){
    :`"${titleFont}",Arial,Helvetica,sans-serif`
  );
 }
+
 function renderThemeSettings(){
  const appearance=state.config.appearance||createDefaults().config.appearance;
  $$('[data-theme-field]').forEach(input=>{
@@ -1972,8 +2570,8 @@ function renderNoteCard(note,{archived=false}={}){
  return`<article class="note-card ${archived?'archived':''}" data-note-id="${note.id}">
   <div class="note-main">
    <h3>${esc(note.title||'Ohne Überschrift')}</h3>
-   <div class="small">${esc(note.area||'Kein Bereich')}</div>
-   <div class="preview">${previewHtml}</div>
+   <div class="small note-category">${esc(note.area||'Kein Bereich')}</div>
+   <div class="preview note-preview">${previewHtml}</div>
   </div>
   <div class="card-footer">
    <span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span>
@@ -2019,7 +2617,7 @@ function ensureTodoDoneStatus(type){
  let done=section.statuses.find(item=>item?.kind==='done');
  if(done)return done;
 
- const fallback=createDefaults().config[type]?.statuses?.find(item=>item.kind==='done');
+ const fallback=createDefaults().config.shared.statuses.find(item=>item.kind==='done');
  done=clone(fallback||status(`${type}-done`,'Erledigt','#e6f1e8','done'));
  section.statuses.push(done);
  return done;
@@ -2069,26 +2667,94 @@ function renderTodoRow(todo,type,{draggable=false}={}){
   </div>
  </div>`;
 }
-function renderOwn(){renderFilter('#own-filters','own',['status','area']);const active=filters.own.status.size||filters.own.area.size;if(active){const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));$('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;$('#own-filters .filter-info').textContent=`${items.length} Treffer`;growAll();return}$('#own-filters .filter-info').textContent='';const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];$('#own-groups').innerHTML=groups.map(group=>{const items=state.ownTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'own'):!todoIsCompleted(todo,'own')&&todo.priorityId===group.id);return`<section class="group own ${group.id==='__completed__'?'completed-group':''}" data-own-drop="${group.id}"><div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span><button type="button" class="quick-add" data-action="quick-own" data-priority-id="${group.id}">+</button></div></div><div class="list">${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div></section>`}).join('');growAll()}
+function renderOwn(){
+ renderFilter('#own-filters','own',['status','area']);
+ const active=filters.own.status.size||filters.own.area.size;
+
+ if(active){
+  const items=state.ownTodos.filter(todo=>todoMatches(todo,'own'));
+  $('#own-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'own')).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;
+  $('#own-filters .filter-info').textContent=`${items.length} Treffer`;
+  growAll();
+  return;
+ }
+
+ $('#own-filters .filter-info').textContent='';
+ const groups=[...options('own','priorities'),{id:'__completed__',label:'Erledigt'}];
+
+ $('#own-groups').innerHTML=groups.map(group=>{
+  const completed=group.id==='__completed__';
+  const items=state.ownTodos.filter(todo=>
+   completed
+    ?todoIsCompleted(todo,'own')
+    :!todoIsCompleted(todo,'own')&&todo.priorityId===group.id
+  );
+  const open=!completed||completedGroupOpen.own;
+
+  return`<section class="group own ${completed?'completed-group':''}" data-own-drop="${group.id}">
+   <div class="group-head">
+    <h3>${esc(group.label)}</h3>
+    <div class="group-meta">
+     <span class="count">${items.length}</span>
+     ${completed
+      ?`<button type="button" class="completed-toggle" data-action="toggle-completed"
+          data-completed-section="own" aria-expanded="${open}">${open?'▴':'▾'}</button>`
+      :`<button type="button" class="quick-add" data-action="quick-own"
+          data-priority-id="${group.id}">+</button>`
+     }
+    </div>
+   </div>
+   <div class="list completed-list" ${completed&&!open?'hidden':''}>
+    ${items.map(todo=>renderTodoRow(todo,'own',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}
+   </div>
+  </section>`;
+ }).join('');
+ growAll();
+}
+
 function renderDelegated(){
  renderFilter('#delegated-filters','delegated',['status','area','person']);
- const active=filters.delegated.status.size||filters.delegated.area.size||filters.delegated.person.size;
+ const active=filters.delegated.status.size
+  ||filters.delegated.area.size
+  ||filters.delegated.person.size;
+
  if(active){
   const items=state.delegatedTodos.filter(todo=>todoMatches(todo,'delegated'));
   $('#delegated-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'delegated',{draggable:true})).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;
   $('#delegated-filters .filter-info').textContent=`${items.length} Treffer`;
-  growAll();return;
+  growAll();
+  return;
  }
+
  $('#delegated-filters .filter-info').textContent='';
  const groups=[...options('delegated','priorities'),{id:'__completed__',label:'Erledigt'}];
+
  $('#delegated-groups').innerHTML=groups.map(group=>{
-  const items=state.delegatedTodos.filter(todo=>group.id==='__completed__'?todoIsCompleted(todo,'delegated'):!todoIsCompleted(todo,'delegated')&&todo.priorityId===group.id);
-  return`<section class="group delegated-group ${group.id==='__completed__'?'completed-group':''}" data-delegated-drop="${group.id}">
-   <div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta">
-    <span class="count">${items.length}</span>
-    <button type="button" class="quick-add" data-action="quick-delegated" data-priority-id="${group.id}">+</button>
-   </div></div>
-   <div class="list">${items.map(todo=>renderTodoRow(todo,'delegated',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}</div>
+  const completed=group.id==='__completed__';
+  const items=state.delegatedTodos.filter(todo=>
+   completed
+    ?todoIsCompleted(todo,'delegated')
+    :!todoIsCompleted(todo,'delegated')&&todo.priorityId===group.id
+  );
+  const open=!completed||completedGroupOpen.delegated;
+
+  return`<section class="group delegated-group ${completed?'completed-group':''}"
+                  data-delegated-drop="${group.id}">
+   <div class="group-head">
+    <h3>${esc(group.label)}</h3>
+    <div class="group-meta">
+     <span class="count">${items.length}</span>
+     ${completed
+      ?`<button type="button" class="completed-toggle" data-action="toggle-completed"
+          data-completed-section="delegated" aria-expanded="${open}">${open?'▴':'▾'}</button>`
+      :`<button type="button" class="quick-add" data-action="quick-delegated"
+          data-priority-id="${group.id}">+</button>`
+     }
+    </div>
+   </div>
+   <div class="list completed-list" ${completed&&!open?'hidden':''}>
+    ${items.map(todo=>renderTodoRow(todo,'delegated',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}
+   </div>
   </section>`;
  }).join('');
  growAll();
@@ -2181,34 +2847,81 @@ function renderProjects(){
  const groups=[...options('projects','priorities'),{id:'__completed__',label:'Erledigt'}];
 
  $('#project-groups').innerHTML=groups.map(group=>{
+  const completed=group.id==='__completed__';
   const items=state.projects.filter(project=>
-   group.id==='__completed__'
+   completed
     ?projectStatusKind(project)==='done'
     :projectStatusKind(project)!=='done'&&project.priorityId===group.id
   );
+  const open=!completed||completedGroupOpen.projects;
 
-  return`<section class="group project ${group.id==='__completed__'?'completed-group':''}"
+  return`<section class="group project ${completed?'completed-group':''}"
                   data-project-drop="${group.id}">
    <div class="group-head">
     <h3>${esc(group.label)}</h3>
     <div class="group-meta">
      <span class="count">${items.length}</span>
-     ${group.id!=='__completed__'
-      ?`<button type="button" class="quick-add" data-action="quick-project"
-                 data-priority-id="${group.id}">+</button>`
-      :''
+     ${completed
+      ?`<button type="button" class="completed-toggle" data-action="toggle-completed"
+          data-completed-section="projects" aria-expanded="${open}">${open?'▴':'▾'}</button>`
+      :`<button type="button" class="quick-add" data-action="quick-project"
+          data-priority-id="${group.id}">+</button>`
      }
     </div>
    </div>
-   <div class="list">${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}</div>
+   <div class="list completed-list" ${completed&&!open?'hidden':''}>
+    ${items.map(renderProjectRow).join('')||'<div class="empty">Keine Projekte.</div>'}
+   </div>
   </section>`;
  }).join('');
-
  growAll();
 }
 
-function renderSettings(){const definitions=[['projects','Projekte',[['statuses','Automatischer Projektstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['subtasks','Unteraufgaben in Projekten',[['statuses','Bearbeitungsstatus'],['people','Verantwortlichkeiten']]],['own','Eigene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche']]],['delegated','Vergebene Aufgaben',[['statuses','Bearbeitungsstatus'],['priorities','Prioritäten'],['areas','Aufgabenbereiche'],['people','Verantwortlichkeiten']]]];$('#settings-options-body').innerHTML=definitions.map(([section,title,groups])=>`<section class="settings-section"><h3>${title}</h3><div class="settings-grid">${groups.map(([group,label])=>`<div class="settings-group"><h4>${label}</h4>${group==='statuses'?'<div class="settings-hint">Einordnung: Offen, aktiv in Bearbeitung oder erledigt.</div>':''}<div class="option-list" data-option-section="${section}" data-option-group="${group}">${options(section,group).map(item=>renderOptionRow(section,group,item)).join('')}</div><button type="button" class="add-option" data-action="add-option" data-option-section="${section}" data-option-group="${group}">+ Auswahl hinzufügen</button></div>`).join('')}</div></section>`).join('')}
-function renderOptionRow(section,group,item){return`<div class="option-row ${group==='statuses'?'status-option':''}" draggable="true" data-option-id="${item.id}" data-option-section="${section}" data-option-group="${group}"><span class="drag-handle">⋮⋮</span><input type="text" data-setting-field="label" value="${esc(item.label)}">${group==='statuses'?`<input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}"><select data-setting-field="kind"><option value="open" ${item.kind==='open'?'selected':''}>Offen</option><option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option><option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option></select>`:''}<button type="button" class="option-delete" data-action="delete-option">×</button></div>`}
+function renderSettings(){
+ const groups=[
+  ['areas','Aufgabenbereiche','Gilt für eigene und vergebene Aufgaben sowie Projekte.',false],
+  ['statuses','Bearbeitungsstatus','Gilt für Aufgaben und Unteraufgaben in Projekten.',false],
+  ['people','Verantwortlichkeiten','Gilt für vergebene Aufgaben und Projekt-Unteraufgaben.',false],
+  ['priorities','Prioritäten','Gilt für eigene und vergebene Aufgaben sowie Projekte.',true]
+ ];
+
+ $('#settings-options-body').innerHTML=
+  `<div class="selection-grid">${groups.map(([group,label,hint,locked])=>`
+   <section class="settings-group">
+    <h4>${label}</h4>
+    <div class="settings-hint">${hint}</div>
+    <div class="option-list" data-option-section="shared" data-option-group="${group}">
+     ${options('shared',group).map(item=>renderOptionRow('shared',group,item,{locked})).join('')}
+    </div>
+    ${locked?'':`<button type="button" class="add-option" data-action="add-option"
+      data-option-section="shared" data-option-group="${group}">+ Auswahl hinzufügen</button>`}
+    ${group==='priorities'?`
+     <label class="daily-toggle">
+      <input id="show-daily-own" type="checkbox"
+       ${state.config.shared.showDailyOwn?'checked':''}>
+      Kategorie „Tagesgeschäft“ bei eigenen Aufgaben
+     </label>`:''}
+   </section>`).join('')}</div>`;
+}
+
+function renderOptionRow(section,group,item,{locked=false}={}){
+ return`<div class="option-row ${group==='statuses'?'status-option':''} ${locked?'locked':''}"
+             draggable="true" data-option-id="${item.id}"
+             data-option-section="${section}" data-option-group="${group}">
+  <span class="drag-handle">⋮⋮</span>
+  <input type="text" data-setting-field="label" value="${esc(item.label)}">
+  ${group==='statuses'?`
+   <input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}">
+   <select data-setting-field="kind">
+    <option value="open" ${item.kind==='open'?'selected':''}>Offen</option>
+    <option value="active" ${item.kind==='active'?'selected':''}>Aktiv</option>
+    <option value="done" ${item.kind==='done'?'selected':''}>Erledigt</option>
+   </select>`:''}
+  <button type="button" class="option-delete" data-action="delete-option"
+          ${locked?'disabled aria-hidden="true"':''}>×</button>
+ </div>`;
+}
+
 function renderAccountInfo(){
  const target=$('#account-email');
  if(target){
@@ -2344,11 +3057,131 @@ function deleteSubtask(id,projectId=current.projectId){
  renderProjects();
 }
 
-function usageCount(section,group,id){let count=0;if(section==='own'){state.ownTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===id)count++;if(group==='priorities'&&(todo.priorityId===id||todo.previousPriorityId===id))count++;if(group==='areas'&&todo.areaId===id)count++})}if(section==='delegated'){state.delegatedTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===id)count++;if(group==='priorities'&&(todo.priorityId===id||todo.previousPriorityId===id))count++;if(group==='areas'&&todo.areaId===id)count++;if(group==='people'&&todo.personId===id)count++})}if(section==='projects'){state.projects.forEach(project=>{if(group==='priorities'&&project.priorityId===id)count++;if(group==='areas'&&project.areaId===id)count++})}if(section==='subtasks'){state.projects.flatMap(project=>project.subtasks||[]).forEach(task=>{if(group==='statuses'&&task.statusId===id)count++;if(group==='people'&&task.personId===id)count++})}return count}
-function replaceUsage(section,group,oldId,newId){if(section==='own')state.ownTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===oldId)todo.statusId=newId;if(group==='priorities'){if(todo.priorityId===oldId)todo.priorityId=newId;if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId}if(group==='areas'&&todo.areaId===oldId)todo.areaId=newId});if(section==='delegated')state.delegatedTodos.forEach(todo=>{if(group==='statuses'&&todo.statusId===oldId)todo.statusId=newId;if(group==='priorities'){if(todo.priorityId===oldId)todo.priorityId=newId;if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId}if(group==='areas'&&todo.areaId===oldId)todo.areaId=newId;if(group==='people'&&todo.personId===oldId)todo.personId=newId});if(section==='projects')state.projects.forEach(project=>{if(group==='priorities'&&project.priorityId===oldId)project.priorityId=newId;if(group==='areas'&&project.areaId===oldId)project.areaId=newId});if(section==='subtasks')state.projects.flatMap(project=>project.subtasks||[]).forEach(task=>{if(group==='statuses'&&task.statusId===oldId)task.statusId=newId;if(group==='people'&&task.personId===oldId)task.personId=newId})}
-function addSettingOption(section,group){commit(()=>{const list=sectionConfig(section)[group];list.push(group==='statuses'?status(`custom-${uid()}`,'Neue Auswahl','#eeeeee','active'):option(`custom-${uid()}`,'Neue Auswahl'))})}
-function deleteSettingOption(section,group,id){const list=options(section,group);if(list.length<=1){alert('Mindestens eine Auswahl muss erhalten bleiben.');return}if(group==='statuses'){const item=list.find(entry=>entry.id===id);if(item&&list.filter(entry=>entry.kind===item.kind).length<=1){alert('Für diese Einordnung muss mindestens ein Status erhalten bleiben. Ändere zuerst die Einordnung eines anderen Status.');return}}
- const count=usageCount(section,group,id);let replacementId=null;if(count){const alternatives=list.filter(item=>item.id!==id);const answer=prompt(`Diese Auswahl wird ${count}-mal verwendet. Bitte Ersatz auswählen:\n${alternatives.map((item,index)=>`${index+1}: ${item.label}`).join('\n')}`);const index=Number(answer)-1;if(!Number.isInteger(index)||!alternatives[index])return;replacementId=alternatives[index].id}if(!confirm('Auswahl wirklich löschen?'))return;commit(()=>{if(replacementId)replaceUsage(section,group,id,replacementId);sectionConfig(section)[group]=sectionConfig(section)[group].filter(item=>item.id!==id)})}
+function usageCount(section,group,id){
+ if(section!=='shared')return 0;
+ let count=0;
+
+ if(group==='areas'){
+  state.ownTodos.forEach(todo=>{if(todo.areaId===id)count++});
+  state.delegatedTodos.forEach(todo=>{if(todo.areaId===id)count++});
+  state.projects.forEach(project=>{if(project.areaId===id)count++});
+ }
+ if(group==='statuses'){
+  state.ownTodos.forEach(todo=>{if(todo.statusId===id)count++});
+  state.delegatedTodos.forEach(todo=>{if(todo.statusId===id)count++});
+  state.projects.flatMap(project=>project.subtasks||[])
+   .forEach(task=>{if(task.statusId===id)count++});
+ }
+ if(group==='people'){
+  state.delegatedTodos.forEach(todo=>{if(todo.personId===id)count++});
+  state.projects.flatMap(project=>project.subtasks||[])
+   .forEach(task=>{if(task.personId===id)count++});
+ }
+ if(group==='priorities'){
+  state.ownTodos.forEach(todo=>{
+   if(todo.priorityId===id)count++;
+   if(todo.previousPriorityId===id)count++;
+  });
+  state.delegatedTodos.forEach(todo=>{
+   if(todo.priorityId===id)count++;
+   if(todo.previousPriorityId===id)count++;
+  });
+  state.projects.forEach(project=>{if(project.priorityId===id)count++});
+ }
+ return count;
+}
+function replaceUsage(section,group,oldId,newId){
+ if(section!=='shared')return;
+
+ if(group==='areas'){
+  state.ownTodos.forEach(todo=>{if(todo.areaId===oldId)todo.areaId=newId});
+  state.delegatedTodos.forEach(todo=>{if(todo.areaId===oldId)todo.areaId=newId});
+  state.projects.forEach(project=>{if(project.areaId===oldId)project.areaId=newId});
+ }
+ if(group==='statuses'){
+  state.ownTodos.forEach(todo=>{if(todo.statusId===oldId)todo.statusId=newId});
+  state.delegatedTodos.forEach(todo=>{if(todo.statusId===oldId)todo.statusId=newId});
+  state.projects.flatMap(project=>project.subtasks||[])
+   .forEach(task=>{if(task.statusId===oldId)task.statusId=newId});
+ }
+ if(group==='people'){
+  state.delegatedTodos.forEach(todo=>{if(todo.personId===oldId)todo.personId=newId});
+  state.projects.flatMap(project=>project.subtasks||[])
+   .forEach(task=>{if(task.personId===oldId)task.personId=newId});
+ }
+ if(group==='priorities'){
+  state.ownTodos.forEach(todo=>{
+   if(todo.priorityId===oldId)todo.priorityId=newId;
+   if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId;
+  });
+  state.delegatedTodos.forEach(todo=>{
+   if(todo.priorityId===oldId)todo.priorityId=newId;
+   if(todo.previousPriorityId===oldId)todo.previousPriorityId=newId;
+  });
+  state.projects.forEach(project=>{
+   if(project.priorityId===oldId)project.priorityId=newId;
+  });
+ }
+}
+function addSettingOption(section,group){
+ if(section!=='shared'||group==='priorities')return;
+ commit(()=>{
+  const list=sectionConfig(section)[group];
+  list.push(group==='statuses'
+   ?status(`custom-${uid()}`,'Neue Auswahl','#eeeeee','active')
+   :option(`custom-${uid()}`,'Neue Auswahl')
+  );
+ });
+}
+function deleteSettingOption(section,group,id){
+ if(section!=='shared'||group==='priorities')return;
+ const list=options(section,group);
+
+ if(list.length<=1){
+  alert('Mindestens eine Auswahl muss erhalten bleiben.');
+  return;
+ }
+ if(group==='statuses'){
+  const item=list.find(entry=>entry.id===id);
+  if(item&&list.filter(entry=>entry.kind===item.kind).length<=1){
+   alert('Für diese Einordnung muss mindestens ein Status erhalten bleiben.');
+   return;
+  }
+ }
+
+ const count=usageCount(section,group,id);
+ let replacementId=null;
+ if(count){
+  const alternatives=list.filter(item=>item.id!==id);
+  const answer=prompt(
+   `Diese Auswahl wird ${count}-mal verwendet. Bitte Ersatz auswählen:\n`
+   +alternatives.map((item,index)=>`${index+1}: ${item.label}`).join('\n')
+  );
+  const index=Number(answer)-1;
+  if(!Number.isInteger(index)||!alternatives[index])return;
+  replacementId=alternatives[index].id;
+ }
+ if(!confirm('Auswahl wirklich löschen?'))return;
+
+ commit(()=>{
+  if(replacementId)replaceUsage(section,group,id,replacementId);
+  state.config.shared[group]=state.config.shared[group]
+   .filter(item=>item.id!==id);
+ });
+}
+function setDailyOwnEnabled(enabled){
+ commit(()=>{
+  state.config.shared.showDailyOwn=Boolean(enabled);
+  if(!enabled){
+   state.ownTodos.forEach(todo=>{
+    if(todo.priorityId==='priority-daily')todo.priorityId='priority-medium';
+    if(todo.previousPriorityId==='priority-daily'){
+     todo.previousPriorityId='priority-medium';
+    }
+   });
+  }
+ });
+}
 
 function saveNoteSelection(){const selection=getSelection();if(selection.rangeCount&&$('#note-editor').contains(selection.anchorNode))noteRange=selection.getRangeAt(0).cloneRange()}
 function restoreNoteSelection(){if(noteRange){const selection=getSelection();selection.removeAllRanges();selection.addRange(noteRange)}else $('#note-editor').focus()}
@@ -2413,6 +3246,16 @@ document.addEventListener('click',event=>{
    case'restore-note':archiveNote(noteCard.dataset.noteId,false);break;
    case'open-todo':openTodo(todoRow.dataset.todoId,todoRow.dataset.todoType);break;
    case'delete-todo':deleteTodo(todoRow.dataset.todoId,todoRow.dataset.todoType);break;
+   case'toggle-completed':{
+    const section=action.dataset.completedSection;
+    if(section in completedGroupOpen){
+     completedGroupOpen[section]=!completedGroupOpen[section];
+     if(section==='own')renderOwn();
+     if(section==='delegated')renderDelegated();
+     if(section==='projects')renderProjects();
+    }
+    break;
+   }
    case'quick-own':createTodo('own',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
    case'quick-delegated':createTodo('delegated',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
    case'open-project':openProject(projectRow.dataset.projectId);break;
@@ -2488,6 +3331,10 @@ document.addEventListener('change',event=>{
   ){
    renderSubtasks();
   }
+  return;
+ }
+ if(event.target.id==='show-daily-own'){
+  setDailyOwnEnabled(event.target.checked);
   return;
  }
  const themeInput=event.target.closest('[data-theme-field]');
@@ -3081,7 +3928,10 @@ window.__dashboardTest={
  renderTheme,
  renderTodoRow,
  applyMobileMode,
- ensureTitleFontLoaded
+ ensureTitleFontLoaded,
+ setDailyOwnEnabled,
+ sectionConfig,
+ renderSettings
 };
 })();
 </script>
