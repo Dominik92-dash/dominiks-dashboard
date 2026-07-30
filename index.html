@@ -6,9 +6,10 @@
 <title>Dominik's Übersicht</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f6f8;--panel:#fff;--text:#1f2933;--muted:#66717d;--border:#dfe3e8;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a63f3f;--work-group-bg:#bfd6e9;--work-group-title:#1c4668;--own:var(--work-group-bg);--project:var(--work-group-bg);--delegated:var(--work-group-bg);--note-bg:#bfd6e9;--note:var(--note-bg);--note-title:#1c4668;--note-category:#66717d;--note-preview:#66717d;--quick-note-bg:#bfd6e9;--quick-note-title:#66717d;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-text-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif;--sidebar-title-size:30px;--category-border:#c8ced4;--work-card-bg:#ffffff;--category-gap:11px}
-*{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
+:root{--bg:#f7f9fc;--panel:#fff;--text:#1f2d3d;--muted:#6f7b88;--border:#dfe6ee;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a94343;--work-group-bg:#eef6ff;--work-group-title:#1565c0;--own:var(--work-group-bg);--project:var(--work-group-bg);--delegated:var(--work-group-bg);--note-bg:#bfd6e9;--note:var(--note-bg);--note-title:#1c4668;--note-category:#66717d;--note-preview:#66717d;--quick-note-bg:#bfd6e9;--quick-note-title:#66717d;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-text-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif;--sidebar-title-size:30px;--category-border:#d5e5f6;--work-card-bg:#ffffff;--category-gap:12px;--status-width:148px}
+*{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:"Inter",Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
 .sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:var(--sidebar-title-size);line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-text-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
 .tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
@@ -850,61 +851,443 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 }
 
 
-.group.work-group{background:var(--work-group-bg)}
+
+/* --------------------------------------------------------------------------
+   Neuer gemeinsamer Aufgabenreiter – konsolidierte Darstellung
+   -------------------------------------------------------------------------- */
+.group.work-group{
+ background:var(--work-group-bg);
+ border-color:var(--category-border);
+ border-radius:12px;
+ padding:12px
+}
+.work-group .group-head{
+ min-height:32px;
+ margin-bottom:9px;
+ padding:0 2px
+}
+.work-group .group-head h3{
+ color:var(--work-group-title);
+ font-size:16px;
+ font-weight:700;
+ letter-spacing:-.01em
+}
+.work-group .group-meta{gap:9px}
+.work-group .count{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ min-width:27px;
+ height:24px;
+ padding:0 8px;
+ border:1px solid #d8e1eb;
+ border-radius:999px;
+ background:#fff;
+ color:#667380;
+ font-size:12px;
+ font-weight:700;
+ line-height:1;
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
+}
+.work-group .quick-add{
+ width:27px;
+ height:27px;
+ border:1px solid #d8e1eb;
+ border-radius:7px;
+ background:#fff;
+ color:var(--work-group-title);
+ font-size:17px;
+ line-height:1;
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
+}
+.work-group .quick-add:hover{background:#f7fbff}
+.work-group.completed-group{
+ border-color:var(--category-border)!important
+}
+.work-group.completed-group .count{
+ border-color:#cbd3db;
+ background:#f7f8f9
+}
+
+/* Schnelle Todos */
 .quick-todo-list{display:grid;gap:7px}
 .quick-todo-row{
- display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;
- padding:8px 9px;border:1px solid var(--border);border-radius:8px;
- background:var(--work-card-bg)
+ display:grid;
+ grid-template-columns:auto minmax(0,1fr) auto;
+ gap:10px;
+ align-items:center;
+ min-height:44px;
+ padding:7px 9px 7px 13px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ background:var(--work-card-bg);
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
 .quick-todo-row.completed{opacity:.62}
 .quick-todo-row.completed .quick-todo-title{text-decoration:line-through}
-.quick-todo-check{width:18px;height:18px;margin:0;accent-color:var(--accent);cursor:pointer}
-.quick-todo-title{width:100%;min-width:0;padding:7px 8px;border:1px solid transparent;border-radius:6px;background:transparent}
-.quick-todo-title:hover,.quick-todo-title:focus{border-color:var(--border);background:#fff;outline:0}
-.quick-todo-archive{margin-top:9px;border-top:1px solid rgba(31,41,51,.14);padding-top:8px}
-.quick-todo-archive-toggle{display:flex;align-items:center;gap:7px;border:0;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;padding:3px}
-.quick-todo-archive-list{display:grid;gap:7px;margin-top:7px}
-.work-card{display:block;overflow:hidden;background:var(--work-card-bg);border:1px solid var(--border);border-radius:10px}
-.work-card+.work-card{margin-top:10px}
+.quick-todo-check{
+ width:18px;
+ height:18px;
+ margin:0;
+ accent-color:var(--accent);
+ cursor:pointer
+}
+.quick-todo-title{
+ width:100%;
+ min-width:0;
+ height:32px;
+ padding:6px 7px;
+ border:1px solid transparent;
+ border-radius:6px;
+ background:transparent;
+ color:#344454;
+ font-size:13px;
+ font-weight:500
+}
+.quick-todo-title:hover,
+.quick-todo-title:focus{
+ border-color:var(--border);
+ background:#fff;
+ outline:0
+}
+.quick-todo-row>.delete-btn{
+ width:29px;
+ height:29px;
+ border:1px solid #efcaca;
+ border-radius:7px;
+ background:#fff0f0;
+ color:#a94343;
+ font-size:17px
+}
+.quick-todo-archive{
+ margin-top:9px;
+ padding-top:8px;
+ border-top:1px solid rgba(31,41,51,.14)
+}
+.quick-todo-archive-toggle{
+ display:flex;
+ align-items:center;
+ gap:7px;
+ padding:3px;
+ border:0;
+ background:transparent;
+ color:var(--muted);
+ font-size:12px;
+ cursor:pointer
+}
+.quick-todo-archive-list{
+ display:grid;
+ gap:7px;
+ margin-top:7px
+}
+
+/* Aufgaben- und Projektvorschau */
+.work-card{
+ display:block;
+ overflow:hidden;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:var(--work-card-bg);
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
+}
+.work-card+.work-card{margin-top:0}
 .work-preview{
- display:grid;grid-template-columns:minmax(170px,.8fr) minmax(260px,1.35fr) 170px 126px;
- gap:10px;align-items:stretch;padding:11px;background:var(--work-card-bg)
+ display:grid;
+ grid-template-columns:minmax(230px,1.05fr) minmax(250px,1fr)
+                       var(--status-width) auto;
+ gap:10px;
+ align-items:center;
+ min-height:58px;
+ padding:9px 10px 9px 16px;
+ background:var(--work-card-bg)
 }
 .work-meta{min-width:0}
-.work-meta-line{display:flex;align-items:center;gap:5px;min-width:0;margin:2px 0 0 5px;color:var(--muted);font-size:11px}
-.work-meta-line .mini-select{margin:0;max-width:145px;padding-left:0}
-.work-type-label{white-space:nowrap;color:var(--muted)}
-.work-note{width:100%;height:61px;min-height:61px;max-height:61px;padding:8px 9px;resize:none;overflow-y:auto;overflow-x:hidden;border:1px solid var(--border);border-radius:7px;background:#fff;font-size:12px;line-height:1.35;white-space:pre-wrap}
-.work-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;height:61px}
-.work-actions .icon{width:100%;height:100%;min-height:0}
-.work-expand-btn{background:var(--accent-soft);color:var(--accent);font-size:18px;font-weight:700}
-.work-expand-btn:hover{background:#dbe8f3}
-.work-expanded{display:none;gap:8px;padding:0 11px 11px}
+.work-meta .title-input-inline{
+ height:28px;
+ padding:3px 4px;
+ color:#243447;
+ font-size:14px;
+ font-weight:700;
+ line-height:1.25
+}
+.work-meta-line{
+ display:flex;
+ align-items:center;
+ gap:6px;
+ min-width:0;
+ margin:0 0 0 4px;
+ color:var(--muted);
+ font-size:12px;
+ white-space:nowrap
+}
+.work-meta-line .mini-select{
+ width:auto;
+ max-width:150px;
+ height:23px;
+ margin:0;
+ padding:0 19px 0 0;
+ border:1px solid transparent;
+ background:transparent;
+ color:var(--muted);
+ font-size:12px
+}
+.work-meta-line .mini-select:hover,
+.work-meta-line .mini-select:focus{
+ border-color:var(--border);
+ background:#fff
+}
+.work-type-label{
+ overflow:hidden;
+ color:var(--muted);
+ text-overflow:ellipsis;
+ white-space:nowrap
+}
+.work-note{
+ width:100%;
+ height:38px;
+ min-height:38px;
+ max-height:38px;
+ padding:9px 11px;
+ resize:none;
+ overflow:hidden;
+ border:1px solid #d7dfe8;
+ border-radius:7px;
+ background:#fff;
+ color:#536170;
+ font-size:13px;
+ line-height:1.35;
+ white-space:pre
+}
+.work-note:focus{
+ overflow-y:auto;
+ white-space:pre-wrap
+}
+.work-preview>.status-select{
+ width:var(--status-width);
+ min-width:var(--status-width);
+ max-width:var(--status-width);
+ height:36px;
+ align-self:center;
+ padding:0 30px 0 11px;
+ border-width:1px;
+ border-style:solid;
+ border-radius:7px;
+ font-size:12px;
+ font-weight:600!important;
+ white-space:nowrap
+}
+.work-actions{
+ display:flex;
+ align-items:center;
+ justify-content:flex-end;
+ gap:7px;
+ height:auto
+}
+.work-actions .icon{
+ width:32px;
+ min-width:32px;
+ height:32px;
+ min-height:32px;
+ padding:0;
+ border-radius:7px;
+ display:inline-grid;
+ place-items:center;
+ line-height:1;
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
+}
+.work-actions .open-btn{
+ border:1px solid #d7dce1;
+ background:#f1f3f5;
+ color:#455463;
+ font-size:16px
+}
+.work-actions .open-btn:hover{background:#e7eaed}
+.work-actions .delete-btn{
+ border:1px solid #efcaca;
+ background:#fff0f0;
+ color:#a94343;
+ font-size:18px
+}
+.work-actions .delete-btn:hover{background:#fde5e5}
+.work-actions .work-expand-btn{
+ border:1px solid #d8e0e8;
+ background:#fff;
+ color:#455463;
+ font-size:13px;
+ font-weight:700
+}
+.work-actions .work-expand-btn:hover{background:#f5f7f9}
+
+/* Aufgeklappte Unteraufgaben */
+.work-expanded{
+ display:none;
+ gap:8px;
+ padding:0 10px 10px 28px;
+ border-top:1px solid #edf1f5
+}
 .work-card.expanded .work-expanded{display:grid}
 .work-card.item-dragging{opacity:.38}
-.work-card.item-drop-target{outline:2px dashed var(--accent);outline-offset:2px}
-.work-inline-subtask{display:grid;grid-template-columns:minmax(150px,.9fr) minmax(210px,1.25fr) 160px 145px 155px auto;gap:8px;align-items:center;padding:9px;border:1px solid #b8c1ca;border-radius:9px;background:#fafbfc}
-.work-inline-subtask input,.work-inline-subtask select,.work-inline-subtask textarea{width:100%;min-width:0;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff}
-.work-inline-subtask textarea{resize:none;min-height:38px;overflow:hidden}
-.work-inline-add{justify-self:start;border:0;border-radius:7px;padding:8px 10px;background:#edf0f3;cursor:pointer}
-.work-detail-type{min-height:39px;display:flex;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#f4f6f8;color:var(--muted)}
-@media(max-width:1080px){.work-preview{grid-template-columns:1fr}.work-preview>*{grid-column:1}.work-actions{grid-template-columns:repeat(3,1fr);height:42px}}
-body.mobile #work-overlay .detail-grid{grid-template-columns:minmax(0,1fr)}
-body.mobile #work-overlay .field,body.mobile #work-overlay .field input,body.mobile #work-overlay .field select,body.mobile #work-overlay .field textarea{min-width:0;max-width:100%;width:100%}
+.work-card.item-drop-target{
+ outline:2px dashed var(--accent);
+ outline-offset:2px
+}
+.work-inline-subtask{
+ display:grid;
+ grid-template-columns:minmax(150px,.9fr) minmax(210px,1.25fr)
+                       160px 145px 155px auto;
+ gap:8px;
+ align-items:center;
+ padding:8px 0 8px 12px;
+ border:0;
+ border-left:2px solid #dfe7ef;
+ border-radius:0;
+ background:transparent
+}
+.work-inline-subtask+.work-inline-subtask{
+ border-top:1px solid #edf1f5
+}
+.work-inline-subtask input,
+.work-inline-subtask select,
+.work-inline-subtask textarea{
+ width:100%;
+ min-width:0;
+ padding:8px 9px;
+ border:1px solid var(--border);
+ border-radius:7px;
+ background:#fff
+}
+.work-inline-subtask textarea{
+ min-height:36px;
+ resize:none;
+ overflow:hidden
+}
+.work-inline-subtask>.delete-btn{
+ width:30px;
+ height:30px;
+ border:1px solid #efcaca;
+ background:#fff0f0;
+ color:#a94343;
+ font-size:17px
+}
+.work-inline-add{
+ justify-self:start;
+ margin-top:1px;
+ padding:8px 10px;
+ border:1px dashed #b8c8d8;
+ border-radius:7px;
+ background:#fff;
+ color:var(--accent);
+ cursor:pointer
+}
+.work-detail-type{
+ min-height:39px;
+ display:flex;
+ align-items:center;
+ padding:8px 10px;
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#f4f6f8;
+ color:var(--muted)
+}
+
+@media(max-width:1180px){
+ .work-preview{
+  grid-template-columns:minmax(190px,1fr) minmax(210px,1fr)
+                        var(--status-width) auto
+ }
+}
+@media(max-width:980px){
+ .work-preview{grid-template-columns:minmax(0,1fr)}
+ .work-preview>*{grid-column:1}
+ .work-preview>.status-select{
+  width:100%;
+  min-width:0;
+  max-width:none
+ }
+ .work-actions{justify-content:flex-end}
+}
+body.mobile #work-overlay .detail-grid{
+ grid-template-columns:minmax(0,1fr)
+}
+body.mobile #work-overlay .field,
+body.mobile #work-overlay .field input,
+body.mobile #work-overlay .field select,
+body.mobile #work-overlay .field textarea{
+ min-width:0;
+ max-width:100%;
+ width:100%
+}
 body.mobile .work-card{overflow:hidden}
-body.mobile .work-preview{grid-template-columns:minmax(0,1fr);gap:8px;padding:10px}
-body.mobile .work-meta,body.mobile .work-note,body.mobile .work-preview>.status-select,body.mobile .work-actions{grid-column:1;width:100%;min-width:0}
-body.mobile .work-meta .title-input-inline{display:block;width:100%;padding-left:8px}
-body.mobile .work-meta-line{margin-left:8px;flex-wrap:wrap}
-body.mobile .work-meta-line .mini-select{max-width:calc(100% - 80px);height:30px}
-body.mobile .work-note{height:90px;min-height:90px;max-height:90px}
-body.mobile .work-actions{height:42px}
+body.mobile .work-preview{
+ grid-template-columns:minmax(0,1fr);
+ gap:8px;
+ min-height:0;
+ padding:10px
+}
+body.mobile .work-meta,
+body.mobile .work-note,
+body.mobile .work-preview>.status-select,
+body.mobile .work-actions{
+ grid-column:1;
+ width:100%;
+ min-width:0;
+ max-width:100%
+}
+body.mobile .work-meta .title-input-inline{
+ display:block;
+ width:100%;
+ padding-left:8px
+}
+body.mobile .work-meta-line{
+ margin-left:8px;
+ flex-wrap:wrap
+}
+body.mobile .work-meta-line .mini-select{
+ max-width:calc(100% - 80px);
+ height:30px
+}
+body.mobile .work-note{
+ height:58px;
+ min-height:58px;
+ max-height:58px;
+ white-space:pre-wrap
+}
+body.mobile .work-actions{
+ justify-content:flex-end;
+ height:34px
+}
 body.mobile .work-expanded{padding:0 10px 10px}
-body.mobile .work-inline-subtask{grid-template-columns:minmax(0,1fr)!important;width:100%;min-width:0;max-width:100%;overflow:hidden}
-body.mobile .work-inline-subtask>*{grid-column:1;min-width:0;max-width:100%}
-body.mobile .work-inline-subtask .subtask-date-wrap{width:100%;min-width:0;max-width:100%;overflow:hidden}
-body.mobile .work-inline-subtask .subtask-deadline{box-sizing:border-box!important;width:calc(100% - 1px)!important;min-width:0!important;max-width:calc(100% - 1px)!important;padding-left:6px;padding-right:3px;font-size:11px}
+body.mobile .work-inline-subtask{
+ grid-template-columns:minmax(0,1fr)!important;
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ padding:9px;
+ overflow:hidden;
+ border:1px solid #dfe7ef;
+ border-radius:8px;
+ background:#fafbfc
+}
+body.mobile .work-inline-subtask>*{
+ grid-column:1;
+ min-width:0;
+ max-width:100%
+}
+body.mobile .work-inline-subtask .subtask-date-wrap{
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ overflow:hidden
+}
+body.mobile .work-inline-subtask .subtask-deadline{
+ box-sizing:border-box!important;
+ width:calc(100% - 1px)!important;
+ min-width:0!important;
+ max-width:calc(100% - 1px)!important;
+ padding-left:6px;
+ padding-right:3px;
+ font-size:11px
+}
 
 </style>
 </head>
@@ -980,7 +1363,7 @@ body.mobile .work-inline-subtask .subtask-deadline{box-sizing:border-box!importa
     </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-patch" aria-label="Letzter Patch">
-      Patch: 30.07.2026 · 16:06
+      Patch: 30.07.2026 · 23:58
     </div>
   </aside>
 
@@ -1487,9 +1870,9 @@ function createLegacySelectionDefaults(){
  return{
   projects:{
    statuses:[
-    status('project-open','Offen','#fff7d6','open'),
-    status('project-active','In Bearbeitung','#fff0df','active'),
-    status('project-done','Erledigt','#e6f1e8','done')
+    status('project-open','Offen','#fff6df','open'),
+    status('project-active','In Bearbeitung','#eaf4ff','active'),
+    status('project-done','Erledigt','#eaf8ee','done')
    ],
    priorities:[
     option('project-high','Hohe Priorität'),
@@ -1500,21 +1883,21 @@ function createLegacySelectionDefaults(){
   },
   subtasks:{
    statuses:[
-    status('sub-open','Offen','#fff7d6','open'),
-    status('sub-active','In Bearbeitung','#fff0df','active'),
-    status('sub-support','Zuarbeit erforderlich','#f1e8fb','active'),
-    status('sub-appointment','Termin vereinbart','#ece8fb','active'),
-    status('sub-done','Erledigt','#e6f1e8','done')
+    status('sub-open','Offen','#fff6df','open'),
+    status('sub-active','In Bearbeitung','#eaf4ff','active'),
+    status('sub-support','Zuarbeit erforderlich','#f3ebff','active'),
+    status('sub-appointment','Termin vereinbart','#f3ebff','active'),
+    status('sub-done','Erledigt','#eaf8ee','done')
    ],
    people:clone(people)
   },
   own:{
    statuses:[
-    status('own-open','Offen','#fff7d6','open'),
-    status('own-active','In Bearbeitung','#fff0df','active'),
-    status('own-support','Zuarbeit erforderlich','#f1e8fb','active'),
-    status('own-appointment','Termin vereinbart','#ece8fb','active'),
-    status('own-done','Erledigt','#e6f1e8','done')
+    status('own-open','Offen','#fff6df','open'),
+    status('own-active','In Bearbeitung','#eaf4ff','active'),
+    status('own-support','Zuarbeit erforderlich','#f3ebff','active'),
+    status('own-appointment','Termin vereinbart','#f3ebff','active'),
+    status('own-done','Erledigt','#eaf8ee','done')
    ],
    priorities:[
     option('own-daily','Tagesgeschäft'),
@@ -1526,11 +1909,11 @@ function createLegacySelectionDefaults(){
   },
   delegated:{
    statuses:[
-    status('delegated-open','Offen','#fff7d6','open'),
-    status('delegated-active','In Bearbeitung','#fff0df','active'),
-    status('delegated-support','Zuarbeit erforderlich','#f1e8fb','active'),
-    status('delegated-appointment','Termin vereinbart','#ece8fb','active'),
-    status('delegated-done','Erledigt','#e6f1e8','done')
+    status('delegated-open','Offen','#fff6df','open'),
+    status('delegated-active','In Bearbeitung','#eaf4ff','active'),
+    status('delegated-support','Zuarbeit erforderlich','#f3ebff','active'),
+    status('delegated-appointment','Termin vereinbart','#f3ebff','active'),
+    status('delegated-done','Erledigt','#eaf8ee','done')
    ],
    priorities:[
     option('delegated-high','Hohe Priorität'),
@@ -1555,13 +1938,14 @@ function createDefaults(){
     sidebarTextColor:'#315d8a',
     sidebarActiveBg:'#bfd6e9',
     sidebarActiveText:'#1f2933',
-    titleFont:'Jolly Lodger',
+    titleFont:'Inter',
     titleSize:30,
-    workGroupBg:'#bfd6e9',
-    workGroupTitle:'#1c4668',
-    categoryBorder:'#c8ced4',
+    workGroupBg:'#eef6ff',
+    workGroupTitle:'#1565c0',
+    categoryBorder:'#d5e5f6',
     workCardBg:'#ffffff',
-    groupGap:11,
+    groupGap:12,
+    designRefreshVersion:1,
     noteBg:'#bfd6e9',
     noteTitle:'#1c4668',
     noteCategory:'#66717d',
@@ -1573,12 +1957,13 @@ function createDefaults(){
    shared:{
     areas:clone(legacy.projects.areas),
     statuses:[
-     status('status-open','Offen','#fff7d6','open'),
-     status('status-active','In Bearbeitung','#fff0df','active'),
-     status('status-support','Zuarbeit erforderlich','#f1e8fb','active'),
-     status('status-appointment','Termin vereinbart','#ece8fb','active'),
-     status('status-done','Erledigt','#e6f1e8','done')
+     status('status-open','Offen','#fff6df','open'),
+     status('status-active','In Bearbeitung','#eaf4ff','active'),
+     status('status-support','Zuarbeit erforderlich','#f3ebff','active'),
+     status('status-appointment','Termin vereinbart','#f3ebff','active'),
+     status('status-done','Erledigt','#eaf8ee','done')
     ],
+    statusPaletteVersion:1,
     people:clone(legacy.subtasks.people),
     priorities:[
      option('priority-high','Hohe Priorität'),
@@ -1805,6 +2190,23 @@ function normalizeState(raw){
   result.config.shared.priorities=clone(defaults.config.shared.priorities);
  }
 
+ const needsStatusPaletteRefresh=
+  Number(source.config?.shared?.statusPaletteVersion||0)<1;
+ if(needsStatusPaletteRefresh){
+  const paletteRefresh={
+   '#fff7d6':'#fff6df',
+   '#fff0df':'#eaf4ff',
+   '#f1e8fb':'#f3ebff',
+   '#ece8fb':'#f3ebff',
+   '#e6f1e8':'#eaf8ee'
+  };
+  result.config.shared.statuses.forEach(item=>{
+   const replacement=paletteRefresh[String(item.color||'').toLowerCase()];
+   if(replacement)item.color=replacement;
+  });
+ }
+ result.config.shared.statusPaletteVersion=1;
+
  result.config.projects={
   statuses:normalizeOptions(
    source.config?.projects?.statuses,
@@ -1812,8 +2214,20 @@ function normalizeState(raw){
    {statusGroup:true}
   )
  };
+ if(needsStatusPaletteRefresh){
+  const projectPaletteRefresh={
+   '#fff7d6':'#fff6df',
+   '#fff0df':'#eaf4ff',
+   '#e6f1e8':'#eaf8ee'
+  };
+  result.config.projects.statuses.forEach(item=>{
+   const replacement=projectPaletteRefresh[String(item.color||'').toLowerCase()];
+   if(replacement)item.color=replacement;
+  });
+ }
 
  const oldAppearance=source.config?.appearance||{};
+ const needsDesignRefresh=Number(oldAppearance.designRefreshVersion||0)<1;
  result.config.appearance={
   ...defaults.config.appearance,
   ...oldAppearance,
@@ -1839,6 +2253,26 @@ function normalizeState(raw){
    ||oldAppearance.groupColor
    ||defaults.config.appearance.quickNoteBg
  };
+
+ if(needsDesignRefresh){
+  const standardColorRefresh={
+   workGroupBg:['#bfd6e9','#eef6ff'],
+   workGroupTitle:['#1c4668','#1565c0'],
+   categoryBorder:['#c8ced4','#d5e5f6']
+  };
+  for(const [key,[oldValue,newValue]] of Object.entries(standardColorRefresh)){
+   if(String(result.config.appearance[key]||'').toLowerCase()===oldValue){
+    result.config.appearance[key]=newValue;
+   }
+  }
+  if(!oldAppearance.titleFont||oldAppearance.titleFont==='Jolly Lodger'){
+   result.config.appearance.titleFont='Inter';
+  }
+  if(Number(result.config.appearance.groupGap)===11){
+   result.config.appearance.groupGap=12;
+  }
+ }
+ result.config.appearance.designRefreshVersion=1;
 
  const appearanceColorKeys=[
   'sidebarBg','sidebarTitleColor','sidebarTextColor',
@@ -2691,7 +3125,20 @@ function optionLabel(section,group,id){return optionById(section,group,id)?.labe
 function optionColor(section,id){return optionById(section,'statuses',id)?.color||'#eeeeee'}
 function optionKind(section,id){return optionById(section,'statuses',id)?.kind||'active'}
 function readableTextColor(hex){const value=String(hex||'').replace('#','');if(value.length!==6)return'#374151';const r=parseInt(value.slice(0,2),16),g=parseInt(value.slice(2,4),16),b=parseInt(value.slice(4,6),16);return(r*299+g*587+b*114)/1000>175?'#374151':'#fff'}
-function statusStyle(section,id){const background=optionColor(section,id);return`background:${background};border-color:${background};color:${readableTextColor(background)}`}
+function statusStyle(section,id){
+ const background=optionColor(section,id);
+ const normalized=String(background||'').toLowerCase();
+ const palette={
+  '#fff6df':{border:'#f1d89d',text:'#996300'},
+  '#eaf4ff':{border:'#b9d8f6',text:'#1565c0'},
+  '#f3ebff':{border:'#d9c3f3',text:'#7b3eb1'},
+  '#eaf8ee':{border:'#bfe4ca',text:'#2f8f4e'}
+ };
+ const selected=palette[normalized];
+ return selected
+  ?`background:${background};border-color:${selected.border};color:${selected.text}`
+  :`background:${background};border-color:${background};color:${readableTextColor(background)}`;
+}
 function selectOptions(section,group,selected,{custom=false}={}){let html=options(section,group).map(item=>`<option value="${esc(item.id)}" ${item.id===selected?'selected':''}>${esc(item.label)}</option>`).join('');if(custom)html+='<option value="__custom__">Sonstiges …</option>';return html}
 function addCustomOption(section,group,label){const clean=String(label||'').trim();if(!clean)return null;const existing=options(section,group).find(item=>item.label.toLowerCase()===clean.toLowerCase());if(existing)return existing.id;const created=group==='statuses'?status(`custom-${uid()}`,clean,'#eeeeee','active'):option(`custom-${uid()}`,clean);sectionConfig(section)[group].push(created);return created.id}
 function handleCustomSelect(select,section,group){if(select.value!=='__custom__')return select.value;const label=prompt('Neue Auswahl eingeben:')?.trim();if(!label)return null;return addCustomOption(section,group,label)}
@@ -3058,9 +3505,14 @@ function renderWorkItemRow(item){
    <textarea class="work-note" data-work-field="summary" placeholder="Anmerkungen">${esc(item.summary)}</textarea>
    <select class="status-select" data-work-field="statusId" style="${statusStyle('tasks',item.statusId)}">${selectOptions('tasks','statuses',item.statusId)}</select>
    <div class="work-actions">
-    <button type="button" class="icon open-btn" data-action="open-work" title="Großansicht öffnen">⛶</button>
-    <button type="button" class="icon delete-btn" data-action="delete-work" title="Löschen">×</button>
-    <button type="button" class="icon work-expand-btn" data-action="toggle-work-expand" title="${expanded?'Zuklappen':'Unteraufgaben aufklappen'}">${expanded?'⌃':'⌄'}</button>
+    <button type="button" class="icon open-btn" data-action="open-work"
+            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗</button>
+    <button type="button" class="icon delete-btn" data-action="delete-work"
+            title="Löschen" aria-label="Löschen">×</button>
+    <button type="button" class="icon work-expand-btn"
+            data-action="toggle-work-expand"
+            title="${expanded?'Zuklappen':'Unteraufgaben aufklappen'}"
+            aria-label="${expanded?'Zuklappen':'Unteraufgaben aufklappen'}">${expanded?'▴':'▾'}</button>
    </div>
   </div>
   <div class="work-expanded">
