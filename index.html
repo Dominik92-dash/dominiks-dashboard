@@ -867,11 +867,32 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  padding:0 2px
 }
 .work-group .group-head h3{
+ display:flex;
+ align-items:center;
+ gap:6px;
+ margin:0;
  color:var(--work-group-title);
  font-size:16px;
  font-weight:700;
  letter-spacing:-.01em
 }
+.work-group-icon{
+ display:inline-flex;
+ flex:0 0 12px;
+ width:12px;
+ align-items:center;
+ justify-content:center;
+ font-family:Arial,Helvetica,sans-serif;
+ font-size:15px;
+ font-weight:700;
+ line-height:1
+}
+.work-group-icon.quick{color:#2f7ec1}
+.work-group-icon.recurring{color:#6f5fb3}
+.work-group-icon.high{color:#d64545}
+.work-group-icon.medium{color:#e58a1f}
+.work-group-icon.low{color:#c7a000}
+.work-group-icon.completed{color:#2f8f4e}
 .work-group .group-meta{gap:9px}
 .work-group .count{
  display:inline-flex;
@@ -993,7 +1014,7 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 .work-card+.work-card{margin-top:0}
 .work-preview{
  display:grid;
- grid-template-columns:minmax(230px,1.05fr) minmax(250px,1fr)
+ grid-template-columns:minmax(154px,.7fr) minmax(327px,1.35fr)
                        var(--status-width) auto;
  gap:10px;
  align-items:center;
@@ -1003,10 +1024,10 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 }
 .work-meta{min-width:0}
 .work-meta .title-input-inline{
- height:28px;
+ height:29px;
  padding:3px 4px;
  color:#243447;
- font-size:14px;
+ font-size:15px;
  font-weight:700;
  line-height:1.25
 }
@@ -1015,7 +1036,7 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  align-items:center;
  gap:6px;
  min-width:0;
- margin:0 0 0 4px;
+ margin:0;
  color:var(--muted);
  font-size:12px;
  white-space:nowrap
@@ -1025,16 +1046,22 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  max-width:150px;
  height:23px;
  margin:0;
- padding:0 19px 0 0;
+ padding:0 18px 0 4px;
  border:1px solid transparent;
- background:transparent;
+ appearance:none;
+ -webkit-appearance:none;
+ background-color:transparent;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236f7b88' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+ background-repeat:no-repeat;
+ background-position:right 3px center;
+ background-size:10px 6px;
  color:var(--muted);
  font-size:12px
 }
 .work-meta-line .mini-select:hover,
 .work-meta-line .mini-select:focus{
  border-color:var(--border);
- background:#fff
+ background-color:#fff
 }
 .work-type-label{
  overflow:hidden;
@@ -1151,15 +1178,57 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 .work-inline-subtask textarea{
  width:100%;
  min-width:0;
- padding:8px 9px;
  border:1px solid var(--border);
  border-radius:7px;
- background:#fff
+ background:#fff;
+ font-family:"Inter",Arial,Helvetica,sans-serif
 }
 .work-inline-subtask textarea{
- min-height:36px;
+ height:52px;
+ min-height:52px;
+ padding:9px 11px;
  resize:none;
+ overflow:hidden;
+ color:#536170;
+ font-size:13px;
+ line-height:1.35
+}
+.work-inline-subtask .project-inline-title{
+ font-size:13px;
+ font-weight:600
+}
+.work-inline-subtask .subtask-summary{
+ font-size:13px;
+ font-weight:400
+}
+.work-inline-subtask>select,
+.work-inline-subtask .subtask-date-wrap,
+.work-inline-subtask .subtask-deadline{
+ height:36px;
+ min-height:36px;
+ max-height:36px
+}
+.work-inline-subtask>select,
+.work-inline-subtask .subtask-deadline{
+ padding:0 11px;
+ font-size:12px;
+ font-weight:400;
+ line-height:34px
+}
+.work-inline-subtask>.status-select{
+ padding:0 30px 0 11px;
+ font-size:12px;
+ font-weight:600!important;
+ white-space:nowrap
+}
+.work-inline-subtask .subtask-date-wrap{
+ display:block;
  overflow:hidden
+}
+.work-inline-subtask .subtask-deadline{
+ display:block;
+ box-sizing:border-box;
+ width:100%
 }
 .work-inline-subtask>.delete-btn{
  width:30px;
@@ -1192,7 +1261,7 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 
 @media(max-width:1180px){
  .work-preview{
-  grid-template-columns:minmax(190px,1fr) minmax(210px,1fr)
+  grid-template-columns:minmax(150px,.72fr) minmax(260px,1.28fr)
                         var(--status-width) auto
  }
 }
@@ -3301,7 +3370,20 @@ function previewTextFromHtml(html){
  return lines.join('\n');
 }
 function autoGrow(element){if(!element)return;element.style.height='auto';element.style.height=`${Math.max(38,element.scrollHeight)}px`}
-function growAll(){$$('.subtask-row textarea,.project-inline-subtask textarea,.work-inline-subtask textarea').forEach(autoGrow)}
+function syncWorkSubtaskTextareas(scope=document){
+ const rows=scope?.matches?.('.work-inline-subtask')?[scope]:$$('.work-inline-subtask',scope);
+ rows.forEach(row=>{
+  const fields=[...row.querySelectorAll('textarea')];
+  if(!fields.length)return;
+  fields.forEach(field=>field.style.height='auto');
+  const height=Math.max(52,...fields.map(field=>field.scrollHeight));
+  fields.forEach(field=>field.style.height=`${height}px`);
+ });
+}
+function growAll(){
+ $$('.subtask-row textarea,.project-inline-subtask textarea').forEach(autoGrow);
+ syncWorkSubtaskTextareas();
+}
 
 function renderNoteCard(note,{archived=false}={}){
  const preview=previewTextFromHtml(note.content)||'Leere Notiz';
@@ -3431,6 +3513,23 @@ function workMatches(item){
   &&(!selected.area.size||selected.area.has(item.areaId));
 }
 function workGroupKey(item){return workIsCompleted(item)?'__completed__':item.priorityId}
+function workGroupHeading(label,{id='',kind=''}={}){
+ const normalized=String(label||'').trim().toLowerCase();
+ const normalizedId=String(id||'').trim().toLowerCase();
+ let visual=kind;
+ if(!visual){
+  if(id==='__completed__'||normalized==='erledigt')visual='completed';
+  else if(id===WORK_RECURRING_ID||normalized.includes('wiederkehr'))visual='recurring';
+  else if(normalizedId.includes('high')||normalized.includes('hoch'))visual='high';
+  else if(normalizedId.includes('medium')||normalized.includes('mittel'))visual='medium';
+  else if(normalizedId.includes('low')||normalized.includes('gering')||normalized.includes('niedrig'))visual='low';
+ }
+ const symbols={quick:'⚡︎',recurring:'↻',high:'⚑',medium:'⚑',low:'⚑',completed:'✓'};
+ const icon=symbols[visual]
+  ?`<span class="work-group-icon ${visual}" aria-hidden="true">${symbols[visual]}</span>`
+  :'';
+ return`<h3>${icon}<span>${esc(label)}</span></h3>`;
+}
 function renderQuickTodoRow(todo,{completed=false}={}){
  return`<div class="quick-todo-row ${completed?'completed':''}" data-quick-todo-id="${todo.id}">
   <input class="quick-todo-check" type="checkbox" data-quick-todo-toggle ${completed?'checked':''} aria-label="${completed?'Wiederherstellen':'Erledigen'}">
@@ -3443,7 +3542,7 @@ function renderQuickTodoGroup(){
  const completed=state.quickTodos.filter(item=>item.completed);
  return`<section class="group work-group quick-todos-group">
   <div class="group-head">
-   <h3>Schnelle Todos</h3>
+   ${workGroupHeading('Schnelle Todos',{kind:'quick'})}
    <div class="group-meta"><span class="count">${active.length}</span><button type="button" class="quick-add" data-action="add-quick-todo">+</button></div>
   </div>
   <div class="quick-todo-list">${active.length?active.map(item=>renderQuickTodoRow(item)).join(''):'<div class="empty">Keine schnellen Todos.</div>'}</div>
@@ -3540,7 +3639,7 @@ function renderTasks(){
   const items=state.workItems.filter(item=>completed?workIsCompleted(item):!workIsCompleted(item)&&item.priorityId===group.id);
   const open=!completed||completedGroupOpen.tasks;
   return`<section class="group work-group ${completed?'completed-group':''}" data-work-drop="${group.id}">
-   <div class="group-head"><h3>${esc(group.label)}</h3><div class="group-meta"><span class="count">${items.length}</span>${completed?`<button type="button" class="completed-toggle" data-action="toggle-completed" data-completed-section="tasks" aria-expanded="${open}">${open?'▴':'▾'}</button>`:`<button type="button" class="quick-add" data-action="quick-work" data-priority-id="${group.id}">+</button>`}</div></div>
+   <div class="group-head">${workGroupHeading(group.label,{id:group.id})}<div class="group-meta"><span class="count">${items.length}</span>${completed?`<button type="button" class="completed-toggle" data-action="toggle-completed" data-completed-section="tasks" aria-expanded="${open}">${open?'▴':'▾'}</button>`:`<button type="button" class="quick-add" data-action="quick-work" data-priority-id="${group.id}">+</button>`}</div></div>
    <div class="list completed-list" ${completed&&!open?'hidden':''}>${items.length?items.map(renderWorkItemRow).join(''):'<div class="empty">Keine Aufgaben oder Projekte.</div>'}</div>
   </section>`;
  }).join('');
@@ -3644,7 +3743,10 @@ function addWorkSubtask(workId=current.workId){
 }
 function deleteWorkSubtask(id,workId=current.workId){
  const item=state.workItems.find(entry=>entry.id===workId);
- if(!item)return;
+ const task=item?.subtasks.find(entry=>entry.id===id);
+ if(!item||!task)return;
+ const description=task.title?.trim()?`die Unteraufgabe „${task.title.trim()}“`:'diese Unteraufgabe';
+ if(!confirm(`Soll ${description} wirklich gelöscht werden?`))return;
  commit(()=>{item.subtasks=item.subtasks.filter(entry=>entry.id!==id);item.updatedAt=now()});
  if(workId===current.workId&&$('#work-overlay').classList.contains('open'))renderWorkSubtasks();
  renderTasks();
@@ -5337,7 +5439,16 @@ document.addEventListener('input',event=>{
  const workSubtaskField=event.target.closest('[data-work-subtask-field]');
  if(workSubtaskField&&['title','summary','deadline'].includes(workSubtaskField.dataset.workSubtaskField)){
   const{item,task}=resolveWorkSubtaskContext(workSubtaskField);
-  if(item&&task){task[workSubtaskField.dataset.workSubtaskField]=workSubtaskField.value;task.updatedAt=now();item.updatedAt=now();saveState();if(['title','summary'].includes(workSubtaskField.dataset.workSubtaskField))autoGrow(workSubtaskField)}
+  if(item&&task){
+   task[workSubtaskField.dataset.workSubtaskField]=workSubtaskField.value;
+   task.updatedAt=now();
+   item.updatedAt=now();
+   saveState();
+   if(['title','summary'].includes(workSubtaskField.dataset.workSubtaskField)){
+    const inlineRow=workSubtaskField.closest('.work-inline-subtask');
+    inlineRow?syncWorkSubtaskTextareas(inlineRow):autoGrow(workSubtaskField);
+   }
+  }
   return;
  }
  const todoField=event.target.closest('[data-todo-field]');if(todoField&&['title','summary'].includes(todoField.dataset.todoField)){updateInlineTodo(todoField);return}
