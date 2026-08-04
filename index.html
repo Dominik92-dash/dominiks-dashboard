@@ -1001,6 +1001,24 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  gap:7px;
  margin-top:7px
 }
+.quick-todo-archive-list[hidden]{
+ display:none
+}
+.quick-todo-archive-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px
+}
+.quick-todo-clear-all{
+ border:0;
+ background:transparent;
+ color:var(--danger);
+ font-size:12px;
+ cursor:pointer;
+ padding:3px 4px;
+ text-decoration:underline
+}
 
 /* Aufgaben- und Projektvorschau */
 .work-card{
@@ -3867,9 +3885,12 @@ function renderQuickTodoGroup(){
   </div>
   <div class="quick-todo-list">${active.length?active.map(item=>renderQuickTodoRow(item)).join(''):'<div class="empty">Keine schnellen Todos.</div>'}</div>
   ${completed.length?`<div class="quick-todo-archive">
-   <button type="button" class="quick-todo-archive-toggle" data-action="toggle-quick-todo-archive" aria-expanded="${quickTodoArchiveOpen}">
-    <span>${quickTodoArchiveOpen?'▴':'▾'}</span><span>Erledigte schnelle Todos (${completed.length})</span>
-   </button>
+   <div class="quick-todo-archive-head">
+    <button type="button" class="quick-todo-archive-toggle" data-action="toggle-quick-todo-archive" aria-expanded="${quickTodoArchiveOpen}">
+     <span>${quickTodoArchiveOpen?'▴':'▾'}</span><span>Erledigte schnelle Todos (${completed.length})</span>
+    </button>
+    <button type="button" class="quick-todo-clear-all" data-action="clear-quick-todo-archive">Alle löschen</button>
+   </div>
    <div class="quick-todo-archive-list" ${quickTodoArchiveOpen?'':'hidden'}>${completed.map(item=>renderQuickTodoRow(item,{completed:true})).join('')}</div>
   </div>`:''}
  </section>`;
@@ -3900,6 +3921,12 @@ function deleteQuickTodo(id){
  const item=state.quickTodos.find(entry=>entry.id===id);
  if(!item||!confirm(`Soll „${item.title||'dieses schnelle Todo'}“ wirklich gelöscht werden?`))return;
  commit(()=>state.quickTodos=state.quickTodos.filter(entry=>entry.id!==id));
+}
+function clearCompletedQuickTodos(){
+ const completedCount=state.quickTodos.filter(entry=>entry.completed).length;
+ if(!completedCount)return;
+ if(!confirm(`Sollen alle ${completedCount} erledigten schnellen Todos endgültig gelöscht werden?`))return;
+ commit(()=>state.quickTodos=state.quickTodos.filter(entry=>!entry.completed));
 }
 function renderWorkSubtask(task,{detail=false,workId=''}={}){
  const rowClass=detail?'subtask-row work-detail-subtask':'work-inline-subtask';
@@ -5661,6 +5688,7 @@ document.addEventListener('click',event=>{
    case'add-quick-todo':createQuickTodo();break;
    case'delete-quick-todo':deleteQuickTodo(action.closest('[data-quick-todo-id]').dataset.quickTodoId);break;
    case'toggle-quick-todo-archive':quickTodoArchiveOpen=!quickTodoArchiveOpen;renderTasks();break;
+   case'clear-quick-todo-archive':clearCompletedQuickTodos();break;
    case'quick-work':createWorkItem({open:false,priorityId:action.dataset.priorityId});break;
    case'open-work':openWorkItem(action.closest('[data-work-id]').dataset.workId);break;
    case'delete-work':deleteWorkItem(action.closest('[data-work-id]').dataset.workId);break;
