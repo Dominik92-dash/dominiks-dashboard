@@ -596,6 +596,72 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  line-height:1.3;
  opacity:.85
 }
+/* Volltextsuche in der Seitenleiste */
+.sidebar-search{position:relative;margin-bottom:14px}
+.sidebar-search input{
+ width:100%;
+ height:34px;
+ padding:0 10px;
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#fff;
+ color:var(--text);
+ font-size:13px
+}
+.sidebar-search input:focus{outline:0;border-color:var(--accent)}
+.search-results{
+ position:absolute;
+ z-index:200;
+ top:calc(100% + 5px);
+ left:0;
+ right:0;
+ max-height:340px;
+ overflow-y:auto;
+ padding:5px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ background:#fff;
+ box-shadow:var(--shadow)
+}
+.search-results[hidden]{display:none}
+.search-result{
+ display:block;
+ width:100%;
+ padding:7px 8px;
+ border:0;
+ border-radius:6px;
+ background:transparent;
+ text-align:left;
+ cursor:pointer
+}
+.search-result:hover{background:var(--accent-soft)}
+.search-result .sr-title{
+ display:block;
+ color:var(--text);
+ font-size:13px;
+ font-weight:600;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap
+}
+.search-result .sr-meta{
+ display:block;
+ margin-top:1px;
+ color:var(--muted);
+ font-size:11px;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap
+}
+.search-empty{padding:9px;color:var(--muted);font-size:12px;text-align:center}
+.search-group-label{
+ padding:6px 8px 3px;
+ color:var(--muted);
+ font-size:10px;
+ font-weight:700;
+ text-transform:uppercase;
+ letter-spacing:.04em
+}
 body.mobile .sidebar-patch{
  margin-top:8px;
  padding-top:0;
@@ -654,6 +720,9 @@ body.mobile .sidebar-patch{
  background:transparent
 }
 .sidebar .tool{background:#fff!important}
+/* Desktop: Werkzeugleiste füllt exakt die Breite der Trennlinie aus.
+   space-between verteilt den Restplatz gleichmäßig zwischen die Buttons. */
+body:not(.mobile) .tools{justify-content:space-between;gap:0}
 
 
 /* Statusanzeige in Aufgaben etwas kompakter */
@@ -1407,6 +1476,22 @@ body.mobile .work-actions{
  justify-content:flex-end;
  height:34px
 }
+/* Vergebene Aufgaben mobil: spiegelt die Regeln der Eigenen Aufgaben. */
+body.mobile .delegated-card{
+ grid-template-columns:minmax(0,1fr);
+ gap:8px;
+ min-height:0;
+ padding:10px
+}
+body.mobile .delegated-card>.work-meta,
+body.mobile .delegated-card>.work-note,
+body.mobile .delegated-card>.status-select,
+body.mobile .delegated-card>.work-actions{
+ grid-column:1;
+ width:100%;
+ min-width:0;
+ max-width:100%
+}
 body.mobile .work-expanded{padding:0 10px 10px 18px}
 body.mobile .work-inline-subtask{
  grid-template-columns:34px minmax(0,1fr)!important;
@@ -1528,11 +1613,14 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
 #new-delegated-btn:hover{filter:brightness(.97)}
 
 /* Vergebene Aufgaben im kompakten Design des gemeinsamen Aufgabenreiters. */
-.todo-row.delegated{
- grid-template-columns:minmax(150px,.72fr) minmax(250px,1.28fr)
+/* Vergebene Aufgaben: exakt dieselbe Kartenoptik wie die Eigenen Aufgaben.
+   Layout und Innenabstände entsprechen .work-card + .work-preview. */
+.delegated-card{
+ display:grid;
+ grid-template-columns:minmax(154px,.7fr) minmax(327px,1.35fr)
                        var(--status-width) auto;
  gap:10px;
- align-items:start;
+ align-items:center;
  min-height:58px;
  padding:9px 10px 9px 16px;
  border:1px solid var(--border);
@@ -1540,136 +1628,45 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  background:var(--work-card-bg);
  box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
-/* Titelbereich: Bezeichnung + Subzeile bündig ausgerichtet */
-.delegated-title-col{
- min-width:0;
- display:flex;
- flex-direction:column;
- align-items:flex-start;
- padding-top:10px
-}
-.todo-row.delegated .title-input-inline{
- width:100%;
- overflow:hidden;
- white-space:nowrap;
- text-overflow:ellipsis;
- height:28px;
- padding:3px 4px;
- color:#243447;
- font-size:15px;
- font-weight:700;
- line-height:1.25;
- resize:none
-}
-.delegated-sub-label,
-.delegated-mini-select{
- display:block;
- font-size:12px;
- color:var(--muted);
- padding-left:4px;
- margin-top:1px;
- line-height:1.4
-}
-.delegated-mini-select{
- width:auto;
- max-width:150px;
- height:22px;
- border:1px solid transparent;
- border-radius:5px;
- background:transparent;
- padding:0 18px 0 4px;
- font-size:12px;
- color:var(--muted)
-}
-.delegated-mini-select:hover,.delegated-mini-select:focus{
- border-color:var(--border);background:#fff
-}
-/* Anmerkungsfeld: gleiche Höhe wie Eigene Aufgaben (.work-note = 38px) */
-.delegated-summary{
- height:38px;
- min-height:38px;
- max-height:38px;
- padding:9px 11px;
- border:1px solid #d7dfe8;
- border-radius:7px;
- background:#fff;
- color:#536170;
- font-size:13px;
- line-height:1.35;
- resize:none;
- overflow:hidden;
- white-space:pre;
- align-self:center
-}
-.delegated-summary:focus{overflow-y:auto;white-space:pre-wrap}
-.todo-row.delegated>.status-select{
+.delegated-card>.status-select{
  width:var(--status-width);
  min-width:var(--status-width);
  max-width:var(--status-width);
  height:36px;
- min-height:36px;
- padding:0 11px;
- padding-right:30px;
+ align-self:center;
+ padding:0 30px 0 11px;
  border-width:1px;
  border-style:solid;
  border-radius:7px;
- font-family:"Inter",Arial,Helvetica,sans-serif;
  font-size:12px;
  font-weight:600!important;
- white-space:nowrap;
- align-self:center
+ white-space:nowrap
 }
-/* Buttons: identisch mit .work-actions */
-.todo-row.delegated>.actions{
- display:flex;
- align-items:center;
- justify-content:flex-end;
- gap:7px;
- height:auto;
- align-self:center
+.delegated-card.completed{opacity:.62}
+.delegated-card.completed .title-input-inline,
+.delegated-card.completed .work-note{text-decoration:line-through}
+.delegated-card[draggable="true"]{cursor:grab}
+.delegated-card.item-dragging{opacity:.38}
+.delegated-card.item-drop-target{
+ outline:2px dashed var(--accent);
+ outline-offset:2px
 }
-.todo-row.delegated>.actions .icon{
- width:32px;
- min-width:32px;
- height:32px;
- min-height:32px;
- padding:0;
- border-radius:7px;
- display:inline-grid;
- place-items:center;
- line-height:1;
- box-shadow:0 1px 2px rgba(31,45,61,.03)
-}
-.todo-row.delegated>.actions .open-btn{
- border:1px solid #d7dce1;
- background:#f1f3f5;
- color:#455463;
- font-size:16px
-}
-.todo-row.delegated>.actions .open-btn:hover{background:#e7eaed}
-.todo-row.delegated>.actions .delete-btn{
- border:1px solid #efcaca;
- background:#fff0f0;
- color:#a94343;
- font-size:18px
-}
-.todo-row.delegated>.actions .delete-btn:hover{background:#fde5e5}
 
 @media(max-width:1180px){
- .todo-row.delegated{
+ .delegated-card{
   grid-template-columns:minmax(140px,.7fr) minmax(210px,1.1fr)
                         var(--status-width) auto
  }
 }
 @media(max-width:980px){
- .todo-row.delegated{grid-template-columns:minmax(0,1fr);align-items:stretch}
- .todo-row.delegated>*{grid-column:1;align-self:auto}
- .todo-row.delegated>.status-select{
+ .delegated-card{grid-template-columns:minmax(0,1fr)}
+ .delegated-card>*{grid-column:1}
+ .delegated-card>.status-select{
   width:100%;
   min-width:0;
   max-width:none
  }
- .todo-row.delegated>.actions{justify-content:flex-end}
+ .delegated-card>.work-actions{justify-content:flex-end}
 }
 
 /* Kontextmenü für Seitenleistenreiter. */
@@ -1774,10 +1771,12 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
       <button type="button" id="settings-btn" class="tool" title="Einstellungen">⚙</button>
       <button type="button" id="sync-status-btn" class="tool sync-indicator" data-state="offline" title="Cloud-Status" aria-label="Cloud-Status">○</button>
     </div>
-    <nav id="nav" class="nav"></nav>
-    <div class="sidebar-patch" aria-label="Dashboard-Version">
-      Dashboard 27.0 vom 03.08.2026
+    <div class="sidebar-search">
+      <input type="search" id="global-search" placeholder="Suchen …" aria-label="Volltextsuche" autocomplete="off">
+      <div id="global-search-results" class="search-results" hidden></div>
     </div>
+    <nav id="nav" class="nav"></nav>
+    <div class="sidebar-patch" id="app-version-patch" aria-label="Dashboard-Version"></div>
   </aside>
 
   <main class="main">
@@ -1982,24 +1981,42 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
             <div class="theme-control font-control">
               <label for="theme-title-font">Schriftart des Titels</label>
               <select id="theme-title-font" data-theme-field="titleFont">
-                <option value="Jolly Lodger">Jolly Lodger</option>
               <option value="Abril Fatface">Abril Fatface</option>
               <option value="Alfa Slab One">Alfa Slab One</option>
               <option value="Anton">Anton</option>
               <option value="Archivo Black">Archivo Black</option>
+              <option value="Arial">Arial</option>
+              <option value="Audiowide">Audiowide</option>
               <option value="Baloo 2">Baloo 2</option>
+              <option value="Bangers">Bangers</option>
+              <option value="Barriecito">Barriecito</option>
+              <option value="Barrio">Barrio</option>
               <option value="Bebas Neue">Bebas Neue</option>
+              <option value="Bitcount Grid Double">Bitcount Grid Double</option>
+              <option value="Bitcount Prop Single">Bitcount Prop Single</option>
+              <option value="Bitcount Prop Single Ink">Bitcount Prop Single Ink</option>
               <option value="Bungee">Bungee</option>
+              <option value="Butterfly Kids">Butterfly Kids</option>
+              <option value="Cabin Sketch">Cabin Sketch</option>
               <option value="Cinzel">Cinzel</option>
               <option value="Cormorant Garamond">Cormorant Garamond</option>
               <option value="DM Sans">DM Sans</option>
+              <option value="Fontdiner Swanky">Fontdiner Swanky</option>
               <option value="Fredoka">Fredoka</option>
+              <option value="Henny Penny">Henny Penny</option>
+              <option value="Iceberg">Iceberg</option>
               <option value="Inter">Inter</option>
+              <option value="Jolly Lodger">Jolly Lodger</option>
+              <option value="Kablammo">Kablammo</option>
               <option value="Lobster">Lobster</option>
+              <option value="Londrina Sketch">Londrina Sketch</option>
               <option value="Manrope">Manrope</option>
+              <option value="Megrim">Megrim</option>
               <option value="Montserrat">Montserrat</option>
+              <option value="Mountains of Christmas">Mountains of Christmas</option>
               <option value="Nunito">Nunito</option>
               <option value="Orbitron">Orbitron</option>
+              <option value="Original Surfer">Original Surfer</option>
               <option value="Oswald">Oswald</option>
               <option value="Pacifico">Pacifico</option>
               <option value="Permanent Marker">Permanent Marker</option>
@@ -2010,9 +2027,10 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
               <option value="Rubik">Rubik</option>
               <option value="Space Grotesk">Space Grotesk</option>
               <option value="Special Elite">Special Elite</option>
+              <option value="Tektur">Tektur</option>
               <option value="Ubuntu">Ubuntu</option>
+              <option value="Unkempt">Unkempt</option>
               <option value="Yeseva One">Yeseva One</option>
-              <option value="Arial">Arial</option>
               </select>
             </div>
             <div class="theme-control">
@@ -2119,6 +2137,10 @@ const CLOUD_SYNC_META_KEY='dominik_dashboard_cloud_sync_meta';
 const CLOUD_PENDING_KEY='dominik_dashboard_cloud_pending';
 const CLOUD_TABLE='user_dashboards';
 const DASHBOARD_SCHEMA_VERSION=27;
+// Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
+// DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
+// Auslieferung hier hochgezählt.
+const DASHBOARD_RELEASE='Dashboard 31.0 vom 05.08.2026, 19:07';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -2129,24 +2151,42 @@ const SUPABASE_CDN_URLS=[
 const CLOUD_TIMEOUT_MS=10000;
 
 const TITLE_FONT_OPTIONS=[
- "Jolly Lodger",
  "Abril Fatface",
  "Alfa Slab One",
  "Anton",
  "Archivo Black",
+ "Arial",
+ "Audiowide",
  "Baloo 2",
+ "Bangers",
+ "Barriecito",
+ "Barrio",
  "Bebas Neue",
+ "Bitcount Grid Double",
+ "Bitcount Prop Single",
+ "Bitcount Prop Single Ink",
  "Bungee",
+ "Butterfly Kids",
+ "Cabin Sketch",
  "Cinzel",
  "Cormorant Garamond",
  "DM Sans",
+ "Fontdiner Swanky",
  "Fredoka",
+ "Henny Penny",
+ "Iceberg",
  "Inter",
+ "Jolly Lodger",
+ "Kablammo",
  "Lobster",
+ "Londrina Sketch",
  "Manrope",
+ "Megrim",
  "Montserrat",
+ "Mountains of Christmas",
  "Nunito",
  "Orbitron",
+ "Original Surfer",
  "Oswald",
  "Pacifico",
  "Permanent Marker",
@@ -2157,9 +2197,10 @@ const TITLE_FONT_OPTIONS=[
  "Rubik",
  "Space Grotesk",
  "Special Elite",
+ "Tektur",
  "Ubuntu",
- "Yeseva One",
- "Arial"
+ "Unkempt",
+ "Yeseva One"
 ];
 
 const DEBUG_MODE=new URLSearchParams(location.search).get('debug')==='1';
@@ -2415,7 +2456,9 @@ function createDefaults(){
     showDailyOwn:true,
     hiddenTaskCategories:[],
     delegatedOrder:[],
-    selfPersonId:''
+    selfPersonId:'',
+    collapsedCategories:[],
+    expandedCompleted:[]
    },
    projects:{statuses:clone(legacy.projects.statuses)}
   },
@@ -2605,7 +2648,13 @@ function normalizeState(raw){
     :[],
    selfPersonId:typeof source.config.shared.selfPersonId==='string'
     ?source.config.shared.selfPersonId
-    :''
+    :'',
+   collapsedCategories:Array.isArray(source.config.shared.collapsedCategories)
+    ?source.config.shared.collapsedCategories.filter(id=>typeof id==='string')
+    :[],
+   expandedCompleted:Array.isArray(source.config.shared.expandedCompleted)
+    ?source.config.shared.expandedCompleted.filter(id=>typeof id==='string')
+    :[]
   };
  }else{
   result.config.shared={
@@ -2633,7 +2682,9 @@ function normalizeState(raw){
     :defaults.config.shared.showDailyOwn,
    hiddenTaskCategories:[],
    delegatedOrder:[],
-   selfPersonId:''
+   selfPersonId:'',
+   collapsedCategories:[],
+   expandedCompleted:[]
   };
  }
 
@@ -3024,9 +3075,29 @@ function loadState(){
 let state=loadState();
 let activePage='notes';
 let archiveOpen=false;
-const completedGroupOpen={tasks:false,own:false,delegated:false,projects:false};
 let quickTodoArchiveOpen=false;
-let categoryCollapsed={};
+// Zuklapp-Zustände werden dauerhaft im State gespeichert und synchronisiert.
+// Kategorien sind standardmäßig OFFEN -> es werden die zugeklappten gemerkt.
+function isCategoryCollapsed(key){
+ return(state.config.shared.collapsedCategories||[]).includes(key);
+}
+function setCategoryCollapsed(key,collapsed){
+ const list=state.config.shared.collapsedCategories;
+ const index=list.indexOf(key);
+ if(collapsed&&index<0)list.push(key);
+ if(!collapsed&&index>=0)list.splice(index,1);
+}
+// Erledigt-Bereiche sind standardmäßig ZUGEKLAPPT -> es werden die geöffneten
+// gemerkt, damit der bisherige Standard erhalten bleibt.
+function isCompletedOpen(section){
+ return(state.config.shared.expandedCompleted||[]).includes(section);
+}
+function setCompletedOpen(section,open){
+ const list=state.config.shared.expandedCompleted;
+ const index=list.indexOf(section);
+ if(open&&index<0)list.push(section);
+ if(!open&&index>=0)list.splice(index,1);
+}
 const expandedWorkItemIds=new Set();
 const expandedProjectIds=new Set();
 let current={noteId:null,todoId:null,todoType:'own',workId:null,projectId:null};
@@ -3704,6 +3775,8 @@ function renderThemeSettings(){
 function renderBrand(){
  $('#app-title').textContent=state.meta.title;
  $('#app-subtitle').textContent=state.meta.subtitle;
+ const versionPatch=$('#app-version-patch');
+ if(versionPatch)versionPatch.textContent=DASHBOARD_RELEASE;
  const quickEditor=$('#quick-note-editor');
  if(quickEditor&&document.activeElement!==quickEditor){
   const nextHtml=richTextValueToHtml(state.meta.quickNote);
@@ -3973,7 +4046,7 @@ function renderQuickTodoGroup(){
  const active=state.quickTodos.filter(item=>!item.completed);
  const completed=state.quickTodos.filter(item=>item.completed);
  const categoryKey='tasks:quick';
- const open=!categoryCollapsed[categoryKey];
+ const open=!isCategoryCollapsed(categoryKey);
  return`<section class="group work-group quick-todos-group">
   <div class="group-head">
    ${workGroupHeading('Schnelle Todos',{kind:'quick'})}
@@ -4086,7 +4159,7 @@ function renderTasks(){
   const completed=group.id==='__completed__';
   const items=state.workItems.filter(item=>completed?workIsCompleted(item):!workIsCompleted(item)&&item.priorityId===group.id);
   const categoryKey=`tasks:${group.id}`;
-  const open=completed?completedGroupOpen.tasks:!categoryCollapsed[categoryKey];
+  const open=completed?isCompletedOpen('tasks'):!isCategoryCollapsed(categoryKey);
   return`<section class="group work-group ${completed?'completed-group':''}" data-work-drop="${group.id}">
    <div class="group-head">${workGroupHeading(group.label,{id:group.id})}<div class="group-meta"><span class="count">${items.length}</span>${completed?`<button type="button" class="completed-toggle" data-action="toggle-completed" data-completed-section="tasks" aria-expanded="${open}">${open?'▴':'▾'}</button>`:`<button type="button" class="completed-toggle" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">${open?'▴':'▾'}</button><button type="button" class="quick-add" data-action="quick-work" data-priority-id="${group.id}">+</button>`}</div></div>
    <div class="list completed-list" ${open?'':'hidden'}>${items.length?items.map(renderWorkItemRow).join(''):'<div class="empty">Keine Aufgaben oder Projekte.</div>'}</div>
@@ -4223,7 +4296,7 @@ function renderOwn(){
     ?todoIsCompleted(todo,'own')
     :!todoIsCompleted(todo,'own')&&todo.priorityId===group.id
   );
-  const open=!completed||completedGroupOpen.own;
+  const open=!completed||isCompletedOpen('own');
 
   return`<section class="group own ${completed?'completed-group':''}" data-own-drop="${group.id}">
    <div class="group-head">
@@ -4325,52 +4398,56 @@ function delegatedEntriesForPerson(personId,{completed=false}={}){
  });
 }
 
-// Zeilendarstellung eines delegierten Eintrags (Todo oder Unteraufgabe)
+// Zeilendarstellung eines delegierten Eintrags (Todo oder Unteraufgabe).
+// Nutzt bewusst dieselben Klassen wie die Eigenen Aufgaben (.work-meta,
+// .work-meta-line, .work-note, .work-actions), damit Abstände, Ausrichtung
+// und Buttons dort und hier zwangsläufig identisch bleiben.
 function renderDelegatedEntryRow(entry){
  const key=delegatedEntryKey(entry);
  const isDone=entry._kind==='subtask'?isSubtaskDone(entry):todoIsCompleted(entry,'delegated');
  if(entry._kind==='subtask'){
-  // Unteraufgabe aus Projekt: Titel als einzeiliges input (kein Scrollen/Resize),
-  // "Projekt: XY" als Subzeile bündig mit Titel, Status, Öffnen+Löschen
-  return`<div class="todo-row delegated delegated-person-row ${isDone?'completed':''}"
+  // Unteraufgabe aus einem Projekt: Herkunft statt Aufgabenbereich-Auswahl
+  return`<div class="delegated-card ${isDone?'completed':''}"
               data-delegated-key="${esc(key)}"
               data-work-id="${esc(entry._workId)}"
               data-work-subtask-id="${esc(entry.id)}"
               draggable="true">
-   <div class="delegated-title-col">
+   <div class="work-meta">
     <input class="inline title-input-inline" data-work-subtask-field="title"
            value="${esc(entry.title)}" placeholder="Bezeichnung">
-    <span class="delegated-sub-label">Projekt: ${esc(entry._workTitle||'–')}</span>
+    <div class="work-meta-line"><span class="work-type-label">Projekt: ${esc(entry._workTitle||'–')}</span></div>
    </div>
-   <textarea class="inline summary-input delegated-summary" data-work-subtask-field="summary"
-             rows="2" placeholder="Anmerkungen">${esc(entry.summary||'')}</textarea>
+   <textarea class="work-note" data-work-subtask-field="summary"
+             placeholder="Anmerkungen">${esc(entry.summary||'')}</textarea>
    <select class="status-select" data-work-subtask-field="statusId"
            style="${statusStyle('subtasks',entry.statusId)}">${selectOptions('subtasks','statuses',entry.statusId)}</select>
-   <div class="actions">
+   <div class="work-actions">
     <button type="button" class="icon open-btn" data-action="open-work-from-delegated"
-            title="Projekt öffnen">⛶</button>
+            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗</button>
     <button type="button" class="icon delete-btn" data-action="delete-delegated-subtask"
-            title="Unteraufgabe löschen">×</button>
+            title="Löschen" aria-label="Löschen">×</button>
    </div>
   </div>`;
  }
- // delegatedTodo: Bezeichnungsspalte mit mini-select darunter, bündig
- return`<div class="todo-row delegated delegated-person-row ${isDone?'completed':''}"
+ // Vergebene Aufgabe: Aufgabenbereich-Auswahl wie bei den Eigenen Aufgaben
+ return`<div class="delegated-card ${isDone?'completed':''}"
              data-delegated-key="${esc(key)}"
              data-todo-id="${esc(entry.id)}" data-todo-type="delegated"
              draggable="true">
-  <div class="delegated-title-col">
+  <div class="work-meta">
    <input class="inline title-input-inline" data-todo-field="title"
           value="${esc(entry.title)}" placeholder="Bezeichnung">
-   <select class="mini-select delegated-mini-select" data-todo-field="areaId">${selectOptions('delegated','areas',entry.areaId,{custom:true})}</select>
+   <div class="work-meta-line"><select class="mini-select" data-todo-field="areaId">${selectOptions('delegated','areas',entry.areaId,{custom:true})}</select></div>
   </div>
-  <textarea class="inline summary-input delegated-summary" data-todo-field="summary"
-            rows="2" placeholder="Anmerkungen">${esc(entry.summary)}</textarea>
+  <textarea class="work-note" data-todo-field="summary"
+            placeholder="Anmerkungen">${esc(entry.summary)}</textarea>
   <select class="status-select" data-todo-field="statusId"
           style="${statusStyle('delegated',entry.statusId)}">${selectOptions('delegated','statuses',entry.statusId)}</select>
-  <div class="actions">
-   <button type="button" class="icon open-btn" data-action="open-todo" title="Aufgabe öffnen">⛶</button>
-   <button type="button" class="icon delete-btn" data-action="delete-todo" title="Aufgabe löschen">×</button>
+  <div class="work-actions">
+   <button type="button" class="icon open-btn" data-action="open-todo"
+           title="Großansicht öffnen" aria-label="Großansicht öffnen">↗</button>
+   <button type="button" class="icon delete-btn" data-action="delete-todo"
+           title="Löschen" aria-label="Löschen">×</button>
   </div>
  </div>`;
 }
@@ -4404,7 +4481,7 @@ function renderDelegated(){
   }
  }
  const completedCount=completedTodos.length+completedSubtasks.length;
- const completedOpen=completedGroupOpen.delegated;
+ const completedOpen=isCompletedOpen('delegated');
 
  let html='';
  if(personIds.length===0&&completedCount===0){
@@ -4414,7 +4491,7 @@ function renderDelegated(){
    const items=delegatedEntriesForPerson(personId);
    const total=items.length;
    const categoryKey=`delegated:${personId}`;
-   const open=!categoryCollapsed[categoryKey];
+   const open=!isCategoryCollapsed(categoryKey);
    return`<section class="group work-group delegated-group">
     <div class="group-head">
      ${delegatedPersonHeading(personId)}
@@ -4543,7 +4620,7 @@ function renderProjects(){
     ?projectStatusKind(project)==='done'
     :projectStatusKind(project)!=='done'&&project.priorityId===group.id
   );
-  const open=!completed||completedGroupOpen.projects;
+  const open=!completed||isCompletedOpen('projects');
 
   return`<section class="group project ${completed?'completed-group':''}"
                   data-project-drop="${group.id}">
@@ -5824,6 +5901,97 @@ function placeCaretAtEnd(element){
 }
 
 function closeFilters(except=null){$$('.filter.open').forEach(item=>{if(item!==except)item.classList.remove('open')})}
+// ── Volltextsuche über Notizen, Aufgaben, Projekte und Unteraufgaben ───────
+function stripHtmlToText(value){
+ const div=document.createElement('div');
+ div.innerHTML=String(value??'');
+ return(div.textContent||'').replace(/\s+/g,' ').trim();
+}
+function collectSearchIndex(){
+ const entries=[];
+ for(const note of state.notes||[]){
+  entries.push({
+   kind:'note',id:note.id,
+   title:note.title||'Ohne Titel',
+   meta:note.archived?'Notiz (archiviert)':'Notiz',
+   haystack:`${note.title||''} ${note.area||''} ${stripHtmlToText(note.content)}`
+  });
+ }
+ for(const todo of state.quickTodos||[]){
+  if(!todo.title)continue;
+  entries.push({
+   kind:'quick',id:todo.id,
+   title:todo.title,
+   meta:todo.completed?'Schnelles Todo (erledigt)':'Schnelles Todo',
+   haystack:todo.title
+  });
+ }
+ for(const item of state.workItems||[]){
+  entries.push({
+   kind:'work',id:item.id,
+   title:item.title||'Ohne Bezeichnung',
+   meta:`${workItemType(item)} · ${optionLabel('tasks','areas',item.areaId)||'Ohne Bereich'}`,
+   haystack:`${item.title||''} ${item.summary||''}`
+  });
+  for(const task of item.subtasks||[]){
+   entries.push({
+    kind:'work-subtask',id:task.id,workId:item.id,
+    title:task.title||'Ohne Bezeichnung',
+    meta:`Unteraufgabe · Projekt: ${item.title||'–'}`,
+    haystack:`${task.title||''} ${task.summary||''}`
+   });
+  }
+ }
+ for(const todo of state.delegatedTodos||[]){
+  entries.push({
+   kind:'delegated',id:todo.id,
+   title:todo.title||'Ohne Bezeichnung',
+   meta:`Vergeben · ${optionLabel('delegated','people',todo.personId)||'Ohne Verantwortliche'}`,
+   haystack:`${todo.title||''} ${todo.summary||''} ${todo.details||''}`
+  });
+ }
+ return entries;
+}
+function runGlobalSearch(query){
+ const box=$('#global-search-results');
+ if(!box)return;
+ const term=String(query||'').trim().toLowerCase();
+ if(term.length<2){box.hidden=true;box.innerHTML='';return}
+ const hits=collectSearchIndex()
+  .filter(entry=>entry.haystack.toLowerCase().includes(term))
+  .slice(0,30);
+ if(!hits.length){
+  box.innerHTML='<div class="search-empty">Keine Treffer.</div>';
+  box.hidden=false;
+  return;
+ }
+ box.innerHTML=hits.map(hit=>`<button type="button" class="search-result"
+   data-search-kind="${esc(hit.kind)}" data-search-id="${esc(hit.id)}"
+   ${hit.workId?`data-search-work-id="${esc(hit.workId)}"`:''}>
+   <span class="sr-title">${esc(hit.title)}</span>
+   <span class="sr-meta">${esc(hit.meta)}</span>
+  </button>`).join('');
+ box.hidden=false;
+}
+function closeGlobalSearch({clearInput=false}={}){
+ const box=$('#global-search-results');
+ if(box){box.hidden=true;box.innerHTML=''}
+ if(clearInput){const input=$('#global-search');if(input)input.value=''}
+}
+function openSearchHit(kind,id,workId){
+ closeGlobalSearch({clearInput:true});
+ if(kind==='note'){switchPage('notes');openNote(id);return}
+ if(kind==='quick'){switchPage('tasks');return}
+ if(kind==='work'){switchPage('tasks');openWorkItem(id);return}
+ if(kind==='work-subtask'){
+  switchPage('tasks');
+  expandedWorkItemIds.add(workId);
+  openWorkItem(workId);
+  return;
+ }
+ if(kind==='delegated'){switchPage('delegated');openTodo(id,'delegated')}
+}
+
 function switchPage(page){
  if(state.config.deletedPages.includes(page))return;
  activePage=page;
@@ -5924,6 +6092,16 @@ document.addEventListener('click',event=>{
   return;
  }
  if(!event.target.closest?.('#nav-context-menu'))closeNavContextMenu();
+ const searchResult=event.target.closest?.('.search-result');
+ if(searchResult){
+  openSearchHit(
+   searchResult.dataset.searchKind,
+   searchResult.dataset.searchId,
+   searchResult.dataset.searchWorkId
+  );
+  return;
+ }
+ if(!event.target.closest?.('.sidebar-search'))closeGlobalSearch();
  const checklistItem=event.target.closest?.('#note-editor ul.note-checklist > li');
  if(checklistItem&&event.detail>0){
   const rect=checklistItem.getBoundingClientRect();
@@ -5949,12 +6127,8 @@ document.addEventListener('click',event=>{
    case'delete-todo':deleteTodo(todoRow.dataset.todoId,todoRow.dataset.todoType);break;
    case'toggle-completed':{
     const section=action.dataset.completedSection;
-    if(section in completedGroupOpen){
-     completedGroupOpen[section]=!completedGroupOpen[section];
-     if(section==='tasks')renderTasks();
-     if(section==='own')renderOwn();
-     if(section==='delegated')renderDelegated();
-     if(section==='projects')renderProjects();
+    if(['tasks','own','delegated','projects'].includes(section)){
+     commit(()=>setCompletedOpen(section,!isCompletedOpen(section)));
     }
     break;
    }
@@ -5965,9 +6139,7 @@ document.addEventListener('click',event=>{
    case'toggle-category':{
     const key=action.dataset.categoryKey;
     if(key){
-     categoryCollapsed[key]=!categoryCollapsed[key];
-     if(key.startsWith('tasks:'))renderTasks();
-     else if(key.startsWith('delegated:'))renderDelegated();
+     commit(()=>setCategoryCollapsed(key,!isCategoryCollapsed(key)));
     }
     break;
    }
@@ -6811,6 +6983,12 @@ bind('#backup-file-input','change',async event=>{
 // Direct controls
 bind('#new-note-btn','click',createNote);
 bind('#new-delegated-btn','click',()=>createTodo('delegated',{open:true}));
+// Volltextsuche: Eingabe, Auswahl per Klick, Schließen per Escape/Klick daneben
+bind('#global-search','input',event=>runGlobalSearch(event.target.value));
+bind('#global-search','focus',event=>{if(event.target.value.trim())runGlobalSearch(event.target.value)});
+bind('#global-search','keydown',event=>{
+ if(event.key==='Escape'){event.preventDefault();closeGlobalSearch({clearInput:true});event.target.blur()}
+});
 bind('#archive-toggle','click',()=>{
  archiveOpen=!archiveOpen;
  renderNotes();
