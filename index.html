@@ -931,6 +931,17 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
 .work-group .quick-add:hover{background:#f7fbff}
+.work-group .completed-toggle{
+ width:27px;
+ height:27px;
+ border:1px solid #d8e1eb;
+ border-radius:7px;
+ background:#fff;
+ color:var(--work-group-title);
+ font-size:13px;
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
+}
+.work-group .completed-toggle:hover{background:#f7fbff}
 .work-group.completed-group{
  border-color:var(--category-border)!important
 }
@@ -941,6 +952,7 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 
 /* Schnelle Todos */
 .quick-todo-list{display:grid;gap:7px}
+.quick-todo-list[hidden]{display:none}
 .quick-todo-row{
  display:grid;
  grid-template-columns:auto minmax(0,1fr) auto;
@@ -1526,7 +1538,7 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
 /* Vergebene Aufgaben im kompakten Design des gemeinsamen Aufgabenreiters. */
 .todo-row.delegated{
  grid-template-columns:minmax(150px,.72fr) minmax(250px,1.28fr)
-                       160px var(--status-width) auto;
+                       var(--status-width) auto;
  gap:10px;
  align-items:center;
  min-height:58px;
@@ -1536,50 +1548,73 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  background:var(--work-card-bg);
  box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
-.todo-row.delegated>div:first-child{min-width:0}
+/* Titelbereich: Bezeichnung (input, kein Resize/Scroll) + Subzeile bündig */
+.delegated-title-col{
+ min-width:0;
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start
+}
 .todo-row.delegated .title-input-inline{
- height:29px;
+ width:100%;
+ overflow:hidden;
+ white-space:nowrap;
+ text-overflow:ellipsis;
+ height:28px;
  padding:3px 4px;
  color:#243447;
  font-size:15px;
  font-weight:700;
- line-height:1.25
+ line-height:1.25;
+ resize:none
 }
-.todo-row.delegated .mini-select{
+.delegated-sub-label,
+.delegated-mini-select{
+ display:block;
+ font-size:12px;
+ color:var(--muted);
+ padding-left:4px;
+ margin-top:1px;
+ line-height:1.4
+}
+.delegated-mini-select{
  width:auto;
  max-width:150px;
- height:23px;
- margin:0;
+ height:22px;
+ border:1px solid transparent;
+ border-radius:5px;
+ background:transparent;
  padding:0 18px 0 4px;
- color:var(--muted);
- font-size:12px
+ font-size:12px;
+ color:var(--muted)
 }
-.todo-row.delegated .summary-input{
- height:38px;
- min-height:38px;
- max-height:38px;
+.delegated-mini-select:hover,.delegated-mini-select:focus{
+ border-color:var(--border);background:#fff
+}
+.delegated-summary{
+ height:58px;
+ min-height:58px;
+ max-height:58px;
  padding:9px 11px;
  border-color:#d7dfe8;
  color:#536170;
  font-size:13px;
- line-height:1.35
-}
-.todo-row.delegated>.person-select,
-.todo-row.delegated>.status-select{
- height:36px;
- min-height:36px;
- padding:0 11px;
- border-width:1px;
- border-style:solid;
- border-radius:7px;
- font-family:"Inter",Arial,Helvetica,sans-serif;
- font-size:12px
+ line-height:1.35;
+ resize:none
 }
 .todo-row.delegated>.status-select{
  width:var(--status-width);
  min-width:var(--status-width);
  max-width:var(--status-width);
+ height:36px;
+ min-height:36px;
+ padding:0 11px;
  padding-right:30px;
+ border-width:1px;
+ border-style:solid;
+ border-radius:7px;
+ font-family:"Inter",Arial,Helvetica,sans-serif;
+ font-size:12px;
  font-weight:600!important;
  white-space:nowrap
 }
@@ -1595,7 +1630,7 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
 @media(max-width:1180px){
  .todo-row.delegated{
   grid-template-columns:minmax(140px,.7fr) minmax(210px,1.1fr)
-                        150px var(--status-width) auto
+                        var(--status-width) auto
  }
 }
 @media(max-width:980px){
@@ -2351,7 +2386,8 @@ function createDefaults(){
     ],
     showDailyOwn:true,
     hiddenTaskCategories:[],
-    delegatedOrder:[]
+    delegatedOrder:[],
+    selfPersonId:''
    },
    projects:{statuses:clone(legacy.projects.statuses)}
   },
@@ -2538,7 +2574,10 @@ function normalizeState(raw){
     :[],
    delegatedOrder:Array.isArray(source.config.shared.delegatedOrder)
     ?source.config.shared.delegatedOrder.filter(id=>typeof id==='string')
-    :[]
+    :[],
+   selfPersonId:typeof source.config.shared.selfPersonId==='string'
+    ?source.config.shared.selfPersonId
+    :''
   };
  }else{
   result.config.shared={
@@ -2565,7 +2604,8 @@ function normalizeState(raw){
      })
     :defaults.config.shared.showDailyOwn,
    hiddenTaskCategories:[],
-   delegatedOrder:[]
+   delegatedOrder:[],
+   selfPersonId:''
   };
  }
 
@@ -4202,13 +4242,13 @@ function delegatedEntryPersonId(entry){return entry.personId||''}
 // Alle in der Ansicht relevanten PersonIds (Verantwortliche mit mind. 1 nicht-erledigtem Eintrag),
 // sortiert nach delegatedOrder (manuelle Reihenfolge der Einträge pro Person).
 function delegatedPersonIds(){
+ const selfId=state.config.shared.selfPersonId||'';
  const entries=allDelegatedEntries().filter(e=>{
   if(e._kind==='subtask')return!isSubtaskDone(e);
   return!todoIsCompleted(e,'delegated');
  });
  const seen=new Set();
  const order=state.config.shared.delegatedOrder||[];
- // Alle PersonIds aus geordneter Liste + ungekannte aus Einträgen
  const fromOrder=order.map(key=>{
   const e=allDelegatedEntries().find(entry=>delegatedEntryKey(entry)===key);
   return e?delegatedEntryPersonId(e):null;
@@ -4216,7 +4256,9 @@ function delegatedPersonIds(){
  const all=entries.map(delegatedEntryPersonId);
  const combined=[...fromOrder,...all];
  const result=[];
- for(const pid of combined){if(pid&&!seen.has(pid)){seen.add(pid);result.push(pid);}}
+ for(const pid of combined){
+  if(pid&&pid!==selfId&&!seen.has(pid)){seen.add(pid);result.push(pid);}
+ }
  return result;
 }
 
@@ -4260,38 +4302,41 @@ function renderDelegatedEntryRow(entry){
  const key=delegatedEntryKey(entry);
  const isDone=entry._kind==='subtask'?isSubtaskDone(entry):todoIsCompleted(entry,'delegated');
  if(entry._kind==='subtask'){
-  // Unteraufgabe: bearbeitbar, zeigt "Projekt: XY" als Bereich, kein Löschen
-  return`<div class="todo-row delegated delegated-subtask-row ${isDone?'completed':''}"
+  // Unteraufgabe aus Projekt: Titel als einzeiliges input (kein Scrollen/Resize),
+  // "Projekt: XY" als Subzeile bündig mit Titel, Status, Öffnen+Löschen
+  return`<div class="todo-row delegated delegated-person-row ${isDone?'completed':''}"
               data-delegated-key="${esc(key)}"
               data-work-id="${esc(entry._workId)}"
               data-work-subtask-id="${esc(entry.id)}"
               draggable="true">
-   <div>
-    <textarea class="inline title-input-inline" data-work-subtask-field="title"
-              placeholder="Bezeichnung">${esc(entry.title)}</textarea>
-    <span class="delegated-project-label">Projekt: ${esc(entry._workTitle||'–')}</span>
+   <div class="delegated-title-col">
+    <input class="inline title-input-inline" data-work-subtask-field="title"
+           value="${esc(entry.title)}" placeholder="Bezeichnung">
+    <span class="delegated-sub-label">Projekt: ${esc(entry._workTitle||'–')}</span>
    </div>
-   <textarea class="inline summary-input" data-work-subtask-field="summary"
+   <textarea class="inline summary-input delegated-summary" data-work-subtask-field="summary"
              rows="2" placeholder="Anmerkungen">${esc(entry.summary||'')}</textarea>
    <select class="status-select" data-work-subtask-field="statusId"
            style="${statusStyle('subtasks',entry.statusId)}">${selectOptions('subtasks','statuses',entry.statusId)}</select>
    <div class="actions">
     <button type="button" class="icon open-btn" data-action="open-work-from-delegated"
             title="Projekt öffnen">⛶</button>
+    <button type="button" class="icon delete-btn" data-action="delete-delegated-subtask"
+            title="Unteraufgabe löschen">×</button>
    </div>
   </div>`;
  }
- // delegatedTodo: normale bearbeitbare Zeile (ohne Personen-Select, das steht im Block-Kopf)
- return`<div class="todo-row delegated ${isDone?'completed':''}"
+ // delegatedTodo: Bezeichnungsspalte mit mini-select darunter, bündig
+ return`<div class="todo-row delegated delegated-person-row ${isDone?'completed':''}"
              data-delegated-key="${esc(key)}"
              data-todo-id="${esc(entry.id)}" data-todo-type="delegated"
              draggable="true">
-  <div>
+  <div class="delegated-title-col">
    <input class="inline title-input-inline" data-todo-field="title"
           value="${esc(entry.title)}" placeholder="Bezeichnung">
-   <select class="mini-select" data-todo-field="areaId">${selectOptions('delegated','areas',entry.areaId,{custom:true})}</select>
+   <select class="mini-select delegated-mini-select" data-todo-field="areaId">${selectOptions('delegated','areas',entry.areaId,{custom:true})}</select>
   </div>
-  <textarea class="inline summary-input" data-todo-field="summary"
+  <textarea class="inline summary-input delegated-summary" data-todo-field="summary"
             rows="2" placeholder="Anmerkungen">${esc(entry.summary)}</textarea>
   <select class="status-select" data-todo-field="statusId"
           style="${statusStyle('delegated',entry.statusId)}">${selectOptions('delegated','statuses',entry.statusId)}</select>
@@ -4507,6 +4552,15 @@ function renderSettings(){
    <section class="settings-group">
     <h4>${label}</h4>
     <div class="settings-hint">${hint}</div>
+    ${group==='people'?`
+     <div class="settings-hint" style="margin-bottom:8px">
+      <strong>Ich bin:</strong>
+      <select id="self-person-select" style="margin-left:8px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+       <option value="">– niemanden auswählen –</option>
+       ${options('shared','people').map(p=>`<option value="${esc(p.id)}" ${state.config.shared.selfPersonId===p.id?'selected':''}>${esc(p.label)}</option>`).join('')}
+      </select>
+      <span style="font-size:12px;color:var(--muted);margin-left:8px">Diese Person bekommt keinen eigenen Block in „Vergebene Aufgaben".</span>
+     </div>`:''}
     <div class="option-list" data-option-section="shared" data-option-group="${group}">
      ${options('shared',group).map(item=>renderOptionRow('shared',group,item,{locked})).join('')}
     </div>
@@ -5904,6 +5958,12 @@ document.addEventListener('click',event=>{
     action.closest('[data-work-subtask-id]').dataset.workSubtaskId,
     action.closest('[data-work-id]')?.dataset.workId||current.workId
    );break;
+   case'delete-delegated-subtask':{
+    const subtaskId=action.closest('[data-work-subtask-id]').dataset.workSubtaskId;
+    const workId=action.closest('[data-work-id]').dataset.workId;
+    deleteWorkSubtask(subtaskId,workId);
+    break;
+   }
    case'quick-own':createTodo('own',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
    case'quick-delegated':createTodo('delegated',{open:false,personId:action.dataset.personId});break;
    case'open-project':openProject(projectRow.dataset.projectId);break;
@@ -6028,6 +6088,10 @@ document.addEventListener('change',event=>{
    if(visible&&index>=0)hidden.splice(index,1);
    if(!visible&&index<0)hidden.push(id);
   });
+  return;
+ }
+ if(event.target.id==='self-person-select'){
+  commit(()=>{state.config.shared.selfPersonId=event.target.value;});
   return;
  }
  const themeInput=event.target.closest('[data-theme-field]');
