@@ -894,14 +894,6 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 .work-group-icon.low{color:#c7a000}
 .work-group-icon.completed{color:#2f8f4e}
 .work-group-icon.delegated-person{font-size:14px;color:#315d8a}
-.delegated-project-label{
- display:block;
- font-size:11px;
- color:var(--muted);
- margin-top:2px;
- padding-left:1px
-}
-.delegated-subtask-row .title-input-inline{font-size:13px}
 .work-group .group-meta{gap:9px}
 .work-group .count{
  display:inline-flex;
@@ -1540,7 +1532,7 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  grid-template-columns:minmax(150px,.72fr) minmax(250px,1.28fr)
                        var(--status-width) auto;
  gap:10px;
- align-items:center;
+ align-items:start;
  min-height:58px;
  padding:9px 10px 9px 16px;
  border:1px solid var(--border);
@@ -1548,12 +1540,13 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  background:var(--work-card-bg);
  box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
-/* Titelbereich: Bezeichnung (input, kein Resize/Scroll) + Subzeile bündig */
+/* Titelbereich: Bezeichnung + Subzeile bündig ausgerichtet */
 .delegated-title-col{
  min-width:0;
  display:flex;
  flex-direction:column;
- align-items:flex-start
+ align-items:flex-start;
+ padding-top:10px
 }
 .todo-row.delegated .title-input-inline{
  width:100%;
@@ -1591,17 +1584,24 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
 .delegated-mini-select:hover,.delegated-mini-select:focus{
  border-color:var(--border);background:#fff
 }
+/* Anmerkungsfeld: gleiche Höhe wie Eigene Aufgaben (.work-note = 38px) */
 .delegated-summary{
- height:58px;
- min-height:58px;
- max-height:58px;
+ height:38px;
+ min-height:38px;
+ max-height:38px;
  padding:9px 11px;
- border-color:#d7dfe8;
+ border:1px solid #d7dfe8;
+ border-radius:7px;
+ background:#fff;
  color:#536170;
  font-size:13px;
  line-height:1.35;
- resize:none
+ resize:none;
+ overflow:hidden;
+ white-space:pre;
+ align-self:center
 }
+.delegated-summary:focus{overflow-y:auto;white-space:pre-wrap}
 .todo-row.delegated>.status-select{
  width:var(--status-width);
  min-width:var(--status-width);
@@ -1616,16 +1616,44 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  font-family:"Inter",Arial,Helvetica,sans-serif;
  font-size:12px;
  font-weight:600!important;
- white-space:nowrap
+ white-space:nowrap;
+ align-self:center
 }
-.todo-row.delegated>.actions{gap:7px}
+/* Buttons: identisch mit .work-actions */
+.todo-row.delegated>.actions{
+ display:flex;
+ align-items:center;
+ justify-content:flex-end;
+ gap:7px;
+ height:auto;
+ align-self:center
+}
 .todo-row.delegated>.actions .icon{
  width:32px;
  min-width:32px;
  height:32px;
  min-height:32px;
- border-radius:7px
+ padding:0;
+ border-radius:7px;
+ display:inline-grid;
+ place-items:center;
+ line-height:1;
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
+.todo-row.delegated>.actions .open-btn{
+ border:1px solid #d7dce1;
+ background:#f1f3f5;
+ color:#455463;
+ font-size:16px
+}
+.todo-row.delegated>.actions .open-btn:hover{background:#e7eaed}
+.todo-row.delegated>.actions .delete-btn{
+ border:1px solid #efcaca;
+ background:#fff0f0;
+ color:#a94343;
+ font-size:18px
+}
+.todo-row.delegated>.actions .delete-btn:hover{background:#fde5e5}
 
 @media(max-width:1180px){
  .todo-row.delegated{
@@ -1634,8 +1662,8 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  }
 }
 @media(max-width:980px){
- .todo-row.delegated{grid-template-columns:minmax(0,1fr)}
- .todo-row.delegated>*{grid-column:1}
+ .todo-row.delegated{grid-template-columns:minmax(0,1fr);align-items:stretch}
+ .todo-row.delegated>*{grid-column:1;align-self:auto}
  .todo-row.delegated>.status-select{
   width:100%;
   min-width:0;
