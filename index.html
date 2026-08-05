@@ -1646,6 +1646,9 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
 /* Herkunftsangabe der Projekt-Unteraufgaben exakt auf die Textkante von
    Bezeichnung und Aufgabenbereich-Auswahl legen (1px Rahmen + 4px Innenabstand). */
 .delegated-card .work-meta-line>.delegated-origin{padding-left:5px}
+/* Die Meta-Zeile bekommt die Höhe der Aufgabenbereich-Auswahl (23px), damit
+   Karten mit Auswahlfeld und Karten mit reinem Textlabel gleich hoch sind. */
+.delegated-card .work-meta-line{min-height:23px}
 .delegated-card.completed .title-input-inline,
 .delegated-card.completed .work-note{text-decoration:line-through}
 .delegated-card[draggable="true"]{cursor:grab}
@@ -2143,7 +2146,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 31.0 vom 05.08.2026, 19:07';
+const DASHBOARD_RELEASE='Dashboard 31.1 vom 05.08.2026, 19:27';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
