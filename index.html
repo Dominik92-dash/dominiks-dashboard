@@ -893,6 +893,15 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
 .work-group-icon.medium{color:#e58a1f}
 .work-group-icon.low{color:#c7a000}
 .work-group-icon.completed{color:#2f8f4e}
+.work-group-icon.delegated-person{font-size:14px;color:#315d8a}
+.delegated-project-label{
+ display:block;
+ font-size:11px;
+ color:var(--muted);
+ margin-top:2px;
+ padding-left:1px
+}
+.delegated-subtask-row .title-input-inline{font-size:13px}
 .work-group .group-meta{gap:9px}
 .work-group .count{
  display:inline-flex;
@@ -1507,6 +1516,12 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  border:1px solid var(--category-border)
 }
 #new-note-btn:hover{filter:brightness(.97)}
+#new-delegated-btn{
+ background:var(--sidebar-bg);
+ color:var(--sidebar-title-color);
+ border:1px solid var(--category-border)
+}
+#new-delegated-btn:hover{filter:brightness(.97)}
 
 /* Vergebene Aufgaben im kompakten Design des gemeinsamen Aufgabenreiters. */
 .todo-row.delegated{
@@ -1746,7 +1761,7 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
     </section>
 
     <section id="page-delegated" class="page">
-      <header class="page-header"><div><h2>Vergebene Aufgaben</h2><p>Delegierte Aufgaben und Verantwortlichkeiten.</p></div></header>
+      <header class="page-header"><div><h2>Vergebene Aufgaben</h2><p>Delegierte Aufgaben und Verantwortlichkeiten.</p></div><button type="button" id="new-delegated-btn" class="primary">Neue Aufgabe vergeben</button></header>
       <div id="delegated-filters" class="filters"></div>
       <div id="delegated-groups" class="groups"></div>
     </section>
@@ -2297,25 +2312,25 @@ function createDefaults(){
    navLabels:clone(DEFAULT_PAGE_LABELS),
    deletedPages:[],
    appearance:{
-    sidebarBg:'#dbe8f3',
-    sidebarTitleColor:'#1f2933',
-    sidebarTextColor:'#315d8a',
-    sidebarActiveBg:'#bfd6e9',
-    sidebarActiveText:'#1f2933',
-    titleFont:'Inter',
-    titleSize:30,
-    workGroupBg:'#eef6ff',
-    workGroupTitle:'#1565c0',
-    categoryBorder:'#d5e5f6',
+    sidebarBg:'#13315d',
+    sidebarTitleColor:'#ffffff',
+    sidebarTextColor:'#ffffff',
+    sidebarActiveBg:'#f4f8fe',
+    sidebarActiveText:'#060f1e',
+    titleFont:'Baloo 2',
+    titleSize:40,
+    workGroupBg:'#f3f8fe',
+    workGroupTitle:'#2a6ccc',
+    categoryBorder:'#e6effb',
     workCardBg:'#ffffff',
-    groupGap:12,
+    groupGap:26,
     designRefreshVersion:1,
-    noteBg:'#bfd6e9',
-    noteTitle:'#1c4668',
-    noteCategory:'#66717d',
+    noteBg:'#f3f8fe',
+    noteTitle:'#2a6ccc',
+    noteCategory:'#11203f',
     notePreview:'#66717d',
-    quickNoteBg:'#bfd6e9',
-    quickNoteTitle:'#66717d'
+    quickNoteBg:'#f3f8fe',
+    quickNoteTitle:'#2a6ccc'
    },
    noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
    shared:{
@@ -2334,7 +2349,9 @@ function createDefaults(){
      option('priority-medium','Mittlere Priorität'),
      option('priority-low','Geringe Priorität')
     ],
-    showDailyOwn:true
+    showDailyOwn:true,
+    hiddenTaskCategories:[],
+    delegatedOrder:[]
    },
    projects:{statuses:clone(legacy.projects.statuses)}
   },
@@ -2515,7 +2532,13 @@ function normalizeState(raw){
     source.config.shared.priorities,
     defaults.config.shared.priorities
    ).filter(item=>item.id!=='priority-daily'&&item.label!=='Tagesgeschäft'),
-   showDailyOwn:source.config.shared.showDailyOwn!==false
+   showDailyOwn:source.config.shared.showDailyOwn!==false,
+   hiddenTaskCategories:Array.isArray(source.config.shared.hiddenTaskCategories)
+    ?source.config.shared.hiddenTaskCategories.filter(id=>typeof id==='string')
+    :[],
+   delegatedOrder:Array.isArray(source.config.shared.delegatedOrder)
+    ?source.config.shared.delegatedOrder.filter(id=>typeof id==='string')
+    :[]
   };
  }else{
   result.config.shared={
@@ -2540,7 +2563,9 @@ function normalizeState(raw){
       const text=`${item?.id||''} ${item?.label||item||''}`.toLowerCase();
       return text.includes('daily')||text.includes('tagesgeschäft')||text.includes('tagesgeschaft');
      })
-    :defaults.config.shared.showDailyOwn
+    :defaults.config.shared.showDailyOwn,
+   hiddenTaskCategories:[],
+   delegatedOrder:[]
   };
  }
 
@@ -2933,10 +2958,11 @@ let activePage='notes';
 let archiveOpen=false;
 const completedGroupOpen={tasks:false,own:false,delegated:false,projects:false};
 let quickTodoArchiveOpen=false;
+let categoryCollapsed={};
 const expandedWorkItemIds=new Set();
 const expandedProjectIds=new Set();
 let current={noteId:null,todoId:null,todoType:'own',workId:null,projectId:null};
-let filters={tasks:{status:new Set(),area:new Set()},own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set(),person:new Set()},projects:{status:new Set(),area:new Set()}};
+let filters={tasks:{status:new Set(),area:new Set()},own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set()},projects:{status:new Set(),area:new Set()}};
 let historyPast=[],historyFuture=[],editKey=null,noteRange=null,quickNoteRange=null;
 const noteEditorState={
  saveTimer:null,
@@ -3801,7 +3827,7 @@ function setTodoStatus(todo,type,statusId){
  }
 }
 function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button type="button" class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button type="button" class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
-function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))&&(type!=='delegated'||!selected.person.size||selected.person.has(todo.personId))}
+function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))}
 function renderTodoRow(todo,type,{draggable=false}={}){
  ensureTodoDoneStatus(type);
  const completed=todoIsCompleted(todo,type);
@@ -3878,12 +3904,16 @@ function renderQuickTodoRow(todo,{completed=false}={}){
 function renderQuickTodoGroup(){
  const active=state.quickTodos.filter(item=>!item.completed);
  const completed=state.quickTodos.filter(item=>item.completed);
+ const categoryKey='tasks:quick';
+ const open=!categoryCollapsed[categoryKey];
  return`<section class="group work-group quick-todos-group">
   <div class="group-head">
    ${workGroupHeading('Schnelle Todos',{kind:'quick'})}
-   <div class="group-meta"><span class="count">${active.length}</span><button type="button" class="quick-add" data-action="add-quick-todo">+</button></div>
+   <div class="group-meta"><span class="count">${active.length}</span>
+    <button type="button" class="completed-toggle" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">${open?'▴':'▾'}</button>
+    <button type="button" class="quick-add" data-action="add-quick-todo">+</button></div>
   </div>
-  <div class="quick-todo-list">${active.length?active.map(item=>renderQuickTodoRow(item)).join(''):'<div class="empty">Keine schnellen Todos.</div>'}</div>
+  <div class="quick-todo-list" ${open?'':'hidden'}>${active.length?active.map(item=>renderQuickTodoRow(item)).join(''):'<div class="empty">Keine schnellen Todos.</div>'}</div>
   ${completed.length?`<div class="quick-todo-archive">
    <div class="quick-todo-archive-head">
     <button type="button" class="quick-todo-archive-toggle" data-action="toggle-quick-todo-archive" aria-expanded="${quickTodoArchiveOpen}">
@@ -3971,7 +4001,8 @@ function renderWorkItemRow(item){
 function renderTasks(){
  renderFilter('#tasks-filters','tasks',['status','area']);
  const filtersActive=filters.tasks.status.size||filters.tasks.area.size;
- let content=renderQuickTodoGroup();
+ const hiddenCategories=state.config.shared.hiddenTaskCategories;
+ let content=hiddenCategories.includes('quick')?'':renderQuickTodoGroup();
  if(filtersActive){
   const items=state.workItems.filter(workMatches);
   content+=`<section class="group work-group"><div class="group-head"><h3>Gefilterte Aufgaben und Projekte</h3><div class="group-meta"><span class="count">${items.length}</span></div></div><div class="list">${items.length?items.map(renderWorkItemRow).join(''):'<div class="empty">Keine Treffer.</div>'}</div></section>`;
@@ -3981,14 +4012,16 @@ function renderTasks(){
   return;
  }
  $('#tasks-filters .filter-info').textContent='';
- const groups=[...workPriorityOptions(),{id:'__completed__',label:'Erledigt'}];
+ const groups=[...workPriorityOptions(),{id:'__completed__',label:'Erledigt'}]
+  .filter(group=>group.id==='__completed__'||!hiddenCategories.includes(group.id));
  content+=groups.map(group=>{
   const completed=group.id==='__completed__';
   const items=state.workItems.filter(item=>completed?workIsCompleted(item):!workIsCompleted(item)&&item.priorityId===group.id);
-  const open=!completed||completedGroupOpen.tasks;
+  const categoryKey=`tasks:${group.id}`;
+  const open=completed?completedGroupOpen.tasks:!categoryCollapsed[categoryKey];
   return`<section class="group work-group ${completed?'completed-group':''}" data-work-drop="${group.id}">
-   <div class="group-head">${workGroupHeading(group.label,{id:group.id})}<div class="group-meta"><span class="count">${items.length}</span>${completed?`<button type="button" class="completed-toggle" data-action="toggle-completed" data-completed-section="tasks" aria-expanded="${open}">${open?'▴':'▾'}</button>`:`<button type="button" class="quick-add" data-action="quick-work" data-priority-id="${group.id}">+</button>`}</div></div>
-   <div class="list completed-list" ${completed&&!open?'hidden':''}>${items.length?items.map(renderWorkItemRow).join(''):'<div class="empty">Keine Aufgaben oder Projekte.</div>'}</div>
+   <div class="group-head">${workGroupHeading(group.label,{id:group.id})}<div class="group-meta"><span class="count">${items.length}</span>${completed?`<button type="button" class="completed-toggle" data-action="toggle-completed" data-completed-section="tasks" aria-expanded="${open}">${open?'▴':'▾'}</button>`:`<button type="button" class="completed-toggle" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">${open?'▴':'▾'}</button><button type="button" class="quick-add" data-action="quick-work" data-priority-id="${group.id}">+</button>`}</div></div>
+   <div class="list completed-list" ${open?'':'hidden'}>${items.length?items.map(renderWorkItemRow).join(''):'<div class="empty">Keine Aufgaben oder Projekte.</div>'}</div>
   </section>`;
  }).join('');
  $('#tasks-groups').innerHTML=content;
@@ -4145,11 +4178,139 @@ function renderOwn(){
  growAll();
 }
 
+// ── Delegated-Ansicht: Hilfsfunktionen ─────────────────────────────────────
+// Erzeugt einen eindeutigen Schlüssel für jeden Eintrag in der Personen-Ansicht.
+// Format: "todo:<id>" für delegatedTodos, "subtask:<workId>:<subtaskId>" für Unteraufgaben.
+function delegatedEntryKey(entry){return entry._kind==='subtask'?`subtask:${entry._workId}:${entry.id}`:`todo:${entry.id}`}
+
+// Gibt alle aktiven, nicht-erledigten Einträge zurück, die einer Person zugeordnet sind:
+// delegatedTodos + Unteraufgaben von workItems, die einen personId haben.
+function allDelegatedEntries(){
+ const todos=state.delegatedTodos.map(todo=>({...todo,_kind:'todo'}));
+ const subtasks=[];
+ for(const work of state.workItems){
+  for(const task of work.subtasks||[]){
+   if(task.personId)subtasks.push({...task,_kind:'subtask',_workId:work.id,_workTitle:work.title});
+  }
+ }
+ return[...todos,...subtasks];
+}
+
+// Gibt die personId eines Eintrags zurück.
+function delegatedEntryPersonId(entry){return entry.personId||''}
+
+// Alle in der Ansicht relevanten PersonIds (Verantwortliche mit mind. 1 nicht-erledigtem Eintrag),
+// sortiert nach delegatedOrder (manuelle Reihenfolge der Einträge pro Person).
+function delegatedPersonIds(){
+ const entries=allDelegatedEntries().filter(e=>{
+  if(e._kind==='subtask')return!isSubtaskDone(e);
+  return!todoIsCompleted(e,'delegated');
+ });
+ const seen=new Set();
+ const order=state.config.shared.delegatedOrder||[];
+ // Alle PersonIds aus geordneter Liste + ungekannte aus Einträgen
+ const fromOrder=order.map(key=>{
+  const e=allDelegatedEntries().find(entry=>delegatedEntryKey(entry)===key);
+  return e?delegatedEntryPersonId(e):null;
+ }).filter(Boolean);
+ const all=entries.map(delegatedEntryPersonId);
+ const combined=[...fromOrder,...all];
+ const result=[];
+ for(const pid of combined){if(pid&&!seen.has(pid)){seen.add(pid);result.push(pid);}}
+ return result;
+}
+
+function isSubtaskDone(task){return optionKind('subtasks',task.statusId)==='done'}
+
+// Materialisiert die aktuelle Reihenfolge aller delegatedOrder-Schlüssel,
+// ergänzt fehlende Einträge am Ende, entfernt veraltete.
+function materializeDelegatedOrder(){
+ const all=allDelegatedEntries().map(delegatedEntryKey);
+ const existing=state.config.shared.delegatedOrder.filter(k=>all.includes(k));
+ const missing=all.filter(k=>!existing.includes(k));
+ return[...existing,...missing];
+}
+
+// Gibt einen Eintrag nach seinem Schlüssel zurück.
+function resolveDelegatedEntry(key){
+ const all=allDelegatedEntries();
+ return all.find(e=>delegatedEntryKey(e)===key)||null;
+}
+
+// Gibt alle Einträge einer Person in der gewünschten Reihenfolge zurück.
+function delegatedEntriesForPerson(personId,{completed=false}={}){
+ const all=allDelegatedEntries().filter(e=>{
+  if(delegatedEntryPersonId(e)!==personId)return false;
+  if(e._kind==='subtask')return completed?isSubtaskDone(e):!isSubtaskDone(e);
+  return completed?todoIsCompleted(e,'delegated'):!todoIsCompleted(e,'delegated');
+ });
+ const order=materializeDelegatedOrder();
+ return all.sort((a,b)=>{
+  const ai=order.indexOf(delegatedEntryKey(a));
+  const bi=order.indexOf(delegatedEntryKey(b));
+  if(ai<0&&bi<0)return 0;
+  if(ai<0)return 1;
+  if(bi<0)return-1;
+  return ai-bi;
+ });
+}
+
+// Zeilendarstellung eines delegierten Eintrags (Todo oder Unteraufgabe)
+function renderDelegatedEntryRow(entry){
+ const key=delegatedEntryKey(entry);
+ const isDone=entry._kind==='subtask'?isSubtaskDone(entry):todoIsCompleted(entry,'delegated');
+ if(entry._kind==='subtask'){
+  // Unteraufgabe: bearbeitbar, zeigt "Projekt: XY" als Bereich, kein Löschen
+  return`<div class="todo-row delegated delegated-subtask-row ${isDone?'completed':''}"
+              data-delegated-key="${esc(key)}"
+              data-work-id="${esc(entry._workId)}"
+              data-work-subtask-id="${esc(entry.id)}"
+              draggable="true">
+   <div>
+    <textarea class="inline title-input-inline" data-work-subtask-field="title"
+              placeholder="Bezeichnung">${esc(entry.title)}</textarea>
+    <span class="delegated-project-label">Projekt: ${esc(entry._workTitle||'–')}</span>
+   </div>
+   <textarea class="inline summary-input" data-work-subtask-field="summary"
+             rows="2" placeholder="Anmerkungen">${esc(entry.summary||'')}</textarea>
+   <select class="status-select" data-work-subtask-field="statusId"
+           style="${statusStyle('subtasks',entry.statusId)}">${selectOptions('subtasks','statuses',entry.statusId)}</select>
+   <div class="actions">
+    <button type="button" class="icon open-btn" data-action="open-work-from-delegated"
+            title="Projekt öffnen">⛶</button>
+   </div>
+  </div>`;
+ }
+ // delegatedTodo: normale bearbeitbare Zeile (ohne Personen-Select, das steht im Block-Kopf)
+ return`<div class="todo-row delegated ${isDone?'completed':''}"
+             data-delegated-key="${esc(key)}"
+             data-todo-id="${esc(entry.id)}" data-todo-type="delegated"
+             draggable="true">
+  <div>
+   <input class="inline title-input-inline" data-todo-field="title"
+          value="${esc(entry.title)}" placeholder="Bezeichnung">
+   <select class="mini-select" data-todo-field="areaId">${selectOptions('delegated','areas',entry.areaId,{custom:true})}</select>
+  </div>
+  <textarea class="inline summary-input" data-todo-field="summary"
+            rows="2" placeholder="Anmerkungen">${esc(entry.summary)}</textarea>
+  <select class="status-select" data-todo-field="statusId"
+          style="${statusStyle('delegated',entry.statusId)}">${selectOptions('delegated','statuses',entry.statusId)}</select>
+  <div class="actions">
+   <button type="button" class="icon open-btn" data-action="open-todo" title="Aufgabe öffnen">⛶</button>
+   <button type="button" class="icon delete-btn" data-action="delete-todo" title="Aufgabe löschen">×</button>
+  </div>
+ </div>`;
+}
+
+// Personen-Block-Kopf mit Person-Symbol
+function delegatedPersonHeading(personId){
+ const label=optionLabel('delegated','people',personId)||personId||'Unbekannt';
+ return`<h3><span class="work-group-icon delegated-person" aria-hidden="true">👤</span><span>${esc(label)}</span></h3>`;
+}
+
 function renderDelegated(){
- renderFilter('#delegated-filters','delegated',['status','area','person']);
- const active=filters.delegated.status.size
-  ||filters.delegated.area.size
-  ||filters.delegated.person.size;
+ renderFilter('#delegated-filters','delegated',['status','area']);
+ const active=filters.delegated.status.size||filters.delegated.area.size;
 
  if(active){
   const items=state.delegatedTodos.filter(todo=>todoMatches(todo,'delegated'));
@@ -4160,36 +4321,59 @@ function renderDelegated(){
  }
 
  $('#delegated-filters .filter-info').textContent='';
- const groups=[...delegatedPriorityOptions(),{id:'__completed__',label:'Erledigt'}];
+ const personIds=delegatedPersonIds();
+ // Erledigte (todos + subtasks) für den gemeinsamen Erledigt-Block
+ const completedTodos=state.delegatedTodos.filter(t=>todoIsCompleted(t,'delegated'));
+ const completedSubtasks=[];
+ for(const work of state.workItems){
+  for(const task of work.subtasks||[]){
+   if(task.personId&&isSubtaskDone(task))completedSubtasks.push({...task,_kind:'subtask',_workId:work.id,_workTitle:work.title});
+  }
+ }
+ const completedCount=completedTodos.length+completedSubtasks.length;
+ const completedOpen=completedGroupOpen.delegated;
 
- $('#delegated-groups').innerHTML=groups.map(group=>{
-  const completed=group.id==='__completed__';
-  const items=state.delegatedTodos.filter(todo=>
-   completed
-    ?todoIsCompleted(todo,'delegated')
-    :!todoIsCompleted(todo,'delegated')&&todo.priorityId===group.id
-  );
-  const open=!completed||completedGroupOpen.delegated;
-
-  return`<section class="group work-group delegated-group ${completed?'completed-group':''}"
-                  data-delegated-drop="${group.id}">
-   <div class="group-head">
-    ${workGroupHeading(group.label,{id:group.id})}
-    <div class="group-meta">
-     <span class="count">${items.length}</span>
-     ${completed
-      ?`<button type="button" class="completed-toggle" data-action="toggle-completed"
-          data-completed-section="delegated" aria-expanded="${open}">${open?'▴':'▾'}</button>`
-      :`<button type="button" class="quick-add" data-action="quick-delegated"
-          data-priority-id="${group.id}">+</button>`
-     }
+ let html='';
+ if(personIds.length===0&&completedCount===0){
+  html='<div class="empty" style="padding:24px;text-align:center;color:var(--muted)">Noch keine vergebenen Aufgaben.</div>';
+ }else{
+  html=personIds.map(personId=>{
+   const items=delegatedEntriesForPerson(personId);
+   const total=items.length;
+   const categoryKey=`delegated:${personId}`;
+   const open=!categoryCollapsed[categoryKey];
+   return`<section class="group work-group delegated-group">
+    <div class="group-head">
+     ${delegatedPersonHeading(personId)}
+     <div class="group-meta">
+      <span class="count">${total}</span>
+      <button type="button" class="completed-toggle" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">${open?'▴':'▾'}</button>
+      <button type="button" class="quick-add" data-action="quick-delegated" data-person-id="${esc(personId)}" title="Neue Aufgabe für diese Person">+</button>
+     </div>
     </div>
-   </div>
-   <div class="list completed-list" ${completed&&!open?'hidden':''}>
-    ${items.map(todo=>renderTodoRow(todo,'delegated',{draggable:true})).join('')||'<div class="empty">Keine Aufgaben.</div>'}
-   </div>
-  </section>`;
- }).join('');
+    <div class="list" ${open?'':'hidden'}>
+     ${items.map(renderDelegatedEntryRow).join('')||'<div class="empty">Keine aktiven Aufgaben.</div>'}
+    </div>
+   </section>`;
+  }).join('');
+  // Gemeinsamer Erledigt-Block
+  if(completedCount>0){
+   html+=`<section class="group work-group delegated-group completed-group">
+    <div class="group-head">
+     ${workGroupHeading('Erledigt',{id:'__completed__'})}
+     <div class="group-meta">
+      <span class="count">${completedCount}</span>
+      <button type="button" class="completed-toggle" data-action="toggle-completed"
+              data-completed-section="delegated" aria-expanded="${completedOpen}">${completedOpen?'▴':'▾'}</button>
+     </div>
+    </div>
+    <div class="list completed-list" ${completedOpen?'':'hidden'}>
+     ${[...completedTodos.map(t=>({...t,_kind:'todo'})),...completedSubtasks].map(renderDelegatedEntryRow).join('')}
+    </div>
+   </section>`;
+  }
+ }
+ $('#delegated-groups').innerHTML=html;
  growAll();
 }
 
@@ -4328,13 +4512,20 @@ function renderSettings(){
     </div>
     ${locked?'':`<button type="button" class="add-option" data-action="add-option"
       data-option-section="shared" data-option-group="${group}">+ Auswahl hinzufügen</button>`}
-    ${group==='priorities'?`
+   </section>`).join('')}
+   <section class="settings-group">
+    <h4>Kategorien im gemeinsamen Aufgabenreiter</h4>
+    <div class="settings-hint">Legt fest, welche Kategorien im Reiter „Aufgaben" angezeigt werden. Ausgeblendete Kategorien und ihre Aufgaben bleiben erhalten, sie werden nur nicht dargestellt.</div>
+    ${taskCategoryVisibilityOptions().map(item=>`
      <label class="daily-toggle">
-      <input id="show-daily-own" type="checkbox"
-       ${state.config.shared.showDailyOwn?'checked':''}>
-      Kategorie „Tagesgeschäft“ bei eigenen Aufgaben
-     </label>`:''}
-   </section>`).join('')}</div>`;
+      <input type="checkbox" data-category-visibility="${esc(item.id)}"
+       ${state.config.shared.hiddenTaskCategories.includes(item.id)?'':'checked'}>
+      Kategorie „${esc(item.label)}" anzeigen
+     </label>`).join('')}
+   </section></div>`;
+}
+function taskCategoryVisibilityOptions(){
+ return[{id:'quick',label:'Schnelle Todos'},...workPriorityOptions()];
 }
 
 function renderOptionRow(section,group,item,{locked=false}={}){
@@ -4417,7 +4608,7 @@ function deleteNote(id){
  closeOverlays();
 }
 
-function createTodo(type,{open=true,priorityId=null,completed=false}={}){const config=sectionConfig(type);const shouldComplete=completed||priorityId==='__completed__';const normalStatus=todoOpenStatus(type)?.id||config.statuses[0]?.id||'';const doneStatus=todoDoneStatus(type)?.id||normalStatus;const effectivePriority=priorityId&&priorityId!=='__completed__'?priorityId:(config.priorities[0]?.id||'');const todo={id:uid(),title:'',summary:'',details:'',statusId:shouldComplete?doneStatus:normalStatus,areaId:config.areas[0]?.id||'',personId:type==='delegated'?(config.people[0]?.id||''):'',priorityId:effectivePriority,previousPriorityId:effectivePriority,completed:shouldComplete,updatedAt:now()};commit(()=>state[type==='own'?'ownTodos':'delegatedTodos'].unshift(todo));if(open)openTodo(todo.id,type)}
+function createTodo(type,{open=true,priorityId=null,completed=false,personId=null}={}){const config=sectionConfig(type);const shouldComplete=completed||priorityId==='__completed__';const normalStatus=todoOpenStatus(type)?.id||config.statuses[0]?.id||'';const doneStatus=todoDoneStatus(type)?.id||normalStatus;const effectivePriority=priorityId&&priorityId!=='__completed__'?priorityId:(config.priorities[0]?.id||'');const todo={id:uid(),title:'',summary:'',details:'',statusId:shouldComplete?doneStatus:normalStatus,areaId:config.areas[0]?.id||'',personId:type==='delegated'?(personId||config.people[0]?.id||''):'',priorityId:effectivePriority,previousPriorityId:effectivePriority,completed:shouldComplete,updatedAt:now()};commit(()=>state[type==='own'?'ownTodos':'delegatedTodos'].unshift(todo));if(open)openTodo(todo.id,type)}
 function openTodo(id,type){ensureTodoDoneStatus(type);const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});openOverlay('todo')}
 function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===current.todoId);if(!todo)return;todo.title=$('#todo-title').value.trim();todo.summary=$('#todo-summary').value;todo.details=$('#todo-details').value;todo.areaId=$('#todo-area').value;const selectedPriority=$('#todo-priority').value;if(!todoIsCompleted(todo,current.todoType)){todo.priorityId=selectedPriority;todo.previousPriorityId=selectedPriority}else{todo.previousPriorityId=selectedPriority}setTodoStatus(todo,current.todoType,$('#todo-status').value);if(current.todoType==='delegated')todo.personId=$('#todo-person').value;todo.updatedAt=now();$('#todo-status').style.cssText=statusStyle(current.todoType,todo.statusId);saveState()}
 function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});closeOverlays()}
@@ -5689,8 +5880,18 @@ document.addEventListener('click',event=>{
    case'delete-quick-todo':deleteQuickTodo(action.closest('[data-quick-todo-id]').dataset.quickTodoId);break;
    case'toggle-quick-todo-archive':quickTodoArchiveOpen=!quickTodoArchiveOpen;renderTasks();break;
    case'clear-quick-todo-archive':clearCompletedQuickTodos();break;
+   case'toggle-category':{
+    const key=action.dataset.categoryKey;
+    if(key){
+     categoryCollapsed[key]=!categoryCollapsed[key];
+     if(key.startsWith('tasks:'))renderTasks();
+     else if(key.startsWith('delegated:'))renderDelegated();
+    }
+    break;
+   }
    case'quick-work':createWorkItem({open:false,priorityId:action.dataset.priorityId});break;
    case'open-work':openWorkItem(action.closest('[data-work-id]').dataset.workId);break;
+   case'open-work-from-delegated':openWorkItem(action.closest('[data-work-id]').dataset.workId);break;
    case'delete-work':deleteWorkItem(action.closest('[data-work-id]').dataset.workId);break;
    case'toggle-work-expand':{
     const id=action.closest('[data-work-id]').dataset.workId;
@@ -5704,7 +5905,7 @@ document.addEventListener('click',event=>{
     action.closest('[data-work-id]')?.dataset.workId||current.workId
    );break;
    case'quick-own':createTodo('own',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
-   case'quick-delegated':createTodo('delegated',{open:false,priorityId:action.dataset.priorityId,completed:action.dataset.priorityId==='__completed__'});break;
+   case'quick-delegated':createTodo('delegated',{open:false,personId:action.dataset.personId});break;
    case'open-project':openProject(projectRow.dataset.projectId);break;
    case'delete-project':deleteProject(projectRow.dataset.projectId);break;
    case'toggle-project-expand':{
@@ -5815,6 +6016,18 @@ document.addEventListener('change',event=>{
  }
  if(event.target.id==='show-daily-own'){
   setDailyOwnEnabled(event.target.checked);
+  return;
+ }
+ const categoryVisibility=event.target.closest('[data-category-visibility]');
+ if(categoryVisibility){
+  const id=categoryVisibility.dataset.categoryVisibility;
+  const hidden=state.config.shared.hiddenTaskCategories;
+  const visible=categoryVisibility.checked;
+  commit(()=>{
+   const index=hidden.indexOf(id);
+   if(visible&&index>=0)hidden.splice(index,1);
+   if(!visible&&index<0)hidden.push(id);
+  });
   return;
  }
  const themeInput=event.target.closest('[data-theme-field]');
@@ -6048,6 +6261,16 @@ function readDashboardDrag(event){
  catch{return null}
 }
 document.addEventListener('dragstart',event=>{
+ const delegatedItemRow=event.target.closest('[data-delegated-key]');
+ if(delegatedItemRow){
+  delegatedItemRow.classList.add('item-dragging');
+  event.dataTransfer.effectAllowed='move';
+  event.dataTransfer.setData('application/x-dashboard-item',JSON.stringify({
+   kind:'delegated-item',
+   key:delegatedItemRow.dataset.delegatedKey
+  }));
+  return;
+ }
  const subtaskHandle=event.target.closest('[data-work-subtask-drag-handle]');
  if(subtaskHandle){
   const row=subtaskHandle.closest('[data-work-subtask-id]');
@@ -6120,6 +6343,9 @@ document.addEventListener('dragover',event=>{
  const subtaskRow=event.target.closest('[data-work-subtask-id]');
  if(subtaskRow){event.preventDefault();subtaskRow.classList.add('subtask-drop-target')}
 
+ const delegatedItemRow=event.target.closest('[data-delegated-key]');
+ if(delegatedItemRow){event.preventDefault();delegatedItemRow.classList.add('item-drop-target')}
+
  const itemRow=event.target.closest('.todo-row[draggable="true"],.work-row[draggable="true"],.project-row[draggable="true"]');
  if(itemRow){event.preventDefault();itemRow.classList.add('item-drop-target')}
 
@@ -6130,6 +6356,7 @@ document.addEventListener('dragleave',event=>{
  event.target.closest('#nav button')?.classList.remove('drop-target');
  event.target.closest('.option-row')?.classList.remove('drop-target');
  event.target.closest('[data-work-subtask-id]')?.classList.remove('subtask-drop-target');
+ event.target.closest('[data-delegated-key]')?.classList.remove('item-drop-target');
  event.target.closest('.todo-row,.work-row,.project-row')?.classList.remove('item-drop-target');
  event.target.closest('[data-work-drop],[data-own-drop],[data-delegated-drop],[data-project-drop]')?.classList.remove('item-group-target');
 });
@@ -6181,6 +6408,26 @@ document.addEventListener('drop',event=>{
   commit(()=>{reorderRelative(item.subtasks,payload.id,targetId,placeAfter);item.updatedAt=now()});
   expandedWorkItemIds.add(payload.workId);
   if(current.workId===payload.workId&&$('#work-overlay').classList.contains('open'))renderWorkSubtasks();
+  return;
+ }
+
+ const targetDelegatedItem=event.target.closest('[data-delegated-key]');
+ if(payload.kind==='delegated-item'&&targetDelegatedItem){
+  event.preventDefault();
+  const draggedKey=payload.key,targetKey=targetDelegatedItem.dataset.delegatedKey;
+  if(draggedKey&&targetKey&&draggedKey!==targetKey){
+   const draggedEntry=resolveDelegatedEntry(draggedKey);
+   const targetEntry=resolveDelegatedEntry(targetKey);
+   if(draggedEntry&&targetEntry&&draggedEntry.personId===targetEntry.personId){
+    const targetRect=targetDelegatedItem.getBoundingClientRect();
+    const placeAfter=event.clientY>=targetRect.top+(targetRect.height/2);
+    commit(()=>{
+     const order=materializeDelegatedOrder();
+     reorderRelative(order,draggedKey,targetKey,placeAfter);
+     state.config.shared.delegatedOrder=order;
+    });
+   }
+  }
   return;
  }
 
@@ -6471,6 +6718,7 @@ bind('#backup-file-input','change',async event=>{
 
 // Direct controls
 bind('#new-note-btn','click',createNote);
+bind('#new-delegated-btn','click',()=>createTodo('delegated',{open:true}));
 bind('#archive-toggle','click',()=>{
  archiveOpen=!archiveOpen;
  renderNotes();
