@@ -1643,6 +1643,9 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
  white-space:nowrap
 }
 .delegated-card.completed{opacity:.62}
+/* Herkunftsangabe der Projekt-Unteraufgaben exakt auf die Textkante von
+   Bezeichnung und Aufgabenbereich-Auswahl legen (1px Rahmen + 4px Innenabstand). */
+.delegated-card .work-meta-line>.delegated-origin{padding-left:5px}
 .delegated-card.completed .title-input-inline,
 .delegated-card.completed .work-note{text-decoration:line-through}
 .delegated-card[draggable="true"]{cursor:grab}
@@ -4415,7 +4418,7 @@ function renderDelegatedEntryRow(entry){
    <div class="work-meta">
     <input class="inline title-input-inline" data-work-subtask-field="title"
            value="${esc(entry.title)}" placeholder="Bezeichnung">
-    <div class="work-meta-line"><span class="work-type-label">Projekt: ${esc(entry._workTitle||'–')}</span></div>
+    <div class="work-meta-line"><span class="work-type-label delegated-origin">Projekt: ${esc(entry._workTitle||'–')}</span></div>
    </div>
    <textarea class="work-note" data-work-subtask-field="summary"
              placeholder="Anmerkungen">${esc(entry.summary||'')}</textarea>
@@ -5910,10 +5913,11 @@ function stripHtmlToText(value){
 function collectSearchIndex(){
  const entries=[];
  for(const note of state.notes||[]){
+  if(note.archived)continue; // archivierte Notizen bewusst nicht durchsuchen
   entries.push({
    kind:'note',id:note.id,
    title:note.title||'Ohne Titel',
-   meta:note.archived?'Notiz (archiviert)':'Notiz',
+   meta:'Notiz',
    haystack:`${note.title||''} ${note.area||''} ${stripHtmlToText(note.content)}`
   });
  }
