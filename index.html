@@ -589,37 +589,32 @@ body.mobile .theme-grid{grid-template-columns:1fr}
 .sidebar{display:flex;flex-direction:column}
 .sidebar .nav{flex:0 0 auto}
 .sidebar-patch{
- margin-top:auto;
- padding-top:18px;
+ padding-top:12px;
  color:var(--muted);
  font-size:10px;
  line-height:1.3;
  opacity:.85
 }
-/* Passwortablage: Schaltfläche in der Seitenleiste */
+/* Fußbereich der Seitenleiste: schiebt Schloss und Version nach unten. */
+.sidebar-foot{margin-top:auto;padding-top:16px}
+/* Passwortablage: kleine quadratische Schaltfläche ohne Beschriftung. */
 .vault-lock-btn{
- display:flex;
- align-items:center;
- gap:9px;
- width:100%;
- margin-top:10px;
- padding:11px 13px;
- border:0;
- border-radius:9px;
- background:transparent;
- color:var(--sidebar-text-color);
- font-family:inherit;
- font-size:inherit;
- text-align:left;
+ display:inline-grid;
+ place-items:center;
+ width:33px;
+ height:33px;
+ padding:0;
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#fff;
  cursor:pointer
 }
-.vault-lock-btn:hover{background:rgba(255,255,255,.1)}
+.vault-lock-btn:hover{background:var(--accent-soft)}
 .vault-lock-btn.active{
- background:var(--sidebar-active-bg);
- color:var(--sidebar-active-text);
- font-weight:700
+ border-color:var(--sidebar-active-bg);
+ box-shadow:0 0 0 2px var(--sidebar-active-bg)
 }
-.vault-lock-icon{flex:0 0 auto;font-size:14px;line-height:1}
+.vault-lock-icon{font-size:15px;line-height:1}
 /* Passwortablage: Dialog */
 .vault-shell{max-width:430px}
 .vault-hint{margin:0 0 15px;color:var(--muted);font-size:13px;line-height:1.45}
@@ -809,6 +804,9 @@ body.mobile .sidebar-patch{
  text-align:right;
  font-size:9px
 }
+/* Mobil sitzt die Seitenleiste als Kopfbereich – der Fußbereich braucht
+   deshalb keinen automatischen Abstand nach oben. */
+body.mobile .sidebar-foot{margin-top:8px;padding-top:0}
 
 
 /* Notizarchiv */
@@ -1923,9 +1921,11 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
       <div id="global-search-results" class="search-results" hidden></div>
     </div>
     <nav id="nav" class="nav"></nav>
-    <button type="button" id="vault-lock-btn" class="vault-lock-btn" title="Passwörter" aria-label="Passwörter">
-      <span class="vault-lock-icon" aria-hidden="true">🔒</span><span id="vault-lock-label">Passwörter</span>
-    </button>
+    <div class="sidebar-foot">
+      <button type="button" id="vault-lock-btn" class="tool vault-lock-btn" title="Passwörter" aria-label="Passwörter">
+        <span class="vault-lock-icon" aria-hidden="true">🔒</span>
+      </button>
+    </div>
     <div class="sidebar-patch" id="app-version-patch" aria-label="Dashboard-Version"></div>
   </aside>
 
@@ -2338,7 +2338,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 32.0 vom 26.08.2026, 16:32';
+const DASHBOARD_RELEASE='Dashboard 32.1 vom 26.08.2026, 17:13';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
