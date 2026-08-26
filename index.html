@@ -596,6 +596,147 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  line-height:1.3;
  opacity:.85
 }
+/* Passwortablage: Schaltfläche in der Seitenleiste */
+.vault-lock-btn{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ width:100%;
+ margin-top:10px;
+ padding:11px 13px;
+ border:0;
+ border-radius:9px;
+ background:transparent;
+ color:var(--sidebar-text-color);
+ font-family:inherit;
+ font-size:inherit;
+ text-align:left;
+ cursor:pointer
+}
+.vault-lock-btn:hover{background:rgba(255,255,255,.1)}
+.vault-lock-btn.active{
+ background:var(--sidebar-active-bg);
+ color:var(--sidebar-active-text);
+ font-weight:700
+}
+.vault-lock-icon{flex:0 0 auto;font-size:14px;line-height:1}
+/* Passwortablage: Dialog */
+.vault-shell{max-width:430px}
+.vault-hint{margin:0 0 15px;color:var(--muted);font-size:13px;line-height:1.45}
+.vault-error{
+ margin:12px 0 0;
+ padding:8px 10px;
+ border:1px solid #efcaca;
+ border-radius:7px;
+ background:#fff0f0;
+ color:var(--danger);
+ font-size:12.5px
+}
+.vault-error[hidden]{display:none}
+#vault-overlay .field input{
+ width:100%;
+ padding:9px 10px;
+ border:1px solid var(--border);
+ border-radius:8px;
+ font-size:14px
+}
+.editor-foot #vault-dialog-note{color:var(--muted);font-size:12px}
+/* Passwortablage: Tabelle */
+.vault-head-actions{display:flex;gap:8px;align-items:center}
+.vault-table{
+ width:100%;
+ border-collapse:separate;
+ border-spacing:0;
+ border:1px solid var(--category-border);
+ border-radius:10px;
+ background:#fff;
+ overflow:hidden
+}
+.vault-table th{
+ padding:11px 12px;
+ background:var(--work-group-bg);
+ color:var(--work-group-title);
+ font-size:12px;
+ font-weight:700;
+ text-align:left;
+ letter-spacing:.02em;
+ border-bottom:1px solid var(--category-border)
+}
+.vault-table td{
+ padding:8px 10px;
+ border-bottom:1px solid var(--border);
+ vertical-align:middle
+}
+.vault-table tr:last-child td{border-bottom:0}
+.vault-table col.vault-col-label{width:26%}
+.vault-table col.vault-col-secret{width:28%}
+.vault-table col.vault-col-note{width:34%}
+.vault-table col.vault-col-actions{width:12%}
+.vault-table input,
+.vault-table textarea{
+ width:100%;
+ padding:7px 9px;
+ border:1px solid #d7dfe8;
+ border-radius:7px;
+ background:#fff;
+ color:var(--text);
+ font-family:inherit;
+ font-size:13px;
+ line-height:1.35
+}
+.vault-table .vault-label-input{font-weight:600}
+.vault-table textarea{height:36px;min-height:36px;resize:vertical}
+.vault-secret-cell{display:flex;gap:6px;align-items:center}
+.vault-secret-cell input{
+ font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+ letter-spacing:.02em
+}
+.vault-actions{display:flex;gap:6px;justify-content:flex-end}
+.vault-actions .icon,
+.vault-secret-cell .icon{
+ width:30px;
+ min-width:30px;
+ height:30px;
+ border-radius:7px;
+ display:inline-grid;
+ place-items:center;
+ font-size:14px;
+ line-height:1;
+ cursor:pointer;
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
+}
+.vault-secret-cell .icon{
+ border:1px solid #d7dce1;
+ background:#f1f3f5;
+ color:#455463
+}
+.vault-secret-cell .icon:hover{background:#e7eaed}
+.vault-actions .delete-btn{
+ border:1px solid #efcaca;
+ background:#fff0f0;
+ color:#a94343;
+ font-size:17px
+}
+.vault-actions .delete-btn:hover{background:#fde5e5}
+.vault-locked-note{
+ padding:34px 20px;
+ border:1px solid var(--category-border);
+ border-radius:10px;
+ background:#fff;
+ color:var(--muted);
+ font-size:13.5px;
+ text-align:center
+}
+@media(max-width:820px){
+ .vault-table,.vault-table tbody,.vault-table tr,.vault-table td{display:block;width:100%}
+ .vault-table thead{display:none}
+ .vault-table tr{
+  padding:10px;
+  border-bottom:1px solid var(--border)
+ }
+ .vault-table td{border-bottom:0;padding:4px 0}
+ .vault-actions{justify-content:flex-start}
+}
 /* Volltextsuche in der Seitenleiste */
 .sidebar-search{position:relative;margin-bottom:14px}
 .sidebar-search input{
@@ -1782,6 +1923,9 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
       <div id="global-search-results" class="search-results" hidden></div>
     </div>
     <nav id="nav" class="nav"></nav>
+    <button type="button" id="vault-lock-btn" class="vault-lock-btn" title="Passwörter" aria-label="Passwörter">
+      <span class="vault-lock-icon" aria-hidden="true">🔒</span><span id="vault-lock-label">Passwörter</span>
+    </button>
     <div class="sidebar-patch" id="app-version-patch" aria-label="Dashboard-Version"></div>
   </aside>
 
@@ -1833,10 +1977,36 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
       <div id="delegated-filters" class="filters"></div>
       <div id="delegated-groups" class="groups"></div>
     </section>
+    <section id="page-passwords" class="page">
+      <header class="page-header">
+        <div><h2>Passwörter</h2><p>Verschlüsselte Ablage für Zugänge und PINs.</p></div>
+        <div class="vault-head-actions">
+          <button type="button" id="vault-add-entry-btn" class="primary">Neuer Eintrag</button>
+          <button type="button" id="vault-lock-now-btn" class="secondary">Sperren</button>
+        </div>
+      </header>
+      <div id="vault-table-wrap"></div>
+    </section>
   </main>
 </div>
 
 <div id="nav-context-menu" class="nav-context-menu" role="menu" hidden></div>
+
+<section id="vault-overlay" class="overlay"><div class="shell vault-shell">
+  <header class="editor-head"><h2 id="vault-dialog-title" class="title-large">Passwörter</h2><button type="button" class="close-btn" data-close-overlay="vault">×</button></header>
+  <div class="detail-body">
+    <p id="vault-dialog-hint" class="vault-hint"></p>
+    <div class="field"><label for="vault-password-input">Master-Passwort</label>
+      <input type="password" id="vault-password-input" autocomplete="new-password"></div>
+    <div class="field" id="vault-repeat-field"><label for="vault-password-repeat">Master-Passwort wiederholen</label>
+      <input type="password" id="vault-password-repeat" autocomplete="new-password"></div>
+    <p id="vault-dialog-error" class="vault-error" hidden></p>
+  </div>
+  <footer class="editor-foot">
+    <span id="vault-dialog-note"></span>
+    <button type="button" id="vault-submit-btn" class="primary">Bestätigen</button>
+  </footer>
+</div></section>
 
 <section id="note-overlay" class="overlay"><div class="shell note-editor-shell">
   <header class="editor-head"><div><input id="note-title" class="title-large" placeholder="Überschrift"><input id="note-area" style="margin-top:9px;width:320px;max-width:100%;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="Bereich"></div><button type="button" class="close-btn" data-close-overlay="note">×</button></header>
@@ -1959,11 +2129,21 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
 
           <div class="settings-group account-panel">
             <h4>Backup</h4>
-            <div class="settings-hint">Exportiert alle Notizen, Projekte, Aufgaben und Einstellungen als JSON-Datei.</div>
+            <div class="settings-hint">Exportiert alle Notizen, Projekte, Aufgaben und Einstellungen als JSON-Datei. Die Passwortablage ist darin nur in verschlüsselter Form enthalten.</div>
             <div class="account-row">
               <button id="export-backup-btn" class="secondary" type="button">Backup exportieren</button>
               <button id="import-backup-btn" class="secondary" type="button">Backup importieren</button>
               <input id="backup-file-input" class="file-input" type="file" accept=".json,application/json">
+            </div>
+          </div>
+
+          <div class="settings-group account-panel">
+            <h4>Passwortablage</h4>
+            <div class="settings-hint" id="vault-settings-status"></div>
+            <div class="settings-hint">Die Einträge werden mit dem Master-Passwort verschlüsselt. Das Passwort wird nirgends gespeichert – geht es verloren, sind die Einträge endgültig nicht mehr lesbar. Bewahre es außerhalb des Dashboards auf.</div>
+            <div class="account-row">
+              <button id="vault-change-password-btn" class="secondary" type="button">Master-Passwort ändern</button>
+              <button id="vault-reset-btn" class="danger" type="button">Passwortablage löschen</button>
             </div>
           </div>
         </div>
@@ -2142,11 +2322,23 @@ const CLOUD_CONFIG_KEY='dominik_dashboard_supabase_config';
 const CLOUD_SYNC_META_KEY='dominik_dashboard_cloud_sync_meta';
 const CLOUD_PENDING_KEY='dominik_dashboard_cloud_pending';
 const CLOUD_TABLE='user_dashboards';
+const VAULT_ITERATIONS=250000;
+const VAULT_CHECK_TEXT='dashboard-vault-check-v1';
+const VAULT_IDLE_MS=15*60*1000;
+
+// Laufzeitzustand: lebt nur im Arbeitsspeicher, niemals im State oder Storage.
+// Dadurch ist die Ablage nach jedem Neuladen automatisch wieder gesperrt.
+let vaultKey=null;
+let vaultEntries=[];
+let vaultIdleTimer=null;
+let vaultSaveTimer=null;
+let vaultDialogMode='unlock';
+
 const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 31.1 vom 05.08.2026, 19:27';
+const DASHBOARD_RELEASE='Dashboard 32.0 vom 26.08.2026, 16:32';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -2487,7 +2679,10 @@ function createDefaults(){
    summary:'Weiterentwicklung der Oberfläche und Funktionen.',
    areaId:'area-general',priorityId:'priority-high',
    deadline:'',subtasks:[],updatedAt:now()
-  }]
+  }],
+  // Passwortablage: enthält ausschließlich verschlüsselte Daten. Das
+  // Master-Passwort wird nirgends gespeichert – auch nicht als Hash.
+  passwordVault:{enabled:false,salt:'',iterations:VAULT_ITERATIONS,check:null,blob:null,updatedAt:''}
  };
 }
 
@@ -2620,6 +2815,10 @@ function normalizeState(raw){
   workItems:[],
   projects:[]
  };
+
+ // Passwortablage unverändert übernehmen. Der Inhalt ist verschlüsselt und
+ // darf durch Migrationen niemals verworfen oder verändert werden.
+ result.passwordVault=normalizeVault(source.passwordVault,defaults.passwordVault);
 
  result.meta.title=String(result.meta.title||defaults.meta.title);
  result.meta.subtitle=String(result.meta.subtitle||defaults.meta.subtitle);
@@ -3792,7 +3991,9 @@ function renderBrand(){
 function renderNav(){
  const deleted=new Set(state.config.deletedPages||[]);
  const visibleOrder=state.config.navOrder.filter(page=>!deleted.has(page));
- if(!visibleOrder.includes(activePage))activePage=visibleOrder.includes('tasks')?'tasks':(visibleOrder[0]||'notes');
+ // "passwords" ist eine Sonderseite ohne Reiter in der Navigation und darf
+ // deshalb nicht durch die Rückfallregel überschrieben werden.
+ if(activePage!=='passwords'&&!visibleOrder.includes(activePage))activePage=visibleOrder.includes('tasks')?'tasks':(visibleOrder[0]||'notes');
  $('#nav').innerHTML=visibleOrder.map(page=>`<button type="button" draggable="true" data-page="${page}" class="${page===activePage?'active':''}">${esc(pageLabel(page))}</button>`).join('');
  Object.keys(DEFAULT_PAGE_LABELS).forEach(page=>{
   const pageElement=$(`#page-${page}`);
@@ -3802,6 +4003,10 @@ function renderNav(){
   const heading=$('.page-header h2',pageElement);
   if(heading)heading.textContent=pageLabel(page);
  });
+ const vaultPage=$('#page-passwords');
+ if(vaultPage)vaultPage.classList.toggle('active',activePage==='passwords'&&vaultIsUnlocked());
+ const vaultButton=$('#vault-lock-btn');
+ if(vaultButton)vaultButton.classList.toggle('active',activePage==='passwords');
 }
 function openOverlay(name){
  closeOverlays();
@@ -4720,7 +4925,7 @@ function renderAccountInfo(){
    : 'Nicht angemeldet';
  }
 }
-function renderAll(){renderTheme();renderBrand();renderNav();renderNotes();renderTasks();if(!state.config.deletedPages.includes('own'))renderOwn();renderDelegated();if(!state.config.deletedPages.includes('projects'))renderProjects();renderSettings();renderThemeSettings();renderAccountInfo();renderHistoryButtons()}
+function renderAll(){renderTheme();renderBrand();renderNav();renderNotes();renderTasks();if(!state.config.deletedPages.includes('own'))renderOwn();renderDelegated();if(!state.config.deletedPages.includes('projects'))renderProjects();renderSettings();renderThemeSettings();renderAccountInfo();renderVault();renderHistoryButtons()}
 
 function createNote(){
  const note={id:uid(),title:'',area:'',content:'',archived:false,updatedAt:now()};
@@ -5999,6 +6204,303 @@ function openSearchHit(kind,id,workId){
  if(kind==='delegated'){switchPage('delegated');openTodo(id,'delegated')}
 }
 
+// ── Passwortablage ────────────────────────────────────────────────────────
+// Sicherheitsmodell: Aus dem Master-Passwort wird per PBKDF2 ein AES-GCM-
+// Schlüssel abgeleitet. Gespeichert werden ausschließlich Salt, Prüfblock und
+// verschlüsselte Nutzdaten. Das Master-Passwort selbst wird NICHT gespeichert –
+// deshalb ist ein Zurücksetzen prinzipbedingt unmöglich, nur ein Löschen.
+
+function normalizeVault(source,fallback){
+ const base=clone(fallback);
+ if(!source||typeof source!=='object')return base;
+ const part=value=>(value&&typeof value==='object'
+  &&typeof value.iv==='string'&&typeof value.data==='string')
+  ?{iv:value.iv,data:value.data}:null;
+ const check=part(source.check),blob=part(source.blob);
+ const salt=typeof source.salt==='string'?source.salt:'';
+ if(!salt||!check)return base;
+ return{
+  enabled:source.enabled!==false,
+  salt,
+  iterations:Number.isFinite(source.iterations)&&source.iterations>=50000
+   ?Math.floor(source.iterations):VAULT_ITERATIONS,
+  check,
+  blob,
+  updatedAt:typeof source.updatedAt==='string'?source.updatedAt:''
+ };
+}
+function vaultSupported(){
+ return Boolean(globalThis.crypto?.subtle&&globalThis.TextEncoder);
+}
+function bytesToBase64(bytes){
+ let binary='';
+ const view=new Uint8Array(bytes);
+ for(let i=0;i<view.length;i+=1)binary+=String.fromCharCode(view[i]);
+ return btoa(binary);
+}
+function base64ToBytes(value){
+ const binary=atob(value);
+ const bytes=new Uint8Array(binary.length);
+ for(let i=0;i<binary.length;i+=1)bytes[i]=binary.charCodeAt(i);
+ return bytes;
+}
+async function vaultDeriveKey(password,saltBytes,iterations){
+ const material=await crypto.subtle.importKey(
+  'raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveKey']
+ );
+ return crypto.subtle.deriveKey(
+  {name:'PBKDF2',salt:saltBytes,iterations,hash:'SHA-256'},
+  material,
+  {name:'AES-GCM',length:256},
+  false,
+  ['encrypt','decrypt']
+ );
+}
+async function vaultEncrypt(key,plainText){
+ const iv=crypto.getRandomValues(new Uint8Array(12));
+ const data=await crypto.subtle.encrypt(
+  {name:'AES-GCM',iv},key,new TextEncoder().encode(plainText)
+ );
+ return{iv:bytesToBase64(iv),data:bytesToBase64(data)};
+}
+async function vaultDecrypt(key,payload){
+ const plain=await crypto.subtle.decrypt(
+  {name:'AES-GCM',iv:base64ToBytes(payload.iv)},key,base64ToBytes(payload.data)
+ );
+ return new TextDecoder().decode(plain);
+}
+function vaultIsConfigured(){
+ return Boolean(state.passwordVault?.salt&&state.passwordVault?.check);
+}
+function vaultIsUnlocked(){return Boolean(vaultKey)}
+
+function vaultTouchActivity(){
+ if(!vaultIsUnlocked())return;
+ clearTimeout(vaultIdleTimer);
+ vaultIdleTimer=setTimeout(()=>{
+  if(vaultIsUnlocked())lockVault({reason:'idle'});
+ },VAULT_IDLE_MS);
+}
+function lockVault({reason=''}={}){
+ vaultKey=null;
+ vaultEntries=[];
+ clearTimeout(vaultIdleTimer);
+ vaultIdleTimer=null;
+ if(activePage==='passwords')activePage='notes';
+ renderNav();
+ renderVault();
+ if(reason==='idle')setSyncStatus('Passwörter gesperrt','idle');
+}
+async function persistVaultEntries(){
+ if(!vaultIsUnlocked())return;
+ const blob=await vaultEncrypt(vaultKey,JSON.stringify(vaultEntries));
+ commit(()=>{
+  state.passwordVault.blob=blob;
+  state.passwordVault.updatedAt=now();
+ });
+}
+async function createVault(password){
+ const saltBytes=crypto.getRandomValues(new Uint8Array(16));
+ const key=await vaultDeriveKey(password,saltBytes,VAULT_ITERATIONS);
+ const check=await vaultEncrypt(key,VAULT_CHECK_TEXT);
+ const blob=await vaultEncrypt(key,JSON.stringify([]));
+ vaultKey=key;
+ vaultEntries=[];
+ commit(()=>{
+  state.passwordVault={
+   enabled:true,
+   salt:bytesToBase64(saltBytes),
+   iterations:VAULT_ITERATIONS,
+   check,blob,updatedAt:now()
+  };
+ });
+ vaultTouchActivity();
+}
+async function unlockVault(password){
+ const vault=state.passwordVault;
+ const key=await vaultDeriveKey(password,base64ToBytes(vault.salt),vault.iterations);
+ let verified='';
+ try{
+  verified=await vaultDecrypt(key,vault.check);
+ }catch(error){
+  throw new Error('Das Master-Passwort ist nicht korrekt.');
+ }
+ if(verified!==VAULT_CHECK_TEXT)throw new Error('Das Master-Passwort ist nicht korrekt.');
+ vaultKey=key;
+ try{
+  vaultEntries=vault.blob?JSON.parse(await vaultDecrypt(key,vault.blob)):[];
+ }catch(error){
+  vaultEntries=[];
+  console.error(error);
+ }
+ if(!Array.isArray(vaultEntries))vaultEntries=[];
+ vaultTouchActivity();
+}
+// Passwortwechsel ist nur im entsperrten Zustand möglich, weil die Einträge
+// dafür entschlüsselt vorliegen und neu verschlüsselt werden müssen.
+async function changeVaultPassword(newPassword){
+ if(!vaultIsUnlocked())throw new Error('Die Passwortablage muss dafür entsperrt sein.');
+ const saltBytes=crypto.getRandomValues(new Uint8Array(16));
+ const key=await vaultDeriveKey(newPassword,saltBytes,VAULT_ITERATIONS);
+ const check=await vaultEncrypt(key,VAULT_CHECK_TEXT);
+ const blob=await vaultEncrypt(key,JSON.stringify(vaultEntries));
+ vaultKey=key;
+ commit(()=>{
+  state.passwordVault={
+   enabled:true,
+   salt:bytesToBase64(saltBytes),
+   iterations:VAULT_ITERATIONS,
+   check,blob,updatedAt:now()
+  };
+ });
+ vaultTouchActivity();
+}
+function resetVault(){
+ vaultKey=null;
+ vaultEntries=[];
+ clearTimeout(vaultIdleTimer);
+ if(activePage==='passwords')activePage='notes';
+ commit(()=>{
+  state.passwordVault={enabled:false,salt:'',iterations:VAULT_ITERATIONS,check:null,blob:null,updatedAt:''};
+ });
+}
+
+// ── Passwortablage: Dialog ────────────────────────────────────────────────
+function openVaultDialog(mode){
+ vaultDialogMode=mode;
+ const setup=mode==='setup',change=mode==='change';
+ $('#vault-dialog-title').textContent=setup
+  ?'Passwortablage einrichten'
+  :(change?'Master-Passwort ändern':'Passwörter entsperren');
+ $('#vault-dialog-hint').textContent=setup
+  ?'Lege ein Master-Passwort fest. Damit werden alle Einträge verschlüsselt. Notiere es außerhalb des Dashboards – ohne dieses Passwort sind die Einträge nicht wiederherstellbar.'
+  :(change
+   ?'Alle Einträge werden mit dem neuen Master-Passwort neu verschlüsselt. Notiere auch das neue Passwort außerhalb des Dashboards.'
+   :'Gib dein Master-Passwort ein, um die Einträge zu entschlüsseln.');
+ $('#vault-dialog-note').textContent=setup||change
+  ?'Kein Zurücksetzen möglich'
+  :'';
+ $('#vault-repeat-field').hidden=!(setup||change);
+ $('#vault-submit-btn').textContent=setup?'Einrichten':(change?'Passwort ändern':'Entsperren');
+ $('#vault-password-input').value='';
+ $('#vault-password-repeat').value='';
+ setVaultDialogError('');
+ openOverlay('vault');
+ setTimeout(()=>$('#vault-password-input')?.focus(),40);
+}
+function setVaultDialogError(message){
+ const box=$('#vault-dialog-error');
+ if(!box)return;
+ box.textContent=message||'';
+ box.hidden=!message;
+}
+async function submitVaultDialog(){
+ const password=$('#vault-password-input').value;
+ const repeat=$('#vault-password-repeat').value;
+ const button=$('#vault-submit-btn');
+ const needsRepeat=vaultDialogMode==='setup'||vaultDialogMode==='change';
+ if(!password){setVaultDialogError('Bitte ein Passwort eingeben.');return}
+ if(needsRepeat){
+  if(password.length<8){setVaultDialogError('Das Master-Passwort muss mindestens 8 Zeichen haben.');return}
+  if(password!==repeat){setVaultDialogError('Die beiden Eingaben stimmen nicht überein.');return}
+ }
+ button.disabled=true;
+ const previousLabel=button.textContent;
+ button.textContent='Bitte warten …';
+ try{
+  if(vaultDialogMode==='setup')await createVault(password);
+  else if(vaultDialogMode==='change')await changeVaultPassword(password);
+  else await unlockVault(password);
+  closeOverlays();
+  if(vaultDialogMode!=='change'){
+   activePage='passwords';
+   renderNav();
+  }
+  renderVault();
+  renderSettings();
+ }catch(error){
+  setVaultDialogError(error.message||'Der Vorgang ist fehlgeschlagen.');
+ }finally{
+  button.disabled=false;
+  button.textContent=previousLabel;
+ }
+}
+function handleVaultButtonClick(){
+ if(!vaultSupported()){
+  alert('Dieser Browser unterstützt die benötigte Verschlüsselung nicht. Die Passwortablage steht deshalb nicht zur Verfügung.');
+  return;
+ }
+ if(!vaultIsConfigured()){openVaultDialog('setup');return}
+ if(!vaultIsUnlocked()){openVaultDialog('unlock');return}
+ activePage='passwords';
+ renderNav();
+ renderVault();
+}
+
+// ── Passwortablage: Tabelle ──────────────────────────────────────────────
+function renderVault(){
+ const wrap=$('#vault-table-wrap');
+ const status=$('#vault-settings-status');
+ if(status){
+  if(!vaultSupported())status.textContent='Dieser Browser unterstützt die benötigte Verschlüsselung nicht.';
+  else if(!vaultIsConfigured())status.textContent='Noch nicht eingerichtet. Klicke unten links auf „Passwörter“, um ein Master-Passwort festzulegen.';
+  else status.textContent=vaultIsUnlocked()
+   ? `Eingerichtet und aktuell entsperrt – ${vaultEntries.length} ${vaultEntries.length===1?'Eintrag':'Einträge'}.`
+   : 'Eingerichtet und aktuell gesperrt. Zum Ändern des Master-Passworts zuerst entsperren.';
+ }
+ const changeButton=$('#vault-change-password-btn');
+ if(changeButton)changeButton.disabled=!vaultIsConfigured()||!vaultIsUnlocked();
+ const resetButton=$('#vault-reset-btn');
+ if(resetButton)resetButton.disabled=!vaultIsConfigured();
+ const lockButton=$('#vault-lock-btn');
+ if(lockButton){
+  lockButton.classList.toggle('active',activePage==='passwords');
+  const icon=$('.vault-lock-icon',lockButton);
+  if(icon)icon.textContent=vaultIsUnlocked()?'🔓':'🔒';
+ }
+ if(!wrap)return;
+ if(!vaultIsUnlocked()){
+  wrap.innerHTML='<div class="vault-locked-note">Die Passwortablage ist gesperrt.</div>';
+  return;
+ }
+ const rows=vaultEntries.map((entry,index)=>`<tr data-vault-id="${esc(entry.id)}">
+  <td><input class="vault-label-input" data-vault-field="label" value="${esc(entry.label||'')}" placeholder="Bezeichnung"></td>
+  <td><div class="vault-secret-cell">
+   <input type="password" data-vault-field="secret" value="${esc(entry.secret||'')}" placeholder="Passwort / PIN" autocomplete="off">
+   <button type="button" class="icon" data-action="vault-toggle-secret" title="Anzeigen" aria-label="Anzeigen">👁</button>
+   <button type="button" class="icon" data-action="vault-copy-secret" title="Kopieren" aria-label="Kopieren">⧉</button>
+  </div></td>
+  <td><textarea data-vault-field="note" placeholder="Anmerkungen">${esc(entry.note||'')}</textarea></td>
+  <td><div class="vault-actions">
+   <button type="button" class="icon delete-btn" data-action="vault-delete-entry" title="Eintrag löschen" aria-label="Eintrag löschen">×</button>
+  </div></td>
+ </tr>`).join('');
+ wrap.innerHTML=`<table class="vault-table">
+  <colgroup>
+   <col class="vault-col-label"><col class="vault-col-secret">
+   <col class="vault-col-note"><col class="vault-col-actions">
+  </colgroup>
+  <thead><tr><th>Bezeichnung</th><th>Passwort / PIN</th><th>Anmerkungen</th><th></th></tr></thead>
+  <tbody>${rows||'<tr><td colspan="4"><div class="empty">Noch keine Einträge.</div></td></tr>'}</tbody>
+ </table>`;
+}
+function addVaultEntry(){
+ if(!vaultIsUnlocked())return;
+ vaultEntries.push({id:uid(),label:'',secret:'',note:''});
+ renderVault();
+ persistVaultEntries();
+ const rows=$$('#vault-table-wrap tr[data-vault-id]');
+ rows[rows.length-1]?.querySelector('input')?.focus();
+}
+function deleteVaultEntry(id){
+ const entry=vaultEntries.find(item=>item.id===id);
+ if(!entry)return;
+ if(!confirm(`Soll der Eintrag „${entry.label||'ohne Bezeichnung'}“ wirklich gelöscht werden?`))return;
+ vaultEntries=vaultEntries.filter(item=>item.id!==id);
+ renderVault();
+ persistVaultEntries();
+}
+
 function switchPage(page){
  if(state.config.deletedPages.includes(page))return;
  activePage=page;
@@ -6143,6 +6645,30 @@ document.addEventListener('click',event=>{
    case'delete-quick-todo':deleteQuickTodo(action.closest('[data-quick-todo-id]').dataset.quickTodoId);break;
    case'toggle-quick-todo-archive':quickTodoArchiveOpen=!quickTodoArchiveOpen;renderTasks();break;
    case'clear-quick-todo-archive':clearCompletedQuickTodos();break;
+   case'vault-toggle-secret':{
+    const input=action.closest('.vault-secret-cell')?.querySelector('[data-vault-field="secret"]');
+    if(input){
+     const shown=input.type==='text';
+     input.type=shown?'password':'text';
+     action.textContent=shown?'👁':'🙈';
+     action.title=shown?'Anzeigen':'Verbergen';
+    }
+    break;
+   }
+   case'vault-copy-secret':{
+    const input=action.closest('.vault-secret-cell')?.querySelector('[data-vault-field="secret"]');
+    if(input?.value){
+     navigator.clipboard?.writeText(input.value).then(()=>{
+      const previous=action.textContent;
+      action.textContent='✓';
+      setTimeout(()=>{action.textContent=previous},1200);
+     }).catch(()=>alert('Das Kopieren wurde vom Browser verhindert.'));
+    }
+    break;
+   }
+   case'vault-delete-entry':
+    deleteVaultEntry(action.closest('[data-vault-id]')?.dataset.vaultId);
+    break;
    case'toggle-category':{
     const key=action.dataset.categoryKey;
     if(key){
@@ -6971,6 +7497,21 @@ bind('#reset-password-btn','click',async()=>{
  }
 });
 bind('#export-backup-btn','click',downloadBackup);
+bind('#vault-change-password-btn','click',()=>{
+ if(!vaultIsUnlocked()){
+  alert('Bitte entsperre die Passwortablage zuerst über die Schaltfläche „Passwörter“ unten links.');
+  return;
+ }
+ openVaultDialog('change');
+});
+bind('#vault-reset-btn','click',()=>{
+ if(!vaultIsConfigured())return;
+ if(!confirm('Sollen die Passwortablage und ALLE darin gespeicherten Einträge endgültig gelöscht werden?\n\nEine Wiederherstellung ist nicht möglich.'))return;
+ if(!confirm('Letzte Sicherheitsabfrage: Alle Passwörter und PINs werden unwiderruflich gelöscht. Fortfahren?'))return;
+ resetVault();
+ renderVault();
+ renderSettings();
+});
 bind('#import-backup-btn','click',()=>{
  $('#backup-file-input').value='';
  $('#backup-file-input').click();
@@ -6990,6 +7531,33 @@ bind('#backup-file-input','change',async event=>{
 // Direct controls
 bind('#new-note-btn','click',createNote);
 bind('#new-delegated-btn','click',()=>createTodo('delegated',{open:true}));
+// Passwortablage
+bind('#vault-lock-btn','click',handleVaultButtonClick);
+bind('#vault-lock-now-btn','click',()=>lockVault());
+bind('#vault-add-entry-btn','click',addVaultEntry);
+bind('#vault-submit-btn','click',submitVaultDialog);
+bind('#vault-password-input','keydown',event=>{
+ if(event.key==='Enter'){event.preventDefault();submitVaultDialog()}
+});
+bind('#vault-password-repeat','keydown',event=>{
+ if(event.key==='Enter'){event.preventDefault();submitVaultDialog()}
+});
+// Eingaben in der Tabelle sofort verschlüsselt sichern
+bind('#vault-table-wrap','input',event=>{
+ const field=event.target.closest('[data-vault-field]');
+ if(!field||!vaultIsUnlocked())return;
+ const id=field.closest('[data-vault-id]')?.dataset.vaultId;
+ const entry=vaultEntries.find(item=>item.id===id);
+ if(!entry)return;
+ entry[field.dataset.vaultField]=field.value;
+ vaultTouchActivity();
+ clearTimeout(vaultSaveTimer);
+ vaultSaveTimer=setTimeout(()=>persistVaultEntries(),500);
+});
+// Automatische Sperre nach Inaktivität zurücksetzen
+['click','keydown','pointerdown'].forEach(type=>{
+ document.addEventListener(type,()=>vaultTouchActivity(),{passive:true});
+});
 // Volltextsuche: Eingabe, Auswahl per Klick, Schließen per Escape/Klick daneben
 bind('#global-search','input',event=>runGlobalSearch(event.target.value));
 bind('#global-search','focus',event=>{if(event.target.value.trim())runGlobalSearch(event.target.value)});
