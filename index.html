@@ -663,10 +663,11 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  vertical-align:middle
 }
 .vault-table tr:last-child td{border-bottom:0}
-.vault-table col.vault-col-label{width:26%}
-.vault-table col.vault-col-secret{width:28%}
-.vault-table col.vault-col-note{width:34%}
-.vault-table col.vault-col-actions{width:12%}
+.vault-table col.vault-col-label{width:20%}
+.vault-table col.vault-col-user{width:22%}
+.vault-table col.vault-col-secret{width:24%}
+.vault-table col.vault-col-note{width:24%}
+.vault-table col.vault-col-actions{width:10%}
 .vault-table input,
 .vault-table textarea{
  width:100%;
@@ -685,6 +686,11 @@ body.mobile .theme-grid{grid-template-columns:1fr}
 .vault-secret-cell input{
  font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
  letter-spacing:.02em
+}
+/* Der Benutzername ist Fließtext und behält die normale Schrift. */
+.vault-secret-cell input[data-vault-field="username"]{
+ font-family:inherit;
+ letter-spacing:normal
 }
 .vault-actions{display:flex;gap:6px;justify-content:flex-end}
 .vault-actions .icon,
@@ -2338,7 +2344,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 32.1 vom 26.08.2026, 17:13';
+const DASHBOARD_RELEASE='Dashboard 33.0 vom 01.09.2026, 11:33';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -4350,6 +4356,25 @@ function renderWorkItemRow(item){
   </div>
  </article>`;
 }
+// Sortiert Aufgaben und Projekte innerhalb einer Kategorie nach dem
+// Bearbeitungsstand. Maßgeblich ist die Reihenfolge der Status in den
+// Einstellungen (Auswahlmöglichkeiten → Bearbeitungsstatus), nicht ein fest
+// verdrahteter Name. Bei gleichem Status bleibt die manuelle Reihenfolge
+// aus Drag-and-drop erhalten (stabile Sortierung).
+function sortWorkItemsByStatus(items){
+ const order=options('tasks','statuses').map(status=>status.id);
+ const rank=id=>{
+  const index=order.indexOf(id);
+  return index<0?order.length:index;
+ };
+ return items
+  .map((item,index)=>({item,index}))
+  .sort((a,b)=>{
+   const diff=rank(a.item.statusId)-rank(b.item.statusId);
+   return diff!==0?diff:a.index-b.index;
+  })
+  .map(entry=>entry.item);
+}
 function renderTasks(){
  renderFilter('#tasks-filters','tasks',['status','area']);
  const filtersActive=filters.tasks.status.size||filters.tasks.area.size;
@@ -4368,7 +4393,7 @@ function renderTasks(){
   .filter(group=>group.id==='__completed__'||!hiddenCategories.includes(group.id));
  content+=groups.map(group=>{
   const completed=group.id==='__completed__';
-  const items=state.workItems.filter(item=>completed?workIsCompleted(item):!workIsCompleted(item)&&item.priorityId===group.id);
+  const items=sortWorkItemsByStatus(state.workItems.filter(item=>completed?workIsCompleted(item):!workIsCompleted(item)&&item.priorityId===group.id));
   const categoryKey=`tasks:${group.id}`;
   const open=completed?isCompletedOpen('tasks'):!isCategoryCollapsed(categoryKey);
   return`<section class="group work-group ${completed?'completed-group':''}" data-work-drop="${group.id}">
@@ -6466,6 +6491,10 @@ function renderVault(){
  const rows=vaultEntries.map((entry,index)=>`<tr data-vault-id="${esc(entry.id)}">
   <td><input class="vault-label-input" data-vault-field="label" value="${esc(entry.label||'')}" placeholder="Bezeichnung"></td>
   <td><div class="vault-secret-cell">
+   <input data-vault-field="username" value="${esc(entry.username||'')}" placeholder="Benutzername / Login" autocomplete="off">
+   <button type="button" class="icon" data-action="vault-copy-username" title="Kopieren" aria-label="Benutzername kopieren">⧉</button>
+  </div></td>
+  <td><div class="vault-secret-cell">
    <input type="password" data-vault-field="secret" value="${esc(entry.secret||'')}" placeholder="Passwort / PIN" autocomplete="off">
    <button type="button" class="icon" data-action="vault-toggle-secret" title="Anzeigen" aria-label="Anzeigen">👁</button>
    <button type="button" class="icon" data-action="vault-copy-secret" title="Kopieren" aria-label="Kopieren">⧉</button>
@@ -6477,16 +6506,16 @@ function renderVault(){
  </tr>`).join('');
  wrap.innerHTML=`<table class="vault-table">
   <colgroup>
-   <col class="vault-col-label"><col class="vault-col-secret">
+   <col class="vault-col-label"><col class="vault-col-user"><col class="vault-col-secret">
    <col class="vault-col-note"><col class="vault-col-actions">
   </colgroup>
-  <thead><tr><th>Bezeichnung</th><th>Passwort / PIN</th><th>Anmerkungen</th><th></th></tr></thead>
-  <tbody>${rows||'<tr><td colspan="4"><div class="empty">Noch keine Einträge.</div></td></tr>'}</tbody>
+  <thead><tr><th>Bezeichnung</th><th>Benutzername / Login</th><th>Passwort / PIN</th><th>Anmerkungen</th><th></th></tr></thead>
+  <tbody>${rows||'<tr><td colspan="5"><div class="empty">Noch keine Einträge.</div></td></tr>'}</tbody>
  </table>`;
 }
 function addVaultEntry(){
  if(!vaultIsUnlocked())return;
- vaultEntries.push({id:uid(),label:'',secret:'',note:''});
+ vaultEntries.push({id:uid(),label:'',username:'',secret:'',note:''});
  renderVault();
  persistVaultEntries();
  const rows=$$('#vault-table-wrap tr[data-vault-id]');
@@ -6657,6 +6686,17 @@ document.addEventListener('click',event=>{
    }
    case'vault-copy-secret':{
     const input=action.closest('.vault-secret-cell')?.querySelector('[data-vault-field="secret"]');
+    if(input?.value){
+     navigator.clipboard?.writeText(input.value).then(()=>{
+      const previous=action.textContent;
+      action.textContent='✓';
+      setTimeout(()=>{action.textContent=previous},1200);
+     }).catch(()=>alert('Das Kopieren wurde vom Browser verhindert.'));
+    }
+    break;
+   }
+   case'vault-copy-username':{
+    const input=action.closest('.vault-secret-cell')?.querySelector('[data-vault-field="username"]');
     if(input?.value){
      navigator.clipboard?.writeText(input.value).then(()=>{
       const previous=action.textContent;
