@@ -830,11 +830,13 @@ body.mobile .vault-lock-btn{
 .archive-notes-list[hidden]{display:none}
 .note-card.archived{background:#eef0f2;border-color:var(--category-border);box-shadow:none}
 /* Kompakte Notizkarte: Maße exakt wie die Aufgabenkarten in „Meine Aufgaben“
-   (Titelzeile 29px, Metazeile 23px, Innenabstand 9px oben/unten = 72px hoch). */
-.note-card{padding:9px 10px 9px 16px}
+   (Titelzeile 29px, Metazeile 23px, Innenabstand 9px oben/unten = 72px hoch).
+   Rechter Innenabstand 14px, damit die Buttons bündig mit der Werkzeugleiste
+   und dem Textfeld der schnellen Notizen abschließen. */
+.note-card{padding:9px 14px 9px 16px}
 .note-head{
  display:flex;
- align-items:flex-start;
+ align-items:center;
  justify-content:space-between;
  gap:10px
 }
@@ -2385,7 +2387,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 33.3 vom 07.09.2026, 10:09';
+const DASHBOARD_RELEASE='Dashboard 33.4 vom 07.09.2026, 10:15';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
