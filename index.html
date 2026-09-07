@@ -811,8 +811,14 @@ body.mobile .sidebar-patch{
  font-size:9px
 }
 /* Mobil sitzt die Seitenleiste als Kopfbereich – der Fußbereich braucht
-   deshalb keinen automatischen Abstand nach oben. */
-body.mobile .sidebar-foot{margin-top:8px;padding-top:0}
+   deshalb keinen automatischen Abstand nach oben. Der Schloss-Button wandert
+   dort per JavaScript in die obere Werkzeugleiste. */
+body.mobile .sidebar-foot{display:none}
+body.mobile .vault-lock-btn{
+ flex:0 0 36px;
+ width:36px;
+ height:36px
+}
 
 
 /* Notizarchiv */
@@ -2289,10 +2295,6 @@ body.mobile .subtask-row.work-detail-subtask .work-subtask-drag-handle{
               <input id="theme-note-category" type="color" data-theme-field="noteCategory">
             </div>
             <div class="theme-control">
-              <label for="theme-note-preview">Schrift der Vorschau</label>
-              <input id="theme-note-preview" type="color" data-theme-field="notePreview">
-            </div>
-            <div class="theme-control">
               <label for="theme-quick-bg">Hintergrund schnelle Notizen</label>
               <input id="theme-quick-bg" type="color" data-theme-field="quickNoteBg">
             </div>
@@ -2344,7 +2346,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 33.0 vom 01.09.2026, 11:33';
+const DASHBOARD_RELEASE='Dashboard 33.1 vom 07.09.2026, 09:40';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -4109,13 +4111,10 @@ function growAll(){
 }
 
 function renderNoteCard(note,{archived=false}={}){
- const preview=previewTextFromHtml(note.content)||'Leere Notiz';
- const previewHtml=esc(preview).replace(/\n/g,'<br>');
  return`<article class="note-card ${archived?'archived':''}" data-note-id="${note.id}">
   <div class="note-main">
    <h3>${esc(note.title||'Ohne Überschrift')}</h3>
    <div class="small note-category">${esc(note.area||'Kein Bereich')}</div>
-   <div class="preview note-preview">${previewHtml}</div>
   </div>
   <div class="card-footer">
    <span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span>
@@ -6604,6 +6603,15 @@ function renderNoteColors(){
 function applyMobileMode(){
  const mobile=window.innerWidth<=760;
  document.body.classList.toggle('mobile',mobile);
+ // Der Schloss-Button sitzt mobil in der oberen Werkzeugleiste, auf dem
+ // Desktop unten links im Fußbereich der Seitenleiste.
+ const vaultButton=$('#vault-lock-btn');
+ const tools=$('.tools');
+ const foot=$('.sidebar-foot');
+ if(vaultButton&&tools&&foot){
+  const target=mobile?tools:foot;
+  if(vaultButton.parentElement!==target)target.appendChild(vaultButton);
+ }
  closeFilters();
 }
 function reloadDashboardPage(){
