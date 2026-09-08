@@ -20,8 +20,8 @@
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
-.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:7px;font-size:17px;font-weight:700;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
-.note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:17px;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
+.note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:16px;letter-spacing:-.01em;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid var(--category-border);border-radius:var(--radius)}.group.own{background:var(--own)}.group.project{background:var(--project)}.group.delegated-group{background:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
 .todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:var(--work-card-bg);border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 170px auto}.todo-row.completed{opacity:.62;background:var(--work-card-bg)}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.todo-row.delegated>.person-select{font-size:13px}
@@ -835,13 +835,7 @@ body.mobile .vault-lock-btn{
 .archive-notes-list[hidden]{display:none}
 .note-card.archived{background:#eef0f2;border-color:var(--category-border);box-shadow:none}
 /* Startseite */
-.home-greeting{margin-bottom:22px}
-.home-greeting h3{
- margin:0 0 4px;
- font-size:26px;
- font-weight:700;
- color:var(--text)
-}
+.home-header{margin-bottom:20px}
 .home-name{
  padding:1px 6px;
  border-bottom:2px dashed transparent;
@@ -850,8 +844,13 @@ body.mobile .vault-lock-btn{
  cursor:text
 }
 .home-name:hover{background:var(--accent-soft);border-bottom-color:#bcd0e2}
+.home-name:empty::before{
+ content:attr(data-placeholder);
+ color:var(--muted);
+ font-weight:400
+}
 .home-name:focus{background:#fff;border-bottom-color:var(--accent)}
-.home-date{margin:0;color:var(--muted);font-size:13px}
+.home-date{margin:6px 0 0;color:var(--muted)}
 .home-tiles{
  display:grid;
  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
@@ -886,7 +885,7 @@ body.mobile .vault-lock-btn{
  line-height:1
 }
 .home-tile-icon.quick{color:#2f7ec1}
-.home-tile-icon.work{color:#1565c0}
+.home-tile-icon.work{color:#d64545}
 .home-tile-icon.delegated{color:#315d8a}
 .home-tile-icon.notes{color:#2f8f4e}
 .home-tile-zahl{
@@ -907,7 +906,6 @@ body.mobile .vault-lock-btn{
  color:var(--muted);
  font-size:11px
 }
-body.mobile .home-greeting h3{font-size:21px}
 body.mobile .home-tiles{grid-template-columns:1fr 1fr;gap:9px}
 body.mobile .home-tile{padding:12px}
 
@@ -2053,12 +2051,12 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
 
   <main class="main">
     <section id="page-home" class="page">
-      <header class="page-header"><div><h2>Start</h2><p>Überblick über deine Notizen und Aufgaben.</p></div></header>
-      <div class="home-greeting">
-        <h3>Willkommen, <span id="home-user-name" class="home-name" contenteditable="true"
-            spellcheck="false" role="textbox" aria-label="Name ändern"></span>!</h3>
+      <header class="page-header home-header"><div>
+        <h2>Willkommen, <span id="home-user-name" class="home-name" contenteditable="true"
+            spellcheck="false" role="textbox" aria-label="Name ändern"
+            data-placeholder="Name eintragen"></span>!</h2>
         <p id="home-date" class="home-date"></p>
-      </div>
+      </div></header>
       <div id="home-tiles" class="home-tiles"></div>
     </section>
 
@@ -2066,7 +2064,7 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
       <header class="page-header"><div><h2>Notizen</h2><p>Gedanken, Informationen und Erinnerungen.</p></div><button type="button" id="new-note-btn" class="primary">Neue Notiz</button></header>
       <section class="quick-note">
         <div class="quick-note-head">
-          <label for="quick-note-editor"><span class="quick-note-icon" aria-hidden="true">⚡</span>Schnelle Notizen</label>
+          <label for="quick-note-editor"><span class="quick-note-icon" aria-hidden="true">⚡︎</span>Schnelle Notizen</label>
           <div class="quick-note-toolbar" aria-label="Formatierung für schnelle Notizen">
             <button type="button" class="quick-note-tool" data-quick-command="bold" title="Fett"><strong>F</strong></button>
             <button type="button" class="quick-note-tool" data-quick-command="insertUnorderedList" title="Aufzählung">• Liste</button>
@@ -2466,7 +2464,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 35.0 vom 08.09.2026, 16:01';
+const DASHBOARD_RELEASE='Dashboard 35.2 vom 08.09.2026, 16:28';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -2736,7 +2734,7 @@ function createDefaults(){
  const legacy=createLegacySelectionDefaults();
  return{
   version:DASHBOARD_SCHEMA_VERSION,
-  meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:'',userName:'Dominik'},
+  meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:'',userName:''},
   config:{
    navOrder:['home','notes','tasks','projects','own','delegated'],
    navLabels:clone(DEFAULT_PAGE_LABELS),
@@ -4252,21 +4250,23 @@ function renderHome(){
  if(!ziel)return;
 
  const offeneTodos=state.quickTodos.filter(item=>!item.completed).length;
+ const gesamtWork=state.workItems.length;
  const offeneWork=state.workItems.filter(item=>!workIsCompleted(item)).length;
- const projekte=state.workItems.filter(item=>!workIsCompleted(item)&&(item.subtasks||[]).length>0).length;
  const offeneVergeben=allDelegatedEntries().filter(e=>{
   if(delegatedEntryPersonId(e)===(state.config.shared.selfPersonId||''))return false;
   return e._kind==='subtask'?!isSubtaskDone(e):!todoIsCompleted(e,'delegated');
  }).length;
+ // Zeigt, mit wie vielen Personen aktuell etwas offen ist.
+ const personenMitAufgaben=delegatedPersonIds().length;
  const notizen=state.notes.filter(n=>!n.archived).length;
 
  const kacheln=[
   {seite:'tasks',symbol:'⚡',klasse:'quick',titel:'Schnelle Todos',zahl:offeneTodos,
    zusatz:offeneTodos===1?'offen':'offen'},
-  {seite:'tasks',symbol:'▤',klasse:'work',titel:pageLabel('tasks'),zahl:offeneWork,
-   zusatz:projekte>0?`offen · davon ${projekte} ${projekte===1?'Projekt':'Projekte'}`:'offen'},
-  {seite:'delegated',symbol:'👤',klasse:'delegated',titel:pageLabel('delegated'),zahl:offeneVergeben,
-   zusatz:'offen'},
+  {seite:'tasks',symbol:'⚑',klasse:'work',titel:pageLabel('tasks'),zahl:gesamtWork,
+   zusatz:`davon ${offeneWork} offen`},
+  {seite:'delegated',symbol:'👤',klasse:'delegated',titel:pageLabel('delegated'),zahl:personenMitAufgaben,
+   zusatz:`${personenMitAufgaben===1?'Person':'Personen'} · ${offeneVergeben} aktiv`},
   {seite:'notes',symbol:'✎',klasse:'notes',titel:pageLabel('notes'),zahl:notizen,
    zusatz:'aktiv'}
  ].filter(k=>!state.config.deletedPages.includes(k.seite));
@@ -4761,10 +4761,12 @@ function delegatedPersonIds(){
   return e?delegatedEntryPersonId(e):null;
  }).filter(Boolean);
  const all=entries.map(delegatedEntryPersonId);
+ const aktiv=new Set(all);
  const combined=[...fromOrder,...all];
  const result=[];
  for(const pid of combined){
-  if(pid&&pid!==selfId&&!seen.has(pid)){seen.add(pid);result.push(pid);}
+  // Nur Personen mit mindestens einem offenen Eintrag erhalten einen Block.
+  if(pid&&pid!==selfId&&aktiv.has(pid)&&!seen.has(pid)){seen.add(pid);result.push(pid);}
  }
  return result;
 }
