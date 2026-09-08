@@ -223,6 +223,10 @@ body.mobile .sidebar{
  top:0;
  z-index:900;
  min-height:auto;
+ /* Mobil ist die Seitenleiste ein Kopfbereich und darf nicht die
+    volle Fensterhoehe der Desktopansicht uebernehmen. */
+ height:auto;
+ overflow:visible;
  padding:10px 12px 9px;
  border-right:0;
  border-bottom:1px solid var(--border);
@@ -591,7 +595,15 @@ body.mobile .theme-grid{grid-template-columns:1fr}
 .rich-editor img,#note-editor img{max-width:100%;height:auto}
 
 
-.sidebar{display:flex;flex-direction:column}
+.sidebar{
+ display:flex;
+ flex-direction:column;
+ position:sticky;
+ top:0;
+ height:100vh;
+ overflow-y:auto;
+ overscroll-behavior:contain
+}
 .sidebar .nav{flex:0 0 auto}
 .sidebar-patch{
  padding-top:12px;
@@ -606,19 +618,17 @@ body.mobile .theme-grid{grid-template-columns:1fr}
 .vault-lock-btn{
  display:inline-grid;
  place-items:center;
- width:33px;
- height:33px;
+ width:30px;
+ height:30px;
  padding:0;
- border:1px solid var(--border);
+ border:0;
  border-radius:8px;
- background:#fff;
+ background:transparent;
+ opacity:.75;
  cursor:pointer
 }
-.vault-lock-btn:hover{background:var(--accent-soft)}
-.vault-lock-btn.active{
- border-color:var(--sidebar-active-bg);
- box-shadow:0 0 0 2px var(--sidebar-active-bg)
-}
+.vault-lock-btn:hover{opacity:1}
+.vault-lock-btn.active{opacity:1}
 .vault-lock-icon{font-size:15px;line-height:1}
 /* Passwortablage: Dialog */
 .vault-shell{max-width:430px}
@@ -822,7 +832,9 @@ body.mobile .sidebar-foot{display:none}
 body.mobile .vault-lock-btn{
  flex:0 0 36px;
  width:36px;
- height:36px
+ height:36px;
+ border:0;
+ background:transparent!important
 }
 
 
@@ -834,6 +846,39 @@ body.mobile .vault-lock-btn{
 .archive-notes-list{display:grid;gap:10px;padding:0 12px 12px}
 .archive-notes-list[hidden]{display:none}
 .note-card.archived{background:#eef0f2;border-color:var(--category-border);box-shadow:none}
+/* Geteilte Ansicht: zwei Reiter untereinander, jeder mit eigenem Bildlauf. */
+body.split-view:not(.mobile) main{
+ display:grid;
+ grid-template-rows:1fr 1fr;
+ gap:0;
+ height:100vh;
+ padding:0;
+ overflow:hidden
+}
+body.split-view:not(.mobile) main>.page.active{
+ min-height:0;
+ padding:26px 34px;
+ overflow-y:auto;
+ overscroll-behavior:contain
+}
+body.split-view:not(.mobile) main>.page.split-primary{
+ grid-row:1;
+ border-bottom:2px solid var(--category-border)
+}
+body.split-view:not(.mobile) main>.page.split-secondary{grid-row:2}
+/* Der zweite Reiter ist in der Navigation dezenter markiert. */
+.nav button.secondary-active{
+ background:rgba(255,255,255,.16);
+ color:var(--sidebar-text-color);
+ font-weight:600
+}
+.nav button.secondary-active::after{
+ content:'\2195';
+ margin-left:7px;
+ opacity:.7;
+ font-size:12px
+}
+
 /* Startseite */
 .home-header{margin-bottom:20px}
 .home-name{
@@ -2464,7 +2509,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 35.2 vom 08.09.2026, 16:28';
+const DASHBOARD_RELEASE='Dashboard 36.0 vom 08.09.2026, 16:43';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -3410,6 +3455,9 @@ function loadState(){
 
 let state=loadState();
 let activePage='home';
+// Zweiter, gleichzeitig sichtbarer Reiter. Bewusst nur zur Laufzeit -
+// nach dem Neuladen startet das Dashboard wieder mit einer Ansicht.
+let secondaryPage=null;
 let archiveOpen=false;
 let quickTodoArchiveOpen=false;
 // Zuklapp-Zustände werden dauerhaft im State gespeichert und synchronisiert.
@@ -4127,13 +4175,20 @@ function renderNav(){
  // "passwords" ist eine Sonderseite ohne Reiter in der Navigation und darf
  // deshalb nicht durch die Rückfallregel überschrieben werden.
  if(activePage!=='passwords'&&!visibleOrder.includes(activePage))activePage=visibleOrder.includes('tasks')?'tasks':(visibleOrder[0]||'notes');
- $('#nav').innerHTML=visibleOrder.map(page=>`<button type="button" draggable="true" data-page="${page}" class="${page===activePage?'active':''}">${esc(pageLabel(page))}</button>`).join('');
+ if(secondaryPage&&(!visibleOrder.includes(secondaryPage)||secondaryPage===activePage))secondaryPage=null;
+ $('#nav').innerHTML=visibleOrder.map(page=>`<button type="button" draggable="true" data-page="${page}" class="${page===activePage?'active':(page===secondaryPage?'secondary-active':'')}">${esc(pageLabel(page))}</button>`).join('');
+ document.body.classList.toggle('split-view',Boolean(secondaryPage));
  Object.keys(DEFAULT_PAGE_LABELS).forEach(page=>{
   const pageElement=$(`#page-${page}`);
   if(!pageElement)return;
   pageElement.hidden=deleted.has(page);
-  pageElement.classList.toggle('active',!deleted.has(page)&&page===activePage);
-  const heading=$('.page-header h2',pageElement);
+  const sichtbar=!deleted.has(page)&&(page===activePage||page===secondaryPage);
+  pageElement.classList.toggle('active',sichtbar);
+  pageElement.classList.toggle('split-secondary',Boolean(secondaryPage)&&page===secondaryPage);
+  pageElement.classList.toggle('split-primary',Boolean(secondaryPage)&&page===activePage);
+  // Die Startseite trägt die Begrüßung samt Namensfeld in der Überschrift.
+  // Sie darf deshalb nicht mit dem Reiternamen überschrieben werden.
+  const heading=page==='home'?null:$('.page-header h2',pageElement);
   if(heading)heading.textContent=pageLabel(page);
  });
  const vaultPage=$('#page-passwords');
@@ -4235,6 +4290,19 @@ function growAll(){
  syncWorkSubtaskTextareas();
 }
 
+// Zaehlt nur Eintraege mit dem Bearbeitungsstand "Offen" oder
+// "In Bearbeitung". Wartende Staende wie Zuarbeit, Termin oder Hold
+// bleiben ebenso aussen vor wie erledigte Eintraege.
+const ZAEHLBARE_STATUS=['status-open','status-active'];
+function istInArbeit(item){
+ if(workIsCompleted(item))return false;
+ const status=optionById('tasks','statuses',item.statusId);
+ if(!status)return false;
+ if(ZAEHLBARE_STATUS.includes(status.id))return true;
+ const text=String(status.label||'').trim().toLowerCase();
+ return text==='offen'||text==='in bearbeitung';
+}
+
 // ── Startseite ────────────────────────────────────────────────────────────
 function renderHome(){
  const nameFeld=$('#home-user-name');
@@ -4251,7 +4319,7 @@ function renderHome(){
 
  const offeneTodos=state.quickTodos.filter(item=>!item.completed).length;
  const gesamtWork=state.workItems.length;
- const offeneWork=state.workItems.filter(item=>!workIsCompleted(item)).length;
+ const offeneWork=state.workItems.filter(istInArbeit).length;
  const offeneVergeben=allDelegatedEntries().filter(e=>{
   if(delegatedEntryPersonId(e)===(state.config.shared.selfPersonId||''))return false;
   return e._kind==='subtask'?!isSubtaskDone(e):!todoIsCompleted(e,'delegated');
@@ -4265,8 +4333,8 @@ function renderHome(){
    zusatz:offeneTodos===1?'offen':'offen'},
   {seite:'tasks',symbol:'⚑',klasse:'work',titel:pageLabel('tasks'),zahl:gesamtWork,
    zusatz:`davon ${offeneWork} offen`},
-  {seite:'delegated',symbol:'👤',klasse:'delegated',titel:pageLabel('delegated'),zahl:personenMitAufgaben,
-   zusatz:`${personenMitAufgaben===1?'Person':'Personen'} · ${offeneVergeben} aktiv`},
+  {seite:'delegated',symbol:'👤',klasse:'delegated',titel:pageLabel('delegated'),zahl:offeneVergeben,
+   zusatz:`aktiv · ${personenMitAufgaben} ${personenMitAufgaben===1?'Person':'Personen'}`},
   {seite:'notes',symbol:'✎',klasse:'notes',titel:pageLabel('notes'),zahl:notizen,
    zusatz:'aktiv'}
  ].filter(k=>!state.config.deletedPages.includes(k.seite));
@@ -6704,6 +6772,7 @@ function deleteVaultEntry(id){
 
 function switchPage(page){
  if(state.config.deletedPages.includes(page))return;
+ if(secondaryPage===page)secondaryPage=null;
  activePage=page;
  closeOverlays();
  closeNavContextMenu();
@@ -6722,7 +6791,14 @@ function openNavContextMenu(page,clientX,clientY){
  if(!menu)return;
  const canDelete=DELETABLE_LEGACY_PAGES.has(page);
  menu.dataset.page=page;
- menu.innerHTML=`<button type="button" role="menuitem" data-nav-context-action="rename">Reiter umbenennen</button>${canDelete?`<button type="button" role="menuitem" class="danger-action" data-nav-context-action="delete">Reiter dauerhaft löschen</button>`:''}`;
+ const istOffen=page===activePage;
+ const istZweite=page===secondaryPage;
+ // Die geteilte Ansicht ist dem Desktop vorbehalten - mobil fehlt die Hoehe.
+ const teilbar=!document.body.classList.contains('mobile')&&!istOffen;
+ menu.innerHTML=`<button type="button" role="menuitem" data-nav-context-action="rename">Reiter umbenennen</button>`+
+  (teilbar&&!istZweite?`<button type="button" role="menuitem" data-nav-context-action="split-open">Zusätzlich öffnen</button>`:'')+
+  (istZweite?`<button type="button" role="menuitem" data-nav-context-action="split-close">Geteilte Ansicht beenden</button>`:'')+
+  (canDelete?`<button type="button" role="menuitem" class="danger-action" data-nav-context-action="delete">Reiter dauerhaft löschen</button>`:'');
  menu.hidden=false;
  menu.style.left='0px';
  menu.style.top='0px';
@@ -6807,6 +6883,14 @@ document.addEventListener('click',event=>{
   const page=navContextAction.closest('#nav-context-menu')?.dataset.page;
   if(page&&navContextAction.dataset.navContextAction==='rename')renameNavPage(page);
   if(page&&navContextAction.dataset.navContextAction==='delete')deleteLegacyPage(page);
+  if(page&&navContextAction.dataset.navContextAction==='split-open'){
+   secondaryPage=page;
+   renderNav();
+  }
+  if(page&&navContextAction.dataset.navContextAction==='split-close'){
+   secondaryPage=null;
+   renderNav();
+  }
   closeNavContextMenu();
   return;
  }
