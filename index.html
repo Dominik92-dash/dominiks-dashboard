@@ -846,6 +846,39 @@ body.mobile .vault-lock-btn{
 .archive-notes-list{display:grid;gap:10px;padding:0 12px 12px}
 .archive-notes-list[hidden]{display:none}
 .note-card.archived{background:#eef0f2;border-color:var(--category-border);box-shadow:none}
+/* Notizen: anheften und umsortieren */
+.note-card[draggable="true"]{cursor:grab}
+.note-card[draggable="true"]:active{cursor:grabbing}
+.note-card.item-dragging{opacity:.38}
+.note-card.item-drop-target{
+ outline:2px dashed var(--accent);
+ outline-offset:2px
+}
+.note-card.pinned{
+ border-color:#c9d9ea;
+ box-shadow:0 2px 8px rgba(31,45,61,.08)
+}
+.note-pin-mark{
+ flex:0 0 auto;
+ font-size:11px;
+ line-height:1;
+ opacity:.75
+}
+.note-head .actions .pin-btn{
+ border:1px solid #dfe6ee;
+ background:#fff;
+ font-size:13px;
+ opacity:.45
+}
+.note-head .actions .pin-btn:hover{opacity:.85}
+.note-head .actions .pin-btn.is-pinned{
+ border-color:#bcd0e2;
+ background:var(--accent-soft);
+ opacity:1
+}
+/* Innerhalb der Karte bleiben Schaltflaechen normal bedienbar. */
+.note-card[draggable="true"] button{cursor:pointer}
+
 /* Geteilte Ansicht: zwei Reiter untereinander, jeder mit eigenem Bildlauf. */
 body.split-view:not(.mobile) main{
  display:grid;
@@ -2509,7 +2542,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 36.0 vom 08.09.2026, 16:43';
+const DASHBOARD_RELEASE='Dashboard 37.0 vom 08.09.2026, 16:56';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -2782,6 +2815,7 @@ function createDefaults(){
   meta:{title:"Dominik's Übersicht",subtitle:'Notizen, Projekte und Aufgaben',quickNote:'',userName:''},
   config:{
    navOrder:['home','notes','tasks','projects','own','delegated'],
+   noteOrderVersion:1,
    navLabels:clone(DEFAULT_PAGE_LABELS),
    deletedPages:[],
    appearance:{
@@ -3211,6 +3245,7 @@ function normalizeState(raw){
    if(label)result.config.navLabels[page]=label.slice(0,60);
   });
  }
+ result.config.noteOrderVersion=source.config?.noteOrderVersion===1?1:0;
  const available=allowed.filter(page=>!result.config.deletedPages.includes(page));
  result.config.navOrder=Array.isArray(source.config?.navOrder)
   ?source.config.navOrder.filter(item=>available.includes(item))
@@ -3237,8 +3272,18 @@ function normalizeState(raw){
    area:String(item.area??item.category??''),
    content:String(item.content??item.body??item.text??''),
    archived:Boolean(item.archived),
+   pinned:Boolean(item.pinned),
    updatedAt:String(item.updatedAt||item.modifiedAt||now())
   }));
+
+ // Einmalige Umstellung auf feste Reihenfolge: Notizen wurden frueher
+ // stets nach Aenderungsdatum angezeigt. Damit beim ersten Start nach
+ // der Umstellung nichts springt, wird genau diese Reihenfolge in die
+ // Liste uebernommen. Danach bestimmt die Liste selbst die Anzeige.
+ if(result.config.noteOrderVersion!==1){
+  result.notes.sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
+  result.config.noteOrderVersion=1;
+ }
 
  const shared=result.config.shared;
  const doneStatusId=shared.statuses.find(item=>item.kind==='done')?.id
@@ -4348,7 +4393,9 @@ function renderHome(){
 }
 
 function renderNoteCard(note,{archived=false}={}){
- return`<article class="note-card ${archived?'archived':''}" data-note-id="${note.id}">
+ // Nur nicht archivierte Notizen lassen sich anheften und umsortieren.
+ return`<article class="note-card ${archived?'archived':''}${note.pinned&&!archived?' pinned':''}"
+   data-note-id="${note.id}"${archived?'':' draggable="true"'}>
   <div class="note-head">
    <div class="note-main">
     <h3>${esc(note.title||'Ohne Überschrift')}</h3>
@@ -4356,9 +4403,14 @@ function renderNoteCard(note,{archived=false}={}){
      <span class="small note-category">${esc(note.area||'Kein Bereich')}</span>
      <span class="small note-meta-sep" aria-hidden="true">·</span>
      <span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span>
+     ${note.pinned&&!archived?'<span class="note-pin-mark" title="Angeheftet" aria-label="Angeheftet">📌</span>':''}
     </div>
    </div>
    <div class="actions">
+    ${archived?'':`<button type="button" class="icon pin-btn${note.pinned?' is-pinned':''}"
+      data-action="toggle-note-pin"
+      title="${note.pinned?'Lösen':'Oben anheften'}"
+      aria-label="${note.pinned?'Lösen':'Oben anheften'}">📌</button>`}
     <button type="button" class="icon open-btn" data-action="open-note" title="Öffnen">⛶</button>
     ${archived
       ?'<button type="button" class="icon restore-btn" data-action="restore-note" title="Aus Archiv wiederherstellen">↥</button>'
@@ -4370,9 +4422,10 @@ function renderNoteCard(note,{archived=false}={}){
  </article>`;
 }
 function renderNotes(){
- const activeNotes=state.notes
-  .filter(note=>!note.archived)
-  .sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
+ // Angepinnte Notizen stehen oben, sonst gilt die manuelle Reihenfolge
+ // aus der Liste. Innerhalb beider Gruppen bleibt sie unveraendert.
+ const aktive=state.notes.filter(note=>!note.archived);
+ const activeNotes=[...aktive.filter(n=>n.pinned),...aktive.filter(n=>!n.pinned)];
 
  const archivedNotes=state.notes
   .filter(note=>note.archived)
@@ -6939,6 +6992,12 @@ document.addEventListener('click',event=>{
    case'delete-quick-todo':deleteQuickTodo(action.closest('[data-quick-todo-id]').dataset.quickTodoId);break;
    case'toggle-quick-todo-archive':quickTodoArchiveOpen=!quickTodoArchiveOpen;renderTasks();break;
    case'clear-quick-todo-archive':clearCompletedQuickTodos();break;
+   case'toggle-note-pin':{
+    const id=action.closest('[data-note-id]')?.dataset.noteId;
+    const note=state.notes.find(item=>item.id===id);
+    if(note)commit(()=>{note.pinned=!note.pinned});
+    break;
+   }
    case'vault-toggle-secret':{
     const input=action.closest('.vault-secret-cell')?.querySelector('[data-vault-field="secret"]');
     if(input){
@@ -7365,6 +7424,17 @@ function readDashboardDrag(event){
  catch{return null}
 }
 document.addEventListener('dragstart',event=>{
+ // Notizen werden an der ganzen Karte gezogen, nicht aus den Schaltflaechen.
+ const noteCardDrag=event.target.closest('.note-card[draggable="true"]');
+ if(noteCardDrag){
+  if(event.target.closest('button')){event.preventDefault();return}
+  noteCardDrag.classList.add('item-dragging');
+  event.dataTransfer.effectAllowed='move';
+  event.dataTransfer.setData('application/x-dashboard-item',JSON.stringify({
+   kind:'note',id:noteCardDrag.dataset.noteId
+  }));
+  return;
+ }
  const delegatedItemRow=event.target.closest('[data-delegated-key]');
  if(delegatedItemRow){
   delegatedItemRow.classList.add('item-dragging');
@@ -7450,6 +7520,9 @@ document.addEventListener('dragover',event=>{
  const subtaskRow=event.target.closest('[data-work-subtask-id]');
  if(subtaskRow){event.preventDefault();subtaskRow.classList.add('subtask-drop-target')}
 
+ const noteCardOver=event.target.closest('.note-card[draggable="true"]');
+ if(noteCardOver){event.preventDefault();noteCardOver.classList.add('item-drop-target')}
+
  const delegatedItemRow=event.target.closest('[data-delegated-key]');
  if(delegatedItemRow){event.preventDefault();delegatedItemRow.classList.add('item-drop-target')}
 
@@ -7463,6 +7536,7 @@ document.addEventListener('dragleave',event=>{
  event.target.closest('#nav button')?.classList.remove('drop-target');
  event.target.closest('.option-row')?.classList.remove('drop-target');
  event.target.closest('[data-work-subtask-id]')?.classList.remove('subtask-drop-target');
+ event.target.closest('.note-card')?.classList.remove('item-drop-target');
  event.target.closest('[data-delegated-key]')?.classList.remove('item-drop-target');
  event.target.closest('.todo-row,.work-row,.project-row')?.classList.remove('item-drop-target');
  event.target.closest('[data-work-drop],[data-own-drop],[data-delegated-drop],[data-project-drop]')?.classList.remove('item-group-target');
@@ -7515,6 +7589,24 @@ document.addEventListener('drop',event=>{
   commit(()=>{reorderRelative(item.subtasks,payload.id,targetId,placeAfter);item.updatedAt=now()});
   expandedWorkItemIds.add(payload.workId);
   if(current.workId===payload.workId&&$('#work-overlay').classList.contains('open'))renderWorkSubtasks();
+  return;
+ }
+
+ const targetNote=event.target.closest('.note-card[draggable="true"]');
+ if(payload.kind==='note'&&targetNote){
+  event.preventDefault();
+  const gezogenId=payload.id,zielId=targetNote.dataset.noteId;
+  if(gezogenId&&zielId&&gezogenId!==zielId){
+   const gezogen=state.notes.find(n=>n.id===gezogenId);
+   const ziel=state.notes.find(n=>n.id===zielId);
+   // Umsortiert wird nur innerhalb derselben Gruppe, damit angeheftete
+   // Notizen nicht versehentlich ihre Eigenschaft verlieren.
+   if(gezogen&&ziel&&Boolean(gezogen.pinned)===Boolean(ziel.pinned)){
+    const rect=targetNote.getBoundingClientRect();
+    const danach=event.clientY>=rect.top+(rect.height/2);
+    commit(()=>reorderRelative(state.notes,gezogenId,zielId,danach));
+   }
+  }
   return;
  }
 
