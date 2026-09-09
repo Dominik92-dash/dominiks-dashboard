@@ -147,7 +147,7 @@
 .toolbar-select.compact{min-width:96px}
 .color-btn{width:27px;height:27px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px var(--border);cursor:pointer}
 .color-btn.active{box-shadow:0 0 0 2px var(--accent)}
-.note-editor-shell{min-height:calc(100vh - 58px)}
+
 .note-toolbar{position:sticky;top:0;z-index:3}
 .rich-editor{position:relative;flex:1;min-height:420px;padding:27px 31px 48px;outline:0;line-height:1.6;background:#fff}
 .rich-editor:empty::before,.rich-editor.editor-empty::before{content:attr(data-placeholder);position:absolute;top:27px;left:31px;color:#9099a3;pointer-events:none}
@@ -613,7 +613,17 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  opacity:.85
 }
 /* Fußbereich der Seitenleiste: schiebt Schloss und Version nach unten. */
-.sidebar-foot{margin-top:auto;padding-top:16px}
+.sidebar-foot{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ margin-top:auto;
+ padding-top:16px
+}
+.sidebar-foot .vault-lock-btn{flex:0 0 auto}
+.sidebar-foot .sidebar-search{flex:1 1 auto;margin-bottom:0;min-width:0}
+/* Die Trefferliste klappt nach oben auf, weil unten kein Platz ist. */
+.sidebar-foot .search-results{top:auto;bottom:calc(100% + 5px)}
 /* Passwortablage: kleine quadratische Schaltfläche ohne Beschriftung. */
 .vault-lock-btn{
  display:inline-grid;
@@ -819,22 +829,32 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  text-transform:uppercase;
  letter-spacing:.04em
 }
-body.mobile .sidebar-patch{
- margin-top:8px;
- padding-top:0;
- text-align:right;
- font-size:9px
-}
+body.mobile .sidebar-patch{display:none}
 /* Mobil sitzt die Seitenleiste als Kopfbereich – der Fußbereich braucht
    deshalb keinen automatischen Abstand nach oben. Der Schloss-Button wandert
    dort per JavaScript in die obere Werkzeugleiste. */
-body.mobile .sidebar-foot{display:none}
+/* Mobil enthaelt der Fussbereich nur die Suche, weil das Schloss per
+   Skript in die obere Werkzeugleiste wandert. Die Reihenfolge bildet
+   die gewohnte Anordnung ab: Titel, Werkzeuge, Suche, Reiter. */
+body.mobile .sidebar-foot{
+ display:block;
+ margin-top:8px;
+ padding-top:0
+}
+body.mobile .brand{order:1}
+body.mobile .tools{order:2}
+body.mobile .sidebar-foot{order:3}
+body.mobile .nav{order:4}
+body.mobile .sidebar-patch{order:5}
+body.mobile .sidebar-foot .search-results{top:calc(100% + 5px);bottom:auto}
 body.mobile .vault-lock-btn{
  flex:0 0 36px;
  width:36px;
  height:36px;
- border:0;
- background:transparent!important
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#fff!important;
+ opacity:1
 }
 
 
@@ -846,6 +866,129 @@ body.mobile .vault-lock-btn{
 .archive-notes-list{display:grid;gap:10px;padding:0 12px 12px}
 .archive-notes-list[hidden]{display:none}
 .note-card.archived{background:#eef0f2;border-color:var(--category-border);box-shadow:none}
+/* ------------------------------------------------------------------
+   Notizen: eingebettete Detailansicht
+   Die Notiz liegt innerhalb der Seite statt in einem Overlay, damit
+   die geteilte Ansicht erhalten bleibt.
+   ------------------------------------------------------------------ */
+.note-detail{display:flex;flex-direction:column;min-height:0}
+.note-detail[hidden]{display:none}
+.note-detail-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ flex-wrap:wrap;
+ margin-bottom:14px
+}
+.note-back{
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#fff;
+ padding:7px 12px;
+ color:var(--text);
+ font-size:13px;
+ font-weight:600;
+ cursor:pointer
+}
+.note-back:hover{background:var(--accent-soft)}
+.note-detail-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.note-detail-actions .secondary,
+.note-detail-actions .danger{padding:7px 12px;font-size:13px}
+.note-save-status{color:var(--muted);font-size:12px}
+.note-detail-meta{margin-bottom:12px}
+.note-title-input{
+ width:100%;
+ border:0;
+ border-bottom:1px solid transparent;
+ padding:2px 0;
+ background:transparent;
+ font-size:26px;
+ font-weight:700;
+ color:var(--text);
+ outline:0
+}
+.note-title-input:focus{border-bottom-color:var(--border)}
+.note-detail-subline{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
+.note-area-input{
+ width:260px;
+ max-width:100%;
+ padding:6px 9px;
+ border:1px solid var(--border);
+ border-radius:8px;
+ font-size:13px
+}
+.note-detail-date{color:var(--muted);font-size:12px}
+/* Die Werkzeugleiste bleibt beim Scrollen langer Notizen sichtbar. */
+.note-detail .note-toolbar{
+ position:sticky;
+ top:0;
+ z-index:20;
+ margin-bottom:12px;
+ border-radius:10px;
+ background:#fff;
+ box-shadow:0 2px 8px rgba(31,45,61,.06)
+}
+.note-detail .rich-editor{
+ flex:1 1 auto;
+ min-height:340px;
+ padding:16px 18px;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:#fff;
+ outline:0
+}
+body.mobile .note-title-input{font-size:21px}
+body.mobile .note-detail-actions{width:100%;justify-content:flex-end}
+/* In der geteilten Ansicht scrollt die Notiz innerhalb ihrer Haelfte. */
+body.split-view:not(.mobile) .note-detail .note-toolbar{top:-26px}
+
+/* ------------------------------------------------------------------
+   Druckausgabe: nur die geoeffnete Notiz mit Titel und Inhalt.
+   ------------------------------------------------------------------ */
+@media print{
+ .sidebar,.overlay,.note-detail-head,.note-toolbar,
+ .quick-note,.notes-archive,#new-note-btn,#nav-context-menu,
+ .filters,.page-header p{display:none!important}
+ body{background:#fff;color:#000}
+ .app{display:block}
+ main{padding:0!important;height:auto!important;overflow:visible!important;display:block!important}
+ .page{display:none!important}
+ body.note-detail-open #page-notes{display:block!important}
+ body.note-detail-open #notes-list-view{display:none!important}
+ .note-detail{display:block!important}
+ .note-title-input{
+  border:0;
+  font-size:22pt;
+  font-weight:700;
+  color:#000
+ }
+ .note-detail-meta{margin-bottom:10pt}
+ .note-detail-subline{gap:8pt}
+ .note-area-input{border:0;padding:0;font-size:10pt;color:#444}
+ .note-detail-date{font-size:10pt;color:#444}
+ .rich-editor{
+  min-height:0!important;
+  padding:0!important;
+  border:0!important;
+  font-size:11pt;
+  line-height:1.5
+ }
+ .rich-editor a{color:#000;text-decoration:underline}
+ @page{margin:18mm}
+}
+
+/* Auf- und Zuklappen nutzen dasselbe Zeichen. Der offene Zustand wird
+   gedreht, damit beide Pfeile garantiert gleich gross erscheinen. */
+.work-expand-btn,.completed-toggle,.drehpfeil,#archive-arrow{
+ display:inline-grid;
+ place-items:center;
+ line-height:1
+}
+.work-expand-btn.is-open,.completed-toggle.is-open,.drehpfeil.is-open,#archive-arrow.is-open{
+ transform:rotate(180deg)
+}
+
 /* Notizen: anheften und umsortieren */
 .note-card[draggable="true"]{cursor:grab}
 .note-card[draggable="true"]:active{cursor:grabbing}
@@ -1028,6 +1171,10 @@ body.mobile .home-tile{padding:12px}
  white-space:nowrap
 }
 .note-meta-sep{color:var(--muted);opacity:.6}
+/* Mobil ist in der Kartenzeile kein Platz fuer den Zeitpunkt.
+   Er steht stattdessen in der geoeffneten Notiz. */
+body.mobile .note-meta-line .note-meta-sep,
+body.mobile .note-meta-line .note-meta-date{display:none}
 .archive-btn{background:#edf0f3;color:#4e6172;font-size:16px}
 .restore-btn{background:#e8f3eb;color:#2f7040;font-size:17px}
 
@@ -1838,7 +1985,8 @@ body.mobile .work-inline-subtask{
  width:100%;
  min-width:0;
  max-width:100%;
- padding:9px 0;
+ gap:6px;
+ padding:10px 0 10px 14px;
  overflow:visible;
  border:0;
  border-radius:0;
@@ -2114,15 +2262,15 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
       <button type="button" id="settings-btn" class="tool" title="Einstellungen">⚙</button>
       <button type="button" id="sync-status-btn" class="tool sync-indicator" data-state="offline" title="Cloud-Status" aria-label="Cloud-Status">○</button>
     </div>
-    <div class="sidebar-search">
-      <input type="search" id="global-search" placeholder="Suchen …" aria-label="Volltextsuche" autocomplete="off">
-      <div id="global-search-results" class="search-results" hidden></div>
-    </div>
     <nav id="nav" class="nav"></nav>
     <div class="sidebar-foot">
       <button type="button" id="vault-lock-btn" class="tool vault-lock-btn" title="Passwörter" aria-label="Passwörter">
         <span class="vault-lock-icon" aria-hidden="true">🔒</span>
       </button>
+      <div class="sidebar-search">
+        <input type="search" id="global-search" placeholder="Suchen …" aria-label="Volltextsuche" autocomplete="off">
+        <div id="global-search-results" class="search-results" hidden></div>
+      </div>
     </div>
     <div class="sidebar-patch" id="app-version-patch" aria-label="Dashboard-Version"></div>
   </aside>
@@ -2139,27 +2287,94 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
     </section>
 
     <section id="page-notes" class="page">
-      <header class="page-header"><div><h2>Notizen</h2><p>Gedanken, Informationen und Erinnerungen.</p></div><button type="button" id="new-note-btn" class="primary">Neue Notiz</button></header>
-      <section class="quick-note">
-        <div class="quick-note-head">
-          <label for="quick-note-editor"><span class="quick-note-icon" aria-hidden="true">⚡︎</span>Schnelle Notizen</label>
-          <div class="quick-note-toolbar" aria-label="Formatierung für schnelle Notizen">
-            <button type="button" class="quick-note-tool" data-quick-command="bold" title="Fett"><strong>F</strong></button>
-            <button type="button" class="quick-note-tool" data-quick-command="insertUnorderedList" title="Aufzählung">• Liste</button>
-            <button type="button" class="quick-note-tool" data-quick-command="insertOrderedList" title="Nummerierte Liste">1. Liste</button>
+      <div id="notes-list-view">
+        <header class="page-header"><div><h2>Notizen</h2><p>Gedanken, Informationen und Erinnerungen.</p></div><button type="button" id="new-note-btn" class="primary">Neue Notiz</button></header>
+        <section class="quick-note">
+          <div class="quick-note-head">
+            <label for="quick-note-editor"><span class="quick-note-icon" aria-hidden="true">⚡︎</span>Schnelle Notizen</label>
+            <div class="quick-note-toolbar" aria-label="Formatierung für schnelle Notizen">
+              <button type="button" class="quick-note-tool" data-quick-command="bold" title="Fett"><strong>F</strong></button>
+              <button type="button" class="quick-note-tool" data-quick-command="bullet" title="Aufzählung">• Liste</button>
+              <button type="button" class="quick-note-tool" data-quick-command="ordered" title="Nummerierte Liste">1. Liste</button>
+            </div>
+          </div>
+          <div id="quick-note-editor" class="quick-note-editor" contenteditable="true"
+               data-placeholder="Kurz etwas notieren …" aria-label="Schnelle Notizen"></div>
+        </section>
+        <div id="notes-list" class="note-list"></div>
+        <section class="notes-archive">
+          <button id="archive-toggle" class="archive-toggle" type="button" aria-expanded="false">
+            <span>Archiv</span>
+            <span class="archive-toggle-meta"><span id="archive-count">0</span><span id="archive-arrow">▾</span></span>
+          </button>
+          <div id="archive-notes-list" class="archive-notes-list" hidden></div>
+        </section>
+      </div>
+
+      <article id="note-detail-view" class="note-detail" hidden>
+        <header class="note-detail-head">
+          <button type="button" id="note-back-btn" class="note-back" aria-label="Zurück zur Übersicht">← Übersicht</button>
+          <div class="note-detail-actions">
+            <span id="note-save-status" class="note-save-status">Gespeichert</span>
+            <button type="button" id="note-print-btn" class="secondary" title="Notiz drucken">Drucken</button>
+            <button type="button" id="note-archive-btn" class="secondary">Archivieren</button>
+            <button type="button" id="delete-note-detail" class="danger">Löschen</button>
+          </div>
+        </header>
+        <div class="note-detail-meta">
+          <input id="note-title" class="note-title-input" placeholder="Überschrift">
+          <div class="note-detail-subline">
+            <input id="note-area" class="note-area-input" placeholder="Bereich">
+            <span id="note-detail-date" class="note-detail-date"></span>
           </div>
         </div>
-        <div id="quick-note-editor" class="quick-note-editor" contenteditable="true"
-             data-placeholder="Kurz etwas notieren …" aria-label="Schnelle Notizen"></div>
-      </section>
-      <div id="notes-list" class="note-list"></div>
-      <section class="notes-archive">
-        <button id="archive-toggle" class="archive-toggle" type="button" aria-expanded="false">
-          <span>Archiv</span>
-          <span class="archive-toggle-meta"><span id="archive-count">0</span><span id="archive-arrow">▾</span></span>
-        </button>
-        <div id="archive-notes-list" class="archive-notes-list" hidden></div>
-      </section>
+<div id="note-toolbar" class="toolbar note-toolbar" role="toolbar" aria-label="Textformatierung">
+    <div class="toolbar-group">
+      <select id="note-block-format" class="toolbar-select" aria-label="Absatzformat" title="Absatzformat">
+        <option value="p">Standardtext</option>
+        <option value="h2">Überschrift 1</option>
+        <option value="h3">Überschrift 2</option>
+        <option value="blockquote">Zitat</option>
+      </select>
+    </div>
+    <div class="toolbar-group">
+      <button type="button" class="toolbar-btn" data-note-command="bold" aria-label="Fett" title="Fett (Strg+B)"><strong>F</strong></button>
+      <button type="button" class="toolbar-btn" data-note-command="italic" aria-label="Kursiv" title="Kursiv (Strg+I)"><em>K</em></button>
+      <button type="button" class="toolbar-btn" data-note-command="underline" aria-label="Unterstrichen" title="Unterstrichen (Strg+U)"><u>U</u></button>
+      <button type="button" class="toolbar-btn" data-note-command="strikeThrough" aria-label="Durchgestrichen" title="Durchgestrichen"><s>D</s></button>
+    </div>
+    <div class="toolbar-group">
+      <select id="note-font-size" class="toolbar-select compact" aria-label="Schriftgröße" title="Schriftgröße">
+        <option value="">Standard</option>
+        <option value="12">12 px</option>
+        <option value="14">14 px</option>
+        <option value="16">16 px</option>
+        <option value="18">18 px</option>
+        <option value="22">22 px</option>
+        <option value="28">28 px</option>
+      </select>
+    </div>
+    <div id="note-color-buttons" class="toolbar-group" aria-label="Schriftfarbe"></div>
+    <div class="toolbar-group">
+      <button type="button" class="toolbar-btn" data-note-command="insertUnorderedList" aria-label="Aufzählung" title="Aufzählung">• Liste</button>
+      <button type="button" class="toolbar-btn" data-note-command="insertOrderedList" aria-label="Nummerierte Liste" title="Nummerierte Liste">1. Liste</button>
+      <button type="button" id="note-checklist-btn" class="toolbar-btn" aria-label="Checkliste" title="Checkliste">☐ Liste</button>
+      <button type="button" class="toolbar-btn" data-note-command="outdent" aria-label="Einzug verkleinern" title="Einzug verkleinern">←</button>
+      <button type="button" class="toolbar-btn" data-note-command="indent" aria-label="Einzug vergrößern" title="Einzug vergrößern">→</button>
+    </div>
+    <div class="toolbar-group">
+      <button type="button" id="note-link-btn" class="toolbar-btn" aria-label="Link einfügen oder ändern" title="Link einfügen oder ändern (Strg+K)">Link</button>
+      <button type="button" id="note-clear-format-btn" class="toolbar-btn" aria-label="Formatierung entfernen" title="Formatierung entfernen">Format löschen</button>
+    </div>
+    <div class="toolbar-group toolbar-history">
+      <button type="button" id="note-undo-btn" class="toolbar-btn" aria-label="Rückgängig" title="Rückgängig (Strg+Z)">↶</button>
+      <button type="button" id="note-redo-btn" class="toolbar-btn" aria-label="Wiederholen" title="Wiederholen (Strg+Y)">↷</button>
+    </div>
+  </div>
+        <div id="note-editor" class="rich-editor" contenteditable="true" role="textbox"
+             aria-multiline="true" spellcheck="true"
+             data-placeholder="Notiz eingeben …"></div>
+      </article>
     </section>
 
     <section id="page-tasks" class="page">
@@ -2214,57 +2429,6 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
     <span id="vault-dialog-note"></span>
     <button type="button" id="vault-submit-btn" class="primary">Bestätigen</button>
   </footer>
-</div></section>
-
-<section id="note-overlay" class="overlay"><div class="shell note-editor-shell">
-  <header class="editor-head"><div><input id="note-title" class="title-large" placeholder="Überschrift"><input id="note-area" style="margin-top:9px;width:320px;max-width:100%;padding:8px;border:1px solid var(--border);border-radius:8px" placeholder="Bereich"></div><button type="button" class="close-btn" data-close-overlay="note">×</button></header>
-  <div id="note-toolbar" class="toolbar note-toolbar" role="toolbar" aria-label="Textformatierung">
-    <div class="toolbar-group">
-      <select id="note-block-format" class="toolbar-select" aria-label="Absatzformat" title="Absatzformat">
-        <option value="p">Standardtext</option>
-        <option value="h2">Überschrift 1</option>
-        <option value="h3">Überschrift 2</option>
-        <option value="blockquote">Zitat</option>
-      </select>
-    </div>
-    <div class="toolbar-group">
-      <button type="button" class="toolbar-btn" data-note-command="bold" aria-label="Fett" title="Fett (Strg+B)"><strong>F</strong></button>
-      <button type="button" class="toolbar-btn" data-note-command="italic" aria-label="Kursiv" title="Kursiv (Strg+I)"><em>K</em></button>
-      <button type="button" class="toolbar-btn" data-note-command="underline" aria-label="Unterstrichen" title="Unterstrichen (Strg+U)"><u>U</u></button>
-      <button type="button" class="toolbar-btn" data-note-command="strikeThrough" aria-label="Durchgestrichen" title="Durchgestrichen"><s>D</s></button>
-    </div>
-    <div class="toolbar-group">
-      <select id="note-font-size" class="toolbar-select compact" aria-label="Schriftgröße" title="Schriftgröße">
-        <option value="">Standard</option>
-        <option value="12">12 px</option>
-        <option value="14">14 px</option>
-        <option value="16">16 px</option>
-        <option value="18">18 px</option>
-        <option value="22">22 px</option>
-        <option value="28">28 px</option>
-      </select>
-    </div>
-    <div id="note-color-buttons" class="toolbar-group" aria-label="Schriftfarbe"></div>
-    <div class="toolbar-group">
-      <button type="button" class="toolbar-btn" data-note-command="insertUnorderedList" aria-label="Aufzählung" title="Aufzählung">• Liste</button>
-      <button type="button" class="toolbar-btn" data-note-command="insertOrderedList" aria-label="Nummerierte Liste" title="Nummerierte Liste">1. Liste</button>
-      <button type="button" id="note-checklist-btn" class="toolbar-btn" aria-label="Checkliste" title="Checkliste">☐ Liste</button>
-      <button type="button" class="toolbar-btn" data-note-command="outdent" aria-label="Einzug verkleinern" title="Einzug verkleinern">←</button>
-      <button type="button" class="toolbar-btn" data-note-command="indent" aria-label="Einzug vergrößern" title="Einzug vergrößern">→</button>
-    </div>
-    <div class="toolbar-group">
-      <button type="button" id="note-link-btn" class="toolbar-btn" aria-label="Link einfügen oder ändern" title="Link einfügen oder ändern (Strg+K)">Link</button>
-      <button type="button" id="note-clear-format-btn" class="toolbar-btn" aria-label="Formatierung entfernen" title="Formatierung entfernen">Format löschen</button>
-    </div>
-    <div class="toolbar-group toolbar-history">
-      <button type="button" id="note-undo-btn" class="toolbar-btn" aria-label="Rückgängig" title="Rückgängig (Strg+Z)">↶</button>
-      <button type="button" id="note-redo-btn" class="toolbar-btn" aria-label="Wiederholen" title="Wiederholen (Strg+Y)">↷</button>
-    </div>
-  </div>
-  <div id="note-editor" class="rich-editor" contenteditable="true" role="textbox"
-       aria-multiline="true" spellcheck="true"
-       data-placeholder="Notiz eingeben …"></div>
-  <footer class="editor-foot"><span id="note-save-status">Gespeichert</span><button type="button" id="delete-note-detail" class="danger">Notiz löschen</button></footer>
 </div></section>
 
 <section id="todo-overlay" class="overlay"><div class="shell">
@@ -2542,7 +2706,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 37.0 vom 08.09.2026, 16:56';
+const DASHBOARD_RELEASE='Dashboard 38.0 vom 09.09.2026, 17:50';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -2919,21 +3083,6 @@ function findOption(list,value){
  if(raw===undefined||raw===null)return null;
  const text=String(raw);
  return list.find(item=>item.id===text)||list.find(item=>item.label.toLowerCase()===text.toLowerCase())||null;
-}
-function resolveOrAdd(config,section,group,value,fallbackId){
- const list=config[section][group];
- const found=findOption(list,value);
- if(found)return found.id;
- const raw=typeof value==='object'?(value?.label||value?.name||value?.id):value;
- if(raw!==undefined&&raw!==null&&String(raw).trim()){
-  const label=String(raw).replace(/^custom:/,'').trim();
-  let id=`custom-${slug(label)}-${Math.random().toString(16).slice(2,7)}`;
-  while(list.some(item=>item.id===id))id=`${id}-x`;
-  const created=group==='statuses'?status(id,label,'#eeeeee',inferKind(id,label)):option(id,label);
-  list.push(created);
-  return id;
- }
- return fallbackId||list[0]?.id||'';
 }
 function mergeLegacyOptions(defaultList,sourceLists,{statusGroup=false,prefix='shared'}={}){
  const result=clone(defaultList);
@@ -3974,8 +4123,22 @@ async function resetCloudConnection(){
 function snapshot(){return JSON.stringify(state)}
 function checkpoint(){const value=snapshot();if(historyPast.at(-1)!==value)historyPast.push(value);if(historyPast.length>100)historyPast.shift();historyFuture=[];renderHistoryButtons()}
 function commit(mutator){checkpoint();mutator();saveState();renderAll()}
+// Eine Notiz ist geoeffnet, wenn die Detailansicht sichtbar ist.
+// Wechselt zwischen Notizliste und geoeffneter Notiz. Beides liegt
+// innerhalb der Seite, damit die geteilte Ansicht erhalten bleibt.
+function zeigeNotizDetail(offen){
+ const liste=$('#notes-list-view'),detail=$('#note-detail-view');
+ if(!liste||!detail)return;
+ liste.hidden=Boolean(offen);
+ detail.hidden=!offen;
+ document.body.classList.toggle('note-detail-open',Boolean(offen));
+}
+function noteDetailOpen(){
+ const view=$('#note-detail-view');
+ return Boolean(view&&!view.hidden);
+}
 function refreshOpenEditorAfterHistory(){
- if($('#note-overlay').classList.contains('open')&&current.noteId){
+ if(noteDetailOpen()&&current.noteId){
   const note=state.notes.find(item=>item.id===current.noteId);
   if(note){
    $('#note-title').value=note.title;
@@ -4019,7 +4182,7 @@ function redo(){
  renderHistoryButtons();
 }
 function richEditorHistory(command){
- if($('#note-overlay').classList.contains('open')){
+ if(noteDetailOpen()){
   return command==='undo'?noteEditorUndo():noteEditorRedo();
  }
 
@@ -4037,7 +4200,7 @@ function richEditorHistory(command){
 function performUndo(){if(!richEditorHistory('undo'))undo()}
 function performRedo(){if(!richEditorHistory('redo'))redo()}
 function renderHistoryButtons(){
- const noteOpen=$('#note-overlay').classList.contains('open');
+ const noteOpen=noteDetailOpen();
  const noteUndo=noteEditorState.historyPast.length>0;
  const noteRedo=noteEditorState.historyFuture.length>0;
  $('#undo-btn').disabled=noteOpen?!noteUndo:!historyPast.length;
@@ -4111,23 +4274,6 @@ function options(section,group){
 
 function optionById(section,group,id){return options(section,group).find(item=>item.id===id)||null}
 function optionLabel(section,group,id){return optionById(section,group,id)?.label||''}
-function optionColor(section,id){return optionById(section,'statuses',id)?.color||'#eeeeee'}
-function optionKind(section,id){return optionById(section,'statuses',id)?.kind||'active'}
-function readableTextColor(hex){return defaultStatusTextColor(hex)}
-function statusStyle(section,id){
- const selectedStatus=optionById(section,'statuses',id);
- const background=selectedStatus?.color||'#eeeeee';
- const textColor=selectedStatus?.textColor||defaultStatusTextColor(background);
- const normalized=String(background||'').toLowerCase();
- const palette={
-  '#fff6df':'#f1d89d',
-  '#eaf4ff':'#b9d8f6',
-  '#f3ebff':'#d9c3f3',
-  '#eaf8ee':'#bfe4ca'
- };
- const border=palette[normalized]||background;
- return`background:${background};border-color:${border};color:${textColor}`;
-}
 function selectOptions(section,group,selected,{custom=false}={}){let html=options(section,group).map(item=>`<option value="${esc(item.id)}" ${item.id===selected?'selected':''}>${esc(item.label)}</option>`).join('');if(custom)html+='<option value="__custom__">Sonstiges …</option>';return html}
 function addCustomOption(section,group,label){const clean=String(label||'').trim();if(!clean)return null;const existing=options(section,group).find(item=>item.label.toLowerCase()===clean.toLowerCase());if(existing)return existing.id;const created=group==='statuses'?status(`custom-${uid()}`,clean,'#eeeeee','active'):option(`custom-${uid()}`,clean);sectionConfig(section)[group].push(created);return created.id}
 function handleCustomSelect(select,section,group){if(select.value!=='__custom__')return select.value;const label=prompt('Neue Auswahl eingeben:')?.trim();if(!label)return null;return addCustomOption(section,group,label)}
@@ -4248,7 +4394,8 @@ function openOverlay(name){
  renderHistoryButtons();
 }
 function closeOverlays(){
- const noteWasOpen=$('#note-overlay')?.classList.contains('open');
+ const noteWasOpen=noteDetailOpen();
+ if(noteWasOpen)zeigeNotizDetail(false);
  if(noteWasOpen){
   flushCurrentNoteSave();
   current.noteId=null;
@@ -4259,11 +4406,6 @@ function closeOverlays(){
  document.body.style.overflow='';
  if(noteWasOpen)renderNotes();
  renderHistoryButtons();
-}
-function textFromHtml(html){
- const div=document.createElement('div');
- div.innerHTML=html||'';
- return(div.textContent||'').replace(/\s+/g,' ').trim();
 }
 function previewTextFromHtml(html){
  const root=document.createElement('div');
@@ -4392,6 +4534,14 @@ function renderHome(){
  </button>`).join('');
 }
 
+// Einheitliche Datumsanzeige ohne Sekunden.
+function formatiereZeitpunkt(wert){
+ const d=new Date(wert);
+ if(Number.isNaN(d.getTime()))return '';
+ return d.toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',
+  hour:'2-digit',minute:'2-digit'});
+}
+
 function renderNoteCard(note,{archived=false}={}){
  // Nur nicht archivierte Notizen lassen sich anheften und umsortieren.
  return`<article class="note-card ${archived?'archived':''}${note.pinned&&!archived?' pinned':''}"
@@ -4402,7 +4552,7 @@ function renderNoteCard(note,{archived=false}={}){
     <div class="note-meta-line">
      <span class="small note-category">${esc(note.area||'Kein Bereich')}</span>
      <span class="small note-meta-sep" aria-hidden="true">·</span>
-     <span class="small">${new Date(note.updatedAt).toLocaleString('de-DE')}</span>
+     <span class="small note-meta-date">${formatiereZeitpunkt(note.updatedAt)}</span>
      ${note.pinned&&!archived?'<span class="note-pin-mark" title="Angeheftet" aria-label="Angeheftet">📌</span>':''}
     </div>
    </div>
@@ -4436,7 +4586,8 @@ function renderNotes(){
   :'<div class="empty">Noch keine Notizen.</div>';
 
  $('#archive-count').textContent=String(archivedNotes.length);
- $('#archive-arrow').textContent=archiveOpen?'▴':'▾';
+ $('#archive-arrow').textContent='▾';
+ $('#archive-arrow').classList.toggle('is-open',archiveOpen);
  $('#archive-toggle').setAttribute('aria-expanded',String(archiveOpen));
 
  const archiveList=$('#archive-notes-list');
@@ -4560,14 +4711,14 @@ function renderQuickTodoGroup(){
   <div class="group-head">
    ${workGroupHeading('Schnelle Todos',{kind:'quick'})}
    <div class="group-meta"><span class="count">${active.length}</span>
-    <button type="button" class="completed-toggle" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">${open?'▴':'▾'}</button>
+    <button type="button" class="completed-toggle${open?' is-open':''}" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">▾</button>
     <button type="button" class="quick-add" data-action="add-quick-todo">+</button></div>
   </div>
   <div class="quick-todo-list" ${open?'':'hidden'}>${active.length?active.map(item=>renderQuickTodoRow(item)).join(''):'<div class="empty">Keine schnellen Todos.</div>'}</div>
   ${completed.length?`<div class="quick-todo-archive">
    <div class="quick-todo-archive-head">
     <button type="button" class="quick-todo-archive-toggle" data-action="toggle-quick-todo-archive" aria-expanded="${quickTodoArchiveOpen}">
-     <span>${quickTodoArchiveOpen?'▴':'▾'}</span><span>Erledigte schnelle Todos (${completed.length})</span>
+     <span class="drehpfeil${quickTodoArchiveOpen?' is-open':''}">▾</span><span>Erledigte schnelle Todos (${completed.length})</span>
     </button>
     <button type="button" class="quick-todo-clear-all" data-action="clear-quick-todo-archive">Alle löschen</button>
    </div>
@@ -4632,13 +4783,13 @@ function renderWorkItemRow(item){
    <select class="status-select" data-work-field="statusId" style="${statusStyle('tasks',item.statusId)}">${selectOptions('tasks','statuses',item.statusId)}</select>
    <div class="work-actions">
     <button type="button" class="icon open-btn" data-action="open-work"
-            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗</button>
+            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗︎</button>
     <button type="button" class="icon delete-btn" data-action="delete-work"
             title="Löschen" aria-label="Löschen">×</button>
-    <button type="button" class="icon work-expand-btn"
+    <button type="button" class="icon work-expand-btn${expanded?' is-open':''}"
             data-action="toggle-work-expand"
             title="${expanded?'Zuklappen':'Unteraufgaben aufklappen'}"
-            aria-label="${expanded?'Zuklappen':'Unteraufgaben aufklappen'}">${expanded?'▴':'▾'}</button>
+            aria-label="${expanded?'Zuklappen':'Unteraufgaben aufklappen'}">▾</button>
    </div>
   </div>
   <div class="work-expanded">
@@ -4688,7 +4839,7 @@ function renderTasks(){
   const categoryKey=`tasks:${group.id}`;
   const open=completed?isCompletedOpen('tasks'):!isCategoryCollapsed(categoryKey);
   return`<section class="group work-group ${completed?'completed-group':''}" data-work-drop="${group.id}">
-   <div class="group-head">${workGroupHeading(group.label,{id:group.id})}<div class="group-meta"><span class="count">${items.length}</span>${completed?`<button type="button" class="completed-toggle" data-action="toggle-completed" data-completed-section="tasks" aria-expanded="${open}">${open?'▴':'▾'}</button>`:`<button type="button" class="completed-toggle" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">${open?'▴':'▾'}</button><button type="button" class="quick-add" data-action="quick-work" data-priority-id="${group.id}">+</button>`}</div></div>
+   <div class="group-head">${workGroupHeading(group.label,{id:group.id})}<div class="group-meta"><span class="count">${items.length}</span>${completed?`<button type="button" class="completed-toggle${open?' is-open':''}" data-action="toggle-completed" data-completed-section="tasks" aria-expanded="${open}">▾</button>`:`<button type="button" class="completed-toggle${open?' is-open':''}" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">▾</button><button type="button" class="quick-add" data-action="quick-work" data-priority-id="${group.id}">+</button>`}</div></div>
    <div class="list completed-list" ${open?'':'hidden'}>${items.length?items.map(renderWorkItemRow).join(''):'<div class="empty">Keine Aufgaben oder Projekte.</div>'}</div>
   </section>`;
  }).join('');
@@ -4831,8 +4982,8 @@ function renderOwn(){
     <div class="group-meta">
      <span class="count">${items.length}</span>
      ${completed
-      ?`<button type="button" class="completed-toggle" data-action="toggle-completed"
-          data-completed-section="own" aria-expanded="${open}">${open?'▴':'▾'}</button>`
+      ?`<button type="button" class="completed-toggle${open?' is-open':''}" data-action="toggle-completed"
+          data-completed-section="own" aria-expanded="${open}">▾</button>`
       :`<button type="button" class="quick-add" data-action="quick-own"
           data-priority-id="${group.id}">+</button>`
      }
@@ -4952,7 +5103,7 @@ function renderDelegatedEntryRow(entry){
            style="${statusStyle('subtasks',entry.statusId)}">${selectOptions('subtasks','statuses',entry.statusId)}</select>
    <div class="work-actions">
     <button type="button" class="icon open-btn" data-action="open-work-from-delegated"
-            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗</button>
+            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗︎</button>
     <button type="button" class="icon delete-btn" data-action="delete-delegated-subtask"
             title="Löschen" aria-label="Löschen">×</button>
    </div>
@@ -4974,7 +5125,7 @@ function renderDelegatedEntryRow(entry){
           style="${statusStyle('delegated',entry.statusId)}">${selectOptions('delegated','statuses',entry.statusId)}</select>
   <div class="work-actions">
    <button type="button" class="icon open-btn" data-action="open-todo"
-           title="Großansicht öffnen" aria-label="Großansicht öffnen">↗</button>
+           title="Großansicht öffnen" aria-label="Großansicht öffnen">↗︎</button>
    <button type="button" class="icon delete-btn" data-action="delete-todo"
            title="Löschen" aria-label="Löschen">×</button>
   </div>
@@ -5026,7 +5177,7 @@ function renderDelegated(){
      ${delegatedPersonHeading(personId)}
      <div class="group-meta">
       <span class="count">${total}</span>
-      <button type="button" class="completed-toggle" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">${open?'▴':'▾'}</button>
+      <button type="button" class="completed-toggle${open?' is-open':''}" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">▾</button>
       <button type="button" class="quick-add" data-action="quick-delegated" data-person-id="${esc(personId)}" title="Neue Aufgabe für diese Person">+</button>
      </div>
     </div>
@@ -5042,8 +5193,8 @@ function renderDelegated(){
      ${workGroupHeading('Erledigt',{id:'__completed__'})}
      <div class="group-meta">
       <span class="count">${completedCount}</span>
-      <button type="button" class="completed-toggle" data-action="toggle-completed"
-              data-completed-section="delegated" aria-expanded="${completedOpen}">${completedOpen?'▴':'▾'}</button>
+      <button type="button" class="completed-toggle${completedOpen?' is-open':''}" data-action="toggle-completed"
+              data-completed-section="delegated" aria-expanded="${completedOpen}">▾</button>
      </div>
     </div>
     <div class="list completed-list" ${completedOpen?'':'hidden'}>
@@ -5158,8 +5309,8 @@ function renderProjects(){
     <div class="group-meta">
      <span class="count">${items.length}</span>
      ${completed
-      ?`<button type="button" class="completed-toggle" data-action="toggle-completed"
-          data-completed-section="projects" aria-expanded="${open}">${open?'▴':'▾'}</button>`
+      ?`<button type="button" class="completed-toggle${open?' is-open':''}" data-action="toggle-completed"
+          data-completed-section="projects" aria-expanded="${open}">▾</button>`
       :`<button type="button" class="quick-add" data-action="quick-project"
           data-priority-id="${group.id}">+</button>`
      }
@@ -5258,8 +5409,8 @@ function openNote(id){
  $('#note-title').value=note.title;
  $('#note-area').value=note.area;
  loadNoteEditorContent(note.content);
- $('#note-overlay').classList.add('open');
- document.body.style.overflow='hidden';
+ $('#note-detail-date').textContent=formatiereZeitpunkt(note.updatedAt);
+ zeigeNotizDetail(true);
  setTimeout(()=>$('#note-editor')?.focus(),0);
  renderHistoryButtons();
 }
@@ -5300,22 +5451,6 @@ function createTodo(type,{open=true,priorityId=null,completed=false,personId=nul
 function openTodo(id,type){ensureTodoDoneStatus(type);const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});openOverlay('todo')}
 function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===current.todoId);if(!todo)return;todo.title=$('#todo-title').value.trim();todo.summary=$('#todo-summary').value;todo.details=$('#todo-details').value;todo.areaId=$('#todo-area').value;const selectedPriority=$('#todo-priority').value;if(!todoIsCompleted(todo,current.todoType)){todo.priorityId=selectedPriority;todo.previousPriorityId=selectedPriority}else{todo.previousPriorityId=selectedPriority}setTodoStatus(todo,current.todoType,$('#todo-status').value);if(current.todoType==='delegated')todo.personId=$('#todo-person').value;todo.updatedAt=now();$('#todo-status').style.cssText=statusStyle(current.todoType,todo.statusId);saveState()}
 function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});closeOverlays()}
-function toggleTodo(id,type){commit(()=>{const todo=(type==='own'?state.ownTodos:state.delegatedTodos).find(item=>item.id===id);if(!todo)return;const next=todoIsCompleted(todo,type)?todoOpenStatus(type):todoDoneStatus(type);if(next)setTodoStatus(todo,type,next.id);todo.updatedAt=now()})}
-
-function createProject({open=true,priorityId=null}={}){
- const project={
-  id:uid(),
-  title:'',
-  summary:'',
-  areaId:options('projects','areas')[0]?.id||'',
-  priorityId:priorityId||options('projects','priorities')[0]?.id||'',
-  deadline:'',
-  subtasks:[],
-  updatedAt:now()
- };
- commit(()=>state.projects.unshift(project));
- if(open)openProject(project.id);
-}
 function openProject(id){
  const project=state.projects.find(item=>item.id===id);
  if(!project)return;
@@ -5601,7 +5736,12 @@ function restoreQuickNoteSelection(){
 }
 function quickNoteCommand(command){
  restoreQuickNoteSelection();
- document.execCommand(command,false,null);
+ if(command==='bullet'||command==='ordered'){
+  // Auch hier ohne Browserbefehl, damit sich beide Editoren gleich verhalten.
+  document.execCommand(command==='ordered'?'insertOrderedList':'insertUnorderedList',false,null);
+ }else{
+  document.execCommand(command,false,null);
+ }
  saveQuickNoteSelection();
  state.meta.quickNote=$('#quick-note-editor').innerHTML;
  saveState();
@@ -6208,6 +6348,9 @@ function loadNoteEditorContent(html){
 function noteCommand(command,value=null){
  const editor=$('#note-editor');
  if(!editor)return;
+ // Listen werden bewusst selbst aufgebaut, nicht ueber den Browserbefehl.
+ if(command==='insertUnorderedList')return noteToggleList('bullet');
+ if(command==='insertOrderedList')return noteToggleList('ordered');
  restoreNoteSelection();
  noteEditorCheckpoint({force:true,inputType:`command:${command}`});
  noteEditorState.historyLocked=true;
@@ -6250,41 +6393,133 @@ function applyNoteFontSize(value){
  scheduleCurrentNoteSave();
  updateNoteToolbarState();
 }
-function currentNoteList(){
- let node=getSelection().anchorNode;
- if(node?.nodeType===3)node=node.parentElement;
- return node?.closest?.('ul,ol')||null;
-}
-function toggleNoteChecklist(){
- restoreNoteSelection();
- const existing=currentNoteList();
- noteEditorCheckpoint({force:true,inputType:'command:checklist'});
- noteEditorState.historyLocked=true;
+// ---------------------------------------------------------------
+//  Listenlogik ohne document.execCommand
+//  Der Browserbefehl arbeitet bei Listen je nach Cursorposition
+//  unterschiedlich. Deshalb werden Listen hier selbst aufgebaut.
+// ---------------------------------------------------------------
 
- if(existing?.classList.contains('note-checklist')){
-  existing.classList.remove('note-checklist');
-  existing.querySelectorAll(':scope > li').forEach(item=>{
-   delete item.dataset.checked;
-   item.removeAttribute('role');
-   item.removeAttribute('aria-checked');
+// Liefert alle Bloecke, die von der aktuellen Auswahl beruehrt werden.
+function noteBlocksInSelection(){
+ const editor=$('#note-editor');
+ const sel=window.getSelection();
+ if(!editor||!sel||!sel.rangeCount)return[];
+ const range=sel.getRangeAt(0);
+ const bloecke=[...editor.children].filter(el=>{
+  const r=document.createRange();
+  r.selectNodeContents(el);
+  return range.compareBoundaryPoints(Range.END_TO_START,r)<0
+      && range.compareBoundaryPoints(Range.START_TO_END,r)>0;
+ });
+ if(bloecke.length)return bloecke;
+ let knoten=range.startContainer;
+ while(knoten&&knoten.parentNode!==editor)knoten=knoten.parentNode;
+ return knoten?[knoten]:[];
+}
+
+// Merkt sich die Auswahl anhand von Textpositionen, damit sie nach dem
+// Umbau des Dokumentbaums wiederhergestellt werden kann.
+function noteSelectionOffsets(){
+ const editor=$('#note-editor');
+ const sel=window.getSelection();
+ if(!editor||!sel||!sel.rangeCount)return null;
+ const range=sel.getRangeAt(0);
+ const vor=range.cloneRange();
+ vor.selectNodeContents(editor);
+ vor.setEnd(range.startContainer,range.startOffset);
+ const start=vor.toString().length;
+ return{start,laenge:range.toString().length};
+}
+function noteRestoreOffsets(pos){
+ const editor=$('#note-editor');
+ if(!editor||!pos)return;
+ const gehe=(ziel)=>{
+  const lauf=document.createTreeWalker(editor,NodeFilter.SHOW_TEXT);
+  let gezaehlt=0,knoten;
+  while((knoten=lauf.nextNode())){
+   const laenge=knoten.textContent.length;
+   if(gezaehlt+laenge>=ziel)return{knoten,offset:ziel-gezaehlt};
+   gezaehlt+=laenge;
+  }
+  return null;
+ };
+ const a=gehe(pos.start),b=gehe(pos.start+pos.laenge);
+ if(!a)return;
+ const range=document.createRange();
+ range.setStart(a.knoten,a.offset);
+ if(b)range.setEnd(b.knoten,b.offset); else range.collapse(true);
+ const sel=window.getSelection();
+ sel.removeAllRanges();
+ sel.addRange(range);
+}
+
+// Wandelt die ausgewaehlten Bloecke in eine Liste des gewuenschten Typs
+// um. Ist der Typ bereits gesetzt, wird die Liste wieder aufgeloest.
+function noteToggleList(typ){
+ const editor=$('#note-editor');
+ if(!editor)return;
+ // Die Auswahl muss VOR dem Fokussieren gelesen werden: Ein Klick auf die
+ // Werkzeugleiste nimmt dem Editor den Fokus, und focus() setzt den Cursor
+ // dann an den Anfang zurueck.
+ restoreNoteSelection();
+ noteEditorCheckpoint({inputType:'liste'});
+ const pos=noteSelectionOffsets();
+ const bloecke=noteBlocksInSelection();
+ if(!bloecke.length){noteEditorCheckpoint({inputType:'liste'});return}
+
+ const tag=typ==='ordered'?'OL':'UL';
+ const istChecklist=typ==='checklist';
+ const passend=el=>{
+  if(el.tagName!=='UL'&&el.tagName!=='OL')return false;
+  if(istChecklist)return el.classList.contains('note-checklist');
+  return el.tagName===tag&&!el.classList.contains('note-checklist');
+ };
+ const alleSchonSo=bloecke.every(passend);
+
+ if(alleSchonSo){
+  // Liste aufloesen: jedes Element wird ein eigener Absatz
+  bloecke.forEach(liste=>{
+   const absaetze=[...liste.children].map(li=>{
+    const p=document.createElement('p');
+    p.innerHTML=li.innerHTML.replace(/^<label[^>]*>.*?<\/label>/,'')||'<br>';
+    return p;
+   });
+   absaetze.forEach(x=>liste.parentNode.insertBefore(x,liste));
+   liste.remove();
   });
  }else{
-  if(!existing||existing.tagName!=='UL'){
-   document.execCommand('insertUnorderedList',false,null);
-  }
-  const list=currentNoteList();
-  if(list){
-   list.classList.add('note-checklist');
-   [...list.children].forEach(item=>{
-    item.dataset.checked=item.dataset.checked==='true'?'true':'false';
-   });
-  }
+  // In eine gemeinsame Liste umwandeln
+  const liste=document.createElement(istChecklist?'ul':tag.toLowerCase());
+  if(istChecklist)liste.className='note-checklist';
+  bloecke[0].parentNode.insertBefore(liste,bloecke[0]);
+  bloecke.forEach(block=>{
+   if(block.tagName==='UL'||block.tagName==='OL'){
+    [...block.children].forEach(li=>liste.appendChild(li));
+    block.remove();
+   }else{
+    const li=document.createElement('li');
+    li.innerHTML=block.innerHTML||'<br>';
+    liste.appendChild(li);
+    block.remove();
+   }
+  });
+  if(istChecklist)[...liste.children].forEach(li=>{
+   if(!li.querySelector('input[type="checkbox"]')){
+    li.innerHTML='<label><input type="checkbox"><span>'+li.innerHTML+'</span></label>';
+   }
+  });
  }
- noteEditorState.historyLocked=false;
  normalizeChecklistDom();
+ editor.focus();
+ noteRestoreOffsets(pos);
  saveNoteSelection();
- scheduleCurrentNoteSave();
+ updateNoteEditorEmptyState();
  updateNoteToolbarState();
+ scheduleCurrentNoteSave();
+}
+
+function toggleNoteChecklist(){
+ noteToggleList('checklist');
 }
 function toggleChecklistItem(item){
  if(!item?.closest('ul.note-checklist'))return false;
@@ -7932,6 +8167,11 @@ bind('#backup-file-input','change',async event=>{
 
 // Direct controls
 bind('#new-note-btn','click',createNote);
+bind('#note-back-btn','click',()=>{flushCurrentNoteSave();closeOverlays()});
+bind('#note-print-btn','click',()=>window.print());
+bind('#note-archive-btn','click',()=>{
+ if(current.noteId){const id=current.noteId;closeOverlays();archiveNote(id)}
+});
 bind('#new-delegated-btn','click',()=>createTodo('delegated',{open:true}));
 // Startseite: Kacheln springen auf den jeweiligen Reiter
 bind('#home-tiles','click',event=>{
@@ -7994,10 +8234,10 @@ bind('#archive-toggle','click',()=>{
 bind('#add-work-subtask-btn','click',()=>addWorkSubtask(current.workId));
 bind('#add-subtask-btn','click',()=>addSubtask(current.projectId));
 bind('#undo-btn','mousedown',event=>{
- if($('#note-overlay').classList.contains('open')||document.activeElement===$('#quick-note-editor'))event.preventDefault();
+ if(noteDetailOpen()||document.activeElement===$('#quick-note-editor'))event.preventDefault();
 });
 bind('#redo-btn','mousedown',event=>{
- if($('#note-overlay').classList.contains('open')||document.activeElement===$('#quick-note-editor'))event.preventDefault();
+ if(noteDetailOpen()||document.activeElement===$('#quick-note-editor'))event.preventDefault();
 });
 bind('#undo-btn','click',performUndo);
 bind('#redo-btn','click',performRedo);
