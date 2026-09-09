@@ -2706,7 +2706,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 38.0 vom 09.09.2026, 17:50';
+const DASHBOARD_RELEASE='Dashboard 38.1 vom 09.09.2026, 18:07';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -4272,8 +4272,48 @@ function options(section,group){
   :[];
 }
 
+// ---------------------------------------------------------------
+//  Farb- und Statushilfen
+// ---------------------------------------------------------------
+
+// Waehlt zu einer Hintergrundfarbe eine gut lesbare Schriftfarbe.
+function readableTextColor(color){
+ const value=String(color||'').replace('#','').toLowerCase();
+ if(!/^[0-9a-f]{6}$/i.test(value))return'#1f2933';
+ const r=parseInt(value.slice(0,2),16);
+ const g=parseInt(value.slice(2,4),16);
+ const b=parseInt(value.slice(4,6),16);
+ return(r*299+g*587+b*114)/1000>150?'#1f2933':'#ffffff';
+}
+
+// Mischt eine Farbe anteilig in Richtung Schwarz, fuer den Rahmen der
+// Statusfelder. Anteil 0 laesst die Farbe unveraendert.
+function darkenColor(color,anteil){
+ const value=String(color||'').replace('#','').toLowerCase();
+ if(!/^[0-9a-f]{6}$/i.test(value))return'#d7dfe8';
+ const teil=i=>{
+  const n=parseInt(value.slice(i,i+2),16);
+  return Math.max(0,Math.min(255,Math.round(n*(1-anteil)))).toString(16).padStart(2,'0');
+ };
+ return'#'+teil(0)+teil(2)+teil(4);
+}
+
+// Liefert die Inline-Formatierung eines Statusfeldes: Hintergrund,
+// Rahmen und Schriftfarbe des jeweiligen Bearbeitungsstands.
+function statusStyle(section,id){
+ const item=optionById(section,'statuses',id);
+ if(!item)return'';
+ const hintergrund=/^#[0-9a-f]{6}$/i.test(String(item.color||''))?item.color:'#eeeeee';
+ const schrift=/^#[0-9a-f]{6}$/i.test(String(item.textColor||''))
+  ?item.textColor
+  :defaultStatusTextColor(hintergrund);
+ return`background:${hintergrund};border-color:${darkenColor(hintergrund,.18)};color:${schrift}`;
+}
+
 function optionById(section,group,id){return options(section,group).find(item=>item.id===id)||null}
 function optionLabel(section,group,id){return optionById(section,group,id)?.label||''}
+// Liefert die Art eines Bearbeitungsstands (open, active, done).
+function optionKind(section,id){return optionById(section,'statuses',id)?.kind||''}
 function selectOptions(section,group,selected,{custom=false}={}){let html=options(section,group).map(item=>`<option value="${esc(item.id)}" ${item.id===selected?'selected':''}>${esc(item.label)}</option>`).join('');if(custom)html+='<option value="__custom__">Sonstiges …</option>';return html}
 function addCustomOption(section,group,label){const clean=String(label||'').trim();if(!clean)return null;const existing=options(section,group).find(item=>item.label.toLowerCase()===clean.toLowerCase());if(existing)return existing.id;const created=group==='statuses'?status(`custom-${uid()}`,clean,'#eeeeee','active'):option(`custom-${uid()}`,clean);sectionConfig(section)[group].push(created);return created.id}
 function handleCustomSelect(select,section,group){if(select.value!=='__custom__')return select.value;const label=prompt('Neue Auswahl eingeben:')?.trim();if(!label)return null;return addCustomOption(section,group,label)}
@@ -5451,6 +5491,24 @@ function createTodo(type,{open=true,priorityId=null,completed=false,personId=nul
 function openTodo(id,type){ensureTodoDoneStatus(type);const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});openOverlay('todo')}
 function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===current.todoId);if(!todo)return;todo.title=$('#todo-title').value.trim();todo.summary=$('#todo-summary').value;todo.details=$('#todo-details').value;todo.areaId=$('#todo-area').value;const selectedPriority=$('#todo-priority').value;if(!todoIsCompleted(todo,current.todoType)){todo.priorityId=selectedPriority;todo.previousPriorityId=selectedPriority}else{todo.previousPriorityId=selectedPriority}setTodoStatus(todo,current.todoType,$('#todo-status').value);if(current.todoType==='delegated')todo.personId=$('#todo-person').value;todo.updatedAt=now();$('#todo-status').style.cssText=statusStyle(current.todoType,todo.statusId);saveState()}
 function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});closeOverlays()}
+// Legt ein neues Projekt im bisherigen Projektbereich an.
+// Der Bereich ist bei diesem Nutzer geloescht; die Funktion bleibt fuer
+// Zustaende erhalten, in denen der Reiter noch vorhanden ist.
+function createProject({open=true,priorityId=null}={}){
+ const projekt={
+  id:uid(),
+  title:'',
+  summary:'',
+  areaId:options('projects','areas')[0]?.id||'',
+  priorityId:priorityId||options('projects','priorities')[0]?.id||'',
+  statusId:options('projects','statuses')[0]?.id||'',
+  deadline:'',
+  subtasks:[],
+  updatedAt:now()
+ };
+ commit(()=>state.projects.unshift(projekt));
+ if(open)openProject(projekt.id);
+}
 function openProject(id){
  const project=state.projects.find(item=>item.id===id);
  if(!project)return;
