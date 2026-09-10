@@ -839,6 +839,8 @@ body.mobile .sidebar-patch{display:none}
 body.mobile .sidebar-foot{
  display:block;
  margin-top:8px;
+ /* Abstand zur Reiterleiste, damit Suchfeld und Reiter nicht aneinanderstossen. */
+ margin-bottom:12px;
  padding-top:0
 }
 body.mobile .brand{order:1}
@@ -2706,7 +2708,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 38.1 vom 09.09.2026, 18:07';
+const DASHBOARD_RELEASE='Dashboard 38.2 vom 10.09.2026, 18:26';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
