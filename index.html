@@ -1278,16 +1278,9 @@ body:not(.mobile) .tools{justify-content:space-between;gap:0}
  color:var(--danger);
  font-weight:600
 }
-/* Schalter in der Kopfzeile der Aufgabenansicht. */
-.editor-head .head-action{
- flex:0 0 auto;
- height:32px;
- padding:0 13px;
- font-size:13px;
- white-space:nowrap
-}
+/* Vermerk zur zuletzt vorbereiteten Nachricht, in der Fußzeile. */
 .todo-mail-note{
- margin-top:-4px;
+ flex:1;
  color:var(--muted);
  font-size:12px
 }
@@ -2595,12 +2588,7 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
 </div></section>
 
 <section id="todo-overlay" class="overlay"><div class="shell">
-  <header class="editor-head">
-   <input id="todo-title" class="title-large" placeholder="Bezeichnung">
-   <button type="button" id="todo-mail-btn" class="secondary head-action">Als Mail vorbereiten</button>
-   <button type="button" id="todo-save-btn" class="primary head-action">Speichern</button>
-   <button type="button" class="close-btn" data-close-overlay="todo">×</button>
-  </header>
+  <header class="editor-head"><input id="todo-title" class="title-large" placeholder="Bezeichnung"><button type="button" class="close-btn" data-close-overlay="todo">×</button></header>
   <div class="detail-body"><div class="detail-grid">
     <div class="field full"><label>Anmerkungen für die Übersicht</label><textarea id="todo-summary"></textarea></div>
     <div class="field"><label>Aufgabenbereich</label><select id="todo-area"></select></div>
@@ -2608,10 +2596,9 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
     <div class="field"><label>Aktueller Stand</label><select id="todo-status"></select></div>
     <div class="field"><label>Priorität</label><select id="todo-priority"></select></div>
     <div class="field"><label>Deadline</label><input id="todo-deadline" type="date" min="2000-01-01" max="2100-12-31"></div>
-    <div id="todo-mail-note" class="field full todo-mail-note" hidden></div>
     <div class="field full"><label>Ausführliche Notizen</label><textarea id="todo-details" class="details-text"></textarea></div>
   </div></div>
-  <footer class="editor-foot"><span>Automatische Speicherung</span><button type="button" id="delete-todo-detail" class="danger">Aufgabe löschen</button></footer>
+  <footer class="editor-foot"><span>Automatische Speicherung</span><span id="todo-mail-note" class="todo-mail-note" hidden></span><button type="button" id="delete-todo-detail" class="danger">Aufgabe löschen</button></footer>
 </div></section>
 
 <section id="work-overlay" class="overlay"><div class="shell">
@@ -2876,7 +2863,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 43.0 vom 14.10.2026, 21:00';
+const DASHBOARD_RELEASE='Dashboard 43.1 vom 14.10.2026, 21:25';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben & Projekte',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -5777,7 +5764,7 @@ function deleteNote(id){
 }
 
 function createTodo(type,{open=true,priorityId=null,completed=false,personId=null}={}){const config=sectionConfig(type);const shouldComplete=completed||priorityId==='__completed__';const normalStatus=todoOpenStatus(type)?.id||config.statuses[0]?.id||'';const doneStatus=todoDoneStatus(type)?.id||normalStatus;const effectivePriority=priorityId&&priorityId!=='__completed__'?priorityId:(config.priorities[0]?.id||'');const todo={id:uid(),title:'',summary:'',details:'',statusId:shouldComplete?doneStatus:normalStatus,areaId:config.areas[0]?.id||'',personId:type==='delegated'?(personId||config.people[0]?.id||''):'',priorityId:effectivePriority,previousPriorityId:effectivePriority,deadline:'',mailPreparedAt:'',completed:shouldComplete,updatedAt:now()};commit(()=>state[type==='own'?'ownTodos':'delegatedTodos'].unshift(todo));if(open)openTodo(todo.id,type)}
-function openTodo(id,type){ensureTodoDoneStatus(type);const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-deadline').value=todo.deadline||'';$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});$('#todo-mail-btn').hidden=type!=='delegated';renderTodoMailNote(todo);openOverlay('todo')}
+function openTodo(id,type){ensureTodoDoneStatus(type);const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-deadline').value=todo.deadline||'';$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});renderTodoMailNote(todo);openOverlay('todo')}
 function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===current.todoId);if(!todo)return;todo.title=$('#todo-title').value.trim();todo.summary=$('#todo-summary').value;todo.details=$('#todo-details').value;todo.areaId=$('#todo-area').value;const selectedPriority=$('#todo-priority').value;if(!todoIsCompleted(todo,current.todoType)){todo.priorityId=selectedPriority;todo.previousPriorityId=selectedPriority}else{todo.previousPriorityId=selectedPriority}setTodoStatus(todo,current.todoType,$('#todo-status').value);todo.deadline=$('#todo-deadline').value;if(current.todoType==='delegated')todo.personId=$('#todo-person').value;todo.updatedAt=now();$('#todo-status').style.cssText=statusStyle(current.todoType,todo.statusId);saveState()}
 // Eine Aufgabe gilt als leer, wenn weder Bezeichnung noch eines der beiden
 // Notizfelder noch eine Deadline gefuellt ist. Nur dann wird sie beim
@@ -9902,18 +9889,6 @@ bind('#app-title','click',()=>{const value=prompt('Name der Übersicht:',state.m
 bind('#app-subtitle','click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
 bind('#delete-note-detail','click',()=>current.noteId&&deleteNote(current.noteId));
 bind('#delete-todo-detail','click',()=>current.todoId&&deleteTodo(current.todoId,current.todoType));
-bind('#todo-save-btn','click',()=>{
- if(!current.todoId)return;
- saveCurrentTodo();
- closeOverlays();
- current.todoId=null;
- renderAll();
-});
-bind('#todo-mail-btn','click',()=>{
- if(!current.todoId)return;
- saveCurrentTodo();
- oeffneMailVorlage(current.todoId);
-});
 bind('#mail-copy-btn','click',kopiereMailText);
 bind('#mail-copy-recipient','click',()=>kopiereMailFeld('mail-recipient','Die Adresse'));
 bind('#mail-copy-subject','click',()=>kopiereMailFeld('mail-subject','Der Betreff'));
