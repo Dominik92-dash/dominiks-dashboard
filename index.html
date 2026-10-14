@@ -2340,12 +2340,23 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
     </div>
     <div class="toolbar-group">
       <select id="note-font-size" class="toolbar-select compact" aria-label="Schriftgröße" title="Schriftgröße">
+        <option value="">gemischt</option>
+        <option value="10">10 px</option>
+        <option value="11">11 px</option>
         <option value="12">12 px</option>
+        <option value="13">13 px</option>
         <option value="14">14 px</option>
-        <option value="">16 px</option>
+        <option value="15">15 px</option>
+        <option value="16">16 px</option>
         <option value="18">18 px</option>
+        <option value="20">20 px</option>
         <option value="22">22 px</option>
+        <option value="24">24 px</option>
         <option value="28">28 px</option>
+        <option value="32">32 px</option>
+        <option value="36">36 px</option>
+        <option value="42">42 px</option>
+        <option value="48">48 px</option>
       </select>
     </div>
     <div id="note-color-buttons" class="toolbar-group" aria-label="Schriftfarbe"></div>
@@ -2699,7 +2710,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 40.0 vom 14.10.2026, 14:05';
+const DASHBOARD_RELEASE='Dashboard 41.0 vom 14.10.2026, 15:40';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -2996,7 +3007,7 @@ function createDefaults(){
     quickNoteBg:'#f3f8fe',
     quickNoteTitle:'#2a6ccc'
    },
-   noteColors:['#000000','#6f98bd','#73a982','#c97977','#c7a950'],
+   noteColors:['#000000','#0b57d0','#0f8a3c','#d61f26','#e06c00'],
    shared:{
     areas:clone(legacy.projects.areas),
     statuses:[
@@ -3375,14 +3386,32 @@ function normalizeState(raw){
   &&source.config.noteColors.length
   ?source.config.noteColors.map(String)
   :clone(defaults.config.noteColors);
- // Auf ausdrueckliche Anweisung: echtes Schwarz als erste Schriftfarbe, das
- // frueher voreingestellte Grau (#4f5964) entfaellt. Alle uebrigen eigenen
- // Farben bleiben unveraendert erhalten.
- result.config.noteColors=result.config.noteColors
-  .filter(color=>String(color).trim().toLowerCase()!=='#4f5964');
- if(!result.config.noteColors.some(color=>/^#?(?:000|000000)$/i.test(String(color).trim()))){
-  result.config.noteColors=['#000000',...result.config.noteColors];
+ // Einmalige Umstellung der Schriftfarben auf ausdrueckliche Anweisung:
+ // Grau entfaellt, echtes Schwarz kommt nach vorne, und die blassen
+ // Standardfarben werden durch satte ersetzt. Das Versionsflag sorgt dafuer,
+ // dass das genau EINMAL passiert - spaeter selbst gesetzte Farben bleiben
+ // danach unangetastet.
+ const noteColorVersion=Number(source.config?.noteColorVersion)||0;
+ if(noteColorVersion<1){
+  const blasseStandards={
+   '#4f5964':null,       // Grau - entfaellt
+   '#6f98bd':'#0b57d0',  // Blau
+   '#73a982':'#0f8a3c',  // Gruen
+   '#c97977':'#d61f26',  // Rot
+   '#c7a950':'#e06c00'   // Orange
+  };
+  result.config.noteColors=result.config.noteColors
+   .map(color=>{
+    const schluessel=String(color).trim().toLowerCase();
+    return schluessel in blasseStandards?blasseStandards[schluessel]:color;
+   })
+   .filter(Boolean);
+  if(!result.config.noteColors.some(color=>/^#?(?:000|000000)$/i.test(String(color).trim()))){
+   result.config.noteColors=['#000000',...result.config.noteColors];
+  }
+  if(!result.config.noteColors.length)result.config.noteColors=clone(defaults.config.noteColors);
  }
+ result.config.noteColorVersion=1;
 
  const allowed=['home','notes','tasks','projects','own','delegated'];
  result.config.deletedPages=Array.isArray(source.config?.deletedPages)
@@ -3396,6 +3425,7 @@ function normalizeState(raw){
   });
  }
  result.config.noteOrderVersion=source.config?.noteOrderVersion===1?1:0;
+ result.config.noteColorVersion=1;
  const available=allowed.filter(page=>!result.config.deletedPages.includes(page));
  result.config.navOrder=Array.isArray(source.config?.navOrder)
   ?source.config.navOrder.filter(item=>available.includes(item))
@@ -5748,40 +5778,6 @@ function flushCurrentNoteSave(){
  }
  if(current.noteId)saveCurrentNote();
 }
-function saveNoteSelection(){
- const selection=getSelection();
- const editor=$('#note-editor');
- if(selection.rangeCount&&editor.contains(selection.anchorNode)){
-  noteRange=selection.getRangeAt(0).cloneRange();
-  noteEditorState.selection=captureNoteSelectionBookmark();
- }
-}
-function restoreNoteSelection(){
- const editor=$('#note-editor');
- if(!editor)return;
- const selection=getSelection();
- // Eine Auswahl, die bereits im Editor liegt, ist immer die aktuellste. Sie
- // darf nicht durch einen gemerkten Bereich ueberschrieben werden - sonst
- // springt der Cursor beim Klick auf die Werkzeugleiste woanders hin.
- if(selection.rangeCount&&editor.contains(selection.getRangeAt(0).commonAncestorContainer)){
-  noteRange=selection.getRangeAt(0).cloneRange();
-  noteEditorState.selection=captureNoteSelectionBookmark();
-  return;
- }
- const gueltig=noteRange
-  &&noteRange.startContainer?.isConnected
-  &&noteRange.endContainer?.isConnected
-  &&editor.contains(noteRange.startContainer);
- if(gueltig){
-  selection.removeAllRanges();
-  selection.addRange(noteRange);
- }else if(noteEditorState.selection&&restoreNoteSelectionBookmark(noteEditorState.selection)){
-  saveNoteSelection();
- }else{
-  editor.focus();
-  placeCaretAtEnd(editor);
- }
-}
 // ===============================================================
 //  Schnelle Notizen - vollstaendig neu aufgebaut
 //
@@ -6316,130 +6312,16 @@ function qnAktualisiereAnzeige(){
  }
 }
 
-function nodePathFromRoot(root,node){
- const path=[];
- let currentNode=node;
- while(currentNode&&currentNode!==root){
-  const parent=currentNode.parentNode;
-  if(!parent)return null;
-  path.unshift([...parent.childNodes].indexOf(currentNode));
-  currentNode=parent;
- }
- return currentNode===root?path:null;
-}
-function nodeFromRootPath(root,path){
- let node=root;
- for(const index of path||[]){
-  if(!node?.childNodes?.length)return null;
-  node=node.childNodes[Math.min(index,node.childNodes.length-1)];
- }
- return node;
-}
-function clampRangeOffset(node,offset){
- if(!node)return 0;
- return node.nodeType===3
-  ?Math.min(Math.max(0,offset),node.nodeValue?.length||0)
-  :Math.min(Math.max(0,offset),node.childNodes?.length||0);
-}
-function captureNoteSelectionBookmark(){
- const editor=$('#note-editor');
- const selection=getSelection();
- if(!selection.rangeCount||!editor.contains(selection.anchorNode))return null;
- const range=selection.getRangeAt(0);
- const startPath=nodePathFromRoot(editor,range.startContainer);
- const endPath=nodePathFromRoot(editor,range.endContainer);
- if(!startPath||!endPath)return null;
- return{
-  startPath,
-  startOffset:range.startOffset,
-  endPath,
-  endOffset:range.endOffset
- };
-}
-function restoreNoteSelectionBookmark(bookmark){
- const editor=$('#note-editor');
- if(!bookmark)return false;
- const startNode=nodeFromRootPath(editor,bookmark.startPath);
- const endNode=nodeFromRootPath(editor,bookmark.endPath);
- if(!startNode||!endNode)return false;
- try{
-  const range=document.createRange();
-  range.setStart(startNode,clampRangeOffset(startNode,bookmark.startOffset));
-  range.setEnd(endNode,clampRangeOffset(endNode,bookmark.endOffset));
-  const selection=getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  noteRange=range.cloneRange();
-  return true;
- }catch{
-  return false;
- }
-}
 function noteInputGroup(inputType=''){
  if(/^insertText|^insertCompositionText|^deleteContent/.test(inputType))return'typing';
  if(/^insertParagraph|^insertLineBreak/.test(inputType))return'paragraph';
  return inputType||'edit';
 }
-function noteEditorSnapshot(){
- return{
-  html:$('#note-editor').innerHTML,
-  selection:captureNoteSelectionBookmark()
- };
-}
 function noteEditorCheckpoint({force=false,inputType='edit'}={}){
- if(noteEditorState.loading||noteEditorState.historyLocked)return;
- const group=noteInputGroup(inputType);
- const currentTime=Date.now();
- if(!force&&group===noteEditorState.lastInputGroup
-    &&currentTime-noteEditorState.lastInputAt<900){
-  noteEditorState.lastInputAt=currentTime;
-  return;
- }
- const snapshot=noteEditorSnapshot();
- const previous=noteEditorState.historyPast.at(-1);
- if(!previous||previous.html!==snapshot.html){
-  noteEditorState.historyPast.push(snapshot);
-  if(noteEditorState.historyPast.length>100)noteEditorState.historyPast.shift();
- }
- noteEditorState.historyFuture=[];
- noteEditorState.lastInputAt=currentTime;
- noteEditorState.lastInputGroup=group;
- renderHistoryButtons();
+ neMerkeVerlauf({gruppiert:!force&&noteInputGroup(inputType)==='typing'});
 }
-function applyNoteEditorSnapshot(snapshot){
- if(!snapshot)return false;
- noteEditorState.loading=true;
- noteEditorState.historyLocked=true;
- $('#note-editor').innerHTML=snapshot.html||'<p><br></p>';
- normalizeChecklistDom();
- updateNoteEditorEmptyState();
- noteEditorState.historyLocked=false;
- noteEditorState.loading=false;
- if(!restoreNoteSelectionBookmark(snapshot.selection)){
-  placeCaretAtEnd($('#note-editor'));
- }
- saveNoteSelection();
- scheduleCurrentNoteSave(0);
- updateNoteToolbarState();
- renderHistoryButtons();
- return true;
-}
-function noteEditorUndo(){
- if(!noteEditorState.historyPast.length)return false;
- noteEditorState.historyFuture.push(noteEditorSnapshot());
- const snapshot=noteEditorState.historyPast.pop();
- noteEditorState.lastInputAt=0;
- noteEditorState.lastInputGroup='';
- return applyNoteEditorSnapshot(snapshot);
-}
-function noteEditorRedo(){
- if(!noteEditorState.historyFuture.length)return false;
- noteEditorState.historyPast.push(noteEditorSnapshot());
- const snapshot=noteEditorState.historyFuture.pop();
- noteEditorState.lastInputAt=0;
- noteEditorState.lastInputGroup='';
- return applyNoteEditorSnapshot(snapshot);
-}
+function noteEditorUndo(){return neRueckgaengig()}
+function noteEditorRedo(){return neWiederherstellen()}
 function normalizeNoteUrl(value){
  let url=String(value||'').trim();
  if(!url)return'';
@@ -6457,7 +6339,7 @@ function safeNoteFontSize(value){
  const match=String(value||'').trim().match(/^(\d+(?:\.\d+)?)px$/i);
  if(!match)return'';
  const size=Number(match[1]);
- return Number.isFinite(size)&&size>=10&&size<=36?`${size}px`:'';
+ return Number.isFinite(size)&&size>=8&&size<=72?`${size}px`:'';
 }
 function firstTextNode(root){
  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
@@ -6872,860 +6754,972 @@ function plainTextToNoteHtml(text){
  });
  return root.innerHTML;
 }
-function updateNoteEditorEmptyState(){
- const editor=$('#note-editor');
- if(!editor)return;
- const clone=editor.cloneNode(true);
- clone.querySelectorAll('br').forEach(br=>br.remove());
- const hasContent=Boolean((clone.textContent||'').replace(/\u200b/g,'').trim()
-  ||clone.querySelector('table,img,hr'));
- editor.classList.toggle('editor-empty',!hasContent);
-}
-function serializeNoteEditorHtml(){
- const editor=$('#note-editor');
- if(!editor)return'';
- const cleaned=sanitizeNoteHtml(editor.innerHTML);
- const probe=document.createElement('div');
- probe.innerHTML=cleaned;
- const text=(probe.textContent||'').replace(/\u200b/g,'').trim();
- const meaningful=Boolean(text||probe.querySelector('table,ul,ol,blockquote,h2,h3'));
- return meaningful?cleaned:'';
-}
-function loadNoteEditorContent(html){
- clearTimeout(noteEditorState.saveTimer);
- noteEditorState.saveTimer=null;
- noteEditorState.loading=true;
- noteEditorState.historyLocked=true;
- const cleaned=sanitizeNoteHtml(html);
- const editor=$('#note-editor');
- editor.innerHTML=cleaned||'<p><br></p>';
- normalizeChecklistDom();
- updateNoteEditorEmptyState();
- noteEditorState.historyPast=[];
- noteEditorState.historyFuture=[];
- noteEditorState.lastInputAt=0;
- noteEditorState.lastInputGroup='';
- noteEditorState.lastBeforeInputType='';
- noteEditorState.savedHtml=serializeNoteEditorHtml();
- noteEditorState.selection=null;
- noteRange=null;
- noteEditorState.historyLocked=false;
- noteEditorState.loading=false;
- setNoteSaveStatus('Gespeichert');
- updateNoteToolbarState();
- renderHistoryButtons();
-}
-function noteCommand(command,value=null){
- const editor=$('#note-editor');
- if(!editor)return;
- // Listen werden bewusst selbst aufgebaut, nicht ueber den Browserbefehl.
- if(command==='insertUnorderedList')return noteToggleList('bullet');
- if(command==='insertOrderedList')return noteToggleList('ordered');
- focusNoteEditor();
- restoreNoteSelection();
- noteEditorCheckpoint({force:true,inputType:`command:${command}`});
- noteEditorState.historyLocked=true;
-
- const inlineArt={bold:'bold',italic:'italic',underline:'underline',strikeThrough:'strike'}[command];
- if(inlineArt){
-  rtToggleInline(editor,inlineArt);
- }else if(command==='foreColor'){
-  rtApplyColor(editor,value);
- }else{
-  let effectiveValue=value;
-  if(command==='formatBlock')effectiveValue=String(value||'p').toLowerCase();
-  // Nur noch Einzug vergroessern/verkleinern laufen ueber den Browserbefehl.
-  try{
-   const supported=document.queryCommandSupported?.(command)!==false;
-   if(supported)document.execCommand(command,false,effectiveValue);
-  }catch{/* nicht unterstuetzt */}
- }
-
- noteEditorState.historyLocked=false;
- normalizeChecklistDom();
- saveNoteSelection();
- scheduleCurrentNoteSave();
- updateNoteToolbarState();
-}
-// Die Absatzformat-Auswahl wurde auf Wunsch aus der Werkzeugleiste entfernt.
-// Die Funktion bleibt erhalten, damit bestehende Aufrufwege nicht brechen.
-function applyNoteBlockFormat(tag){
- const allowed=['p','h2','h3','blockquote'];
- noteCommand('formatBlock',allowed.includes(tag)?tag:'p');
-}
-function applyNoteFontSize(value){
- const size=value?Number.parseInt(value,10):null;
- if(size!==null&&![12,14,18,22,28].includes(size))return;
- const editor=focusNoteEditor();
- if(!editor)return;
- restoreNoteSelection();
- noteEditorCheckpoint({force:true,inputType:'command:fontSize'});
- noteEditorState.historyLocked=true;
- rtApplyFontSize(editor,size);
- noteEditorState.historyLocked=false;
- saveNoteSelection();
- scheduleCurrentNoteSave();
- updateNoteToolbarState();
-}
 // ===============================================================
-//  Rich-Text-Kern
-//  Gemeinsame Grundlage fuer den Notiz-Editor und die schnellen
-//  Notizen. Listen, Zeichenformate und Schriftfarben werden bewusst
-//  selbst aufgebaut: document.execCommand arbeitet je nach
-//  Cursorposition unterschiedlich und liefert bei Listen regelmaessig
-//  unbrauchbare Ergebnisse (ganze Listen statt einer Zeile, geloeschter
-//  Inhalt beim Zuruecknehmen). Die Logik hier arbeitet deshalb immer
-//  genau auf den Bloecken, die die Auswahl tatsaechlich beruehrt.
-// ===============================================================
-const RT_BLOCK_TAGS=['P','H2','H3','BLOCKQUOTE','LI','TD','TH'];
-const RT_BLOCK_SELECTOR='p,h2,h3,blockquote,li,td,th';
-const RT_CONTAINER_TAGS=['P','H2','H3','BLOCKQUOTE','UL','OL','TABLE','HR','DIV'];
-const RT_INLINE_TAGS={bold:'STRONG',italic:'EM',underline:'U',strike:'S'};
-// Auch alte Schreibweisen erkennen, damit bestehende Notizen funktionieren.
-const RT_INLINE_MATCH={bold:['STRONG','B'],italic:['EM','I'],underline:['U'],strike:['S','STRIKE','DEL']};
-
-// Aktueller Bereich, aber nur wenn er wirklich im uebergebenen Editor liegt.
-function rtRange(root){
- const selection=window.getSelection();
- if(!root||!selection||!selection.rangeCount)return null;
- const range=selection.getRangeAt(0);
- return root.contains(range.commonAncestorContainer)?range:null;
-}
-function rtSetRange(range){
- const selection=window.getSelection();
- selection.removeAllRanges();
- selection.addRange(range);
-}
-function rtPlaceCaretAtEnd(root){
- if(!root)return;
- const range=document.createRange();
- range.selectNodeContents(root);
- range.collapse(false);
- rtSetRange(range);
-}
-function rtPlaceCaretAtStart(element){
- if(!element)return;
- const range=document.createRange();
- range.selectNodeContents(element);
- range.collapse(true);
- rtSetRange(range);
-}
-// Innerster Block, in dem der Knoten liegt. Wichtig: Ein <li> zaehlt selbst
-// als Block, nicht die umgebende Liste. Genau daran scheiterte die alte
-// Logik, die immer die komplette Liste erwischt hat.
-function rtBlockOf(root,node){
- let element=node;
- if(element&&element.nodeType===3)element=element.parentNode;
- while(element&&element!==root){
-  if(RT_BLOCK_TAGS.includes(element.tagName))return element;
-  element=element.parentNode;
- }
- return null;
-}
-// Hebt lose Textknoten direkt unter der Wurzel in Absaetze, damit jede Zeile
-// einen eindeutigen Block besitzt. Ohne diesen Schritt hat eine frisch
-// getippte erste Zeile gar keinen Block und laesst sich nicht formatieren.
-function rtEnsureBlocks(root){
- if(!root)return false;
- let geaendert=false;
- let absatz=null;
- [...root.childNodes].forEach(node=>{
-  if(node.nodeType===1&&RT_CONTAINER_TAGS.includes(node.tagName)){absatz=null;return}
-  if(node.nodeType===8){node.remove();return}
-  if(node.nodeType===3&&!node.nodeValue.replace(/[\u200b\s]/g,'')&&!absatz)return;
-  if(!absatz){
-   absatz=document.createElement('p');
-   node.before(absatz);
-  }
-  absatz.appendChild(node);
-  geaendert=true;
- });
- if(!root.firstChild){
-  const leer=document.createElement('p');
-  leer.appendChild(document.createElement('br'));
-  root.appendChild(leer);
-  geaendert=true;
- }
- return geaendert;
-}
-// Alle Bloecke, die die Auswahl beruehrt. Bei zusammengefallener Auswahl
-// genau ein Block - die Zeile, in der der Cursor steht.
-function rtSelectedBlocks(root){
- const range=rtRange(root);
- if(!range)return[];
- if(range.collapsed){
-  const block=rtBlockOf(root,range.startContainer);
-  return block?[block]:[];
- }
- const treffer=[...root.querySelectorAll(RT_BLOCK_SELECTOR)].filter(element=>{
-  const vergleich=document.createRange();
-  vergleich.selectNodeContents(element);
-  return range.compareBoundaryPoints(Range.END_TO_START,vergleich)<=0
-      && range.compareBoundaryPoints(Range.START_TO_END,vergleich)>=0;
- });
- // Bei verschachtelten Listen nur die innersten Bloecke verwenden.
- return treffer.filter(element=>!treffer.some(other=>other!==element&&element.contains(other)));
-}
-// Merkt sich die Auswahl als Textposition, damit sie den Umbau des
-// Dokumentbaums ueberlebt.
-function rtOffsetsOfRange(root,range){
- if(!root||!range)return null;
- const vor=document.createRange();
- vor.selectNodeContents(root);
- vor.setEnd(range.startContainer,range.startOffset);
- return{start:vor.toString().length,laenge:range.toString().length};
-}
-function rtOffsets(root){
- return rtOffsetsOfRange(root,rtRange(root));
-}
-function rtRestoreOffsets(root,pos){
- if(!root||!pos)return;
- const finde=ziel=>{
-  const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-  let gezaehlt=0,knoten,randtreffer=null;
-  while((knoten=lauf.nextNode())){
-   const laenge=knoten.textContent.length;
-   // Liegt die Position genau auf einer Blockgrenze, passt sie auf das Ende
-   // des vorigen und auf den Anfang des naechsten Textknotens. Der naechste
-   // ist der richtige - sonst springt der Cursor eine Zeile nach oben.
-   if(gezaehlt+laenge>ziel)return{knoten,offset:ziel-gezaehlt};
-   if(gezaehlt+laenge===ziel)randtreffer={knoten,offset:laenge};
-   gezaehlt+=laenge;
-  }
-  return randtreffer;
- };
- const start=finde(pos.start);
- if(!start){rtPlaceCaretAtEnd(root);return}
- const range=document.createRange();
- range.setStart(start.knoten,start.offset);
- const ende=pos.laenge?finde(pos.start+pos.laenge):null;
- if(ende)range.setEnd(ende.knoten,ende.offset);
- else range.collapse(true);
- rtSetRange(range);
-}
-
-// ---------------------------------------------------------------
-//  Listen
-// ---------------------------------------------------------------
-function rtListTyp(item){
- const liste=item&&item.parentElement;
- if(!liste||!['UL','OL'].includes(liste.tagName))return null;
- if(liste.classList.contains('note-checklist'))return'checklist';
- return liste.tagName==='OL'?'ordered':'bullet';
-}
-// Loest genau einen Listenpunkt heraus und teilt die Liste dabei auf. Der
-// Inhalt bleibt in jedem Fall erhalten - auch bei der alten Struktur
-// <label><input type="checkbox"><span>Text</span></label>, die frueher samt
-// Text weggeworfen wurde.
-function rtUnwrapItem(item){
- const liste=item&&item.parentElement;
- if(!liste||!['UL','OL'].includes(liste.tagName))return null;
- const absatz=document.createElement('p');
- let quelle=item;
- const label=[...item.children].find(child=>child.tagName==='LABEL');
- if(label){
-  const span=[...label.children].find(child=>child.tagName==='SPAN');
-  quelle=span||label;
- }
- quelle.querySelectorAll('input').forEach(input=>input.remove());
- while(quelle.firstChild)absatz.appendChild(quelle.firstChild);
- if(!absatz.firstChild)absatz.appendChild(document.createElement('br'));
- const geschwister=[...liste.children];
- const danach=geschwister.slice(geschwister.indexOf(item)+1);
- liste.after(absatz);
- if(danach.length){
-  const rest=document.createElement(liste.tagName.toLowerCase());
-  if(liste.className)rest.className=liste.className;
-  danach.forEach(eintrag=>rest.appendChild(eintrag));
-  absatz.after(rest);
- }
- item.remove();
- if(!liste.children.length)liste.remove();
- return absatz;
-}
-// Fuegt eine neue Liste mit gleichartigen Nachbarlisten zusammen, damit aus
-// einer angehaengten Zeile keine zweite Liste entsteht.
-function rtMergeAdjacentList(liste){
- let ziel=liste;
- const gleichartig=other=>Boolean(other)
-  &&['UL','OL'].includes(other.tagName)
-  &&other.tagName===ziel.tagName
-  &&other.classList.contains('note-checklist')===ziel.classList.contains('note-checklist');
- const davor=ziel.previousElementSibling;
- if(gleichartig(davor)){
-  while(ziel.firstChild)davor.appendChild(ziel.firstChild);
-  ziel.remove();
-  ziel=davor;
- }
- const danach=ziel.nextElementSibling;
- if(gleichartig(danach)){
-  while(danach.firstChild)ziel.appendChild(danach.firstChild);
-  danach.remove();
- }
- return ziel;
-}
-function rtWrapBlocksIntoList(root,bloecke,typ){
- // Zuerst alles auf Absatzebene bringen, damit Listenpunkte anderer Art
- // einzeln herausgeloest werden und die uebrige Liste bestehen bleibt.
- const absaetze=bloecke
-  .map(block=>block.tagName==='LI'?rtUnwrapItem(block):block)
-  .filter(Boolean);
- if(!absaetze.length)return;
- const gruppen=[];
- absaetze.forEach(absatz=>{
-  const letzte=gruppen[gruppen.length-1];
-  if(letzte&&letzte[letzte.length-1].nextElementSibling===absatz)letzte.push(absatz);
-  else gruppen.push([absatz]);
- });
- gruppen.forEach(gruppe=>{
-  const liste=document.createElement(typ==='ordered'?'ol':'ul');
-  if(typ==='checklist')liste.className='note-checklist';
-  gruppe[0].before(liste);
-  gruppe.forEach(absatz=>{
-   const eintrag=document.createElement('li');
-   while(absatz.firstChild)eintrag.appendChild(absatz.firstChild);
-   if(!eintrag.firstChild)eintrag.appendChild(document.createElement('br'));
-   if(typ==='checklist'){
-    eintrag.dataset.checked='false';
-    eintrag.setAttribute('aria-checked','false');
-   }
-   liste.appendChild(eintrag);
-   absatz.remove();
-  });
-  rtMergeAdjacentList(liste);
- });
-}
-// Schaltet die beruehrten Zeilen auf den gewuenschten Listentyp um. Sind sie
-// alle schon so, wird nur fuer diese Zeilen die Liste aufgeloest.
-function rtToggleList(root,typ){
- if(!root)return false;
- const vorher=rtOffsets(root);
- if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
- const pos=rtOffsets(root);
- const bloecke=rtSelectedBlocks(root);
- if(!bloecke.length)return false;
- const alleSchonSo=bloecke.every(block=>block.tagName==='LI'&&rtListTyp(block)===typ);
- if(alleSchonSo)bloecke.forEach(block=>rtUnwrapItem(block));
- else rtWrapBlocksIntoList(root,bloecke,typ);
- rtRestoreOffsets(root,pos);
- return true;
-}
-// Enter auf einer leeren Listenzeile verlaesst die Liste. Ohne das kommt man
-// aus einer Aufzaehlung nicht mehr heraus.
-function rtExitListOnEmptyLine(root,event){
- const range=rtRange(root);
- if(!range||!range.collapsed)return false;
- const block=rtBlockOf(root,range.startContainer);
- if(!block||block.tagName!=='LI')return false;
- if((block.textContent||'').replace(/[\u200b\s]/g,''))return false;
- if(block.querySelector('img,table'))return false;
- event.preventDefault();
- const absatz=rtUnwrapItem(block);
- if(absatz)rtPlaceCaretAtStart(absatz);
- return true;
-}
-
-// ---------------------------------------------------------------
-//  Zeichenformate und Schriftfarbe
-// ---------------------------------------------------------------
-function rtInlineActive(root,art){
- const range=rtRange(root);
- if(!range)return false;
- const namen=RT_INLINE_MATCH[art]||[];
- let knoten=range.startContainer;
- if(knoten&&knoten.nodeType===3)knoten=knoten.parentNode;
- while(knoten&&knoten!==root){
-  if(namen.includes(knoten.nodeName))return true;
-  if(knoten.nodeType===1&&knoten.style){
-   const style=knoten.style;
-   const gewicht=String(style.fontWeight||'').toLowerCase();
-   const deko=String(style.textDecoration||style.textDecorationLine||'').toLowerCase();
-   if(art==='bold'&&(gewicht==='bold'||Number.parseInt(gewicht,10)>=600))return true;
-   if(art==='italic'&&String(style.fontStyle||'').toLowerCase()==='italic')return true;
-   if(art==='underline'&&deko.includes('underline'))return true;
-   if(art==='strike'&&deko.includes('line-through'))return true;
-  }
-  knoten=knoten.parentNode;
- }
- return false;
-}
-// Aeusserstes Formatelement der gesuchten Art oberhalb des Knotens.
-function rtInlineWrapperOf(root,node,art){
- const namen=RT_INLINE_MATCH[art]||[];
- let element=node&&node.nodeType===3?node.parentNode:node;
- let gefunden=null;
- while(element&&element!==root){
-  if(namen.includes(element.nodeName))gefunden=element;
-  element=element.parentNode;
- }
- return gefunden;
-}
-// Teilt den Textknoten, in dem die Zeichenposition liegt, genau dort auf.
-function rtSplitAtOffset(root,ziel){
- const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
- let gezaehlt=0,knoten;
- while((knoten=lauf.nextNode())){
-  const laenge=knoten.nodeValue.length;
-  if(ziel>gezaehlt&&ziel<gezaehlt+laenge){
-   knoten.splitText(ziel-gezaehlt);
-   return true;
-  }
-  gezaehlt+=laenge;
- }
- return false;
-}
-// Alle Textknoten, die die Auswahl vollstaendig umfasst. Die Grenzen werden
-// vorher als ZEICHENPOSITIONEN festgehalten und erst danach die Textknoten
-// geteilt.
+//  Notiz-Editor - Dokumentmodell
 //
-// Warum nicht direkt mit startContainer/startOffset arbeiten? Markiert man
-// mit der Maus von rechts nach links, setzt der Browser die Endgrenze gern
-// auf den Elternknoten, zum Beispiel (p, 1) statt (Text, 14). Sobald dann
-// ein Textknoten geteilt wird, waechst die Kindanzahl von p - und (p, 1)
-// zeigt plotzlich VOR den gesuchten Text. Die Auswahl war damit leer und
-// "Fett" tat nichts. Bei einem Doppelklick liegen beide Grenzen im
-// Textknoten, deshalb hat es dort funktioniert.
-function rtTextNodesInRange(root,range){
- const pos=rtOffsetsOfRange(root,range);
- if(!pos||!pos.laenge)return[];
- const ende=pos.start+pos.laenge;
- rtSplitAtOffset(root,ende);
- rtSplitAtOffset(root,pos.start);
- const treffer=[];
- const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
- let gezaehlt=0,knoten;
- while((knoten=lauf.nextNode())){
-  const laenge=knoten.nodeValue.length;
-  if(laenge&&gezaehlt>=pos.start&&gezaehlt+laenge<=ende)treffer.push(knoten);
-  gezaehlt+=laenge;
+//  Gleicher Aufbau wie bei den schnellen Notizen, nur mit mehr
+//  Formaten. Es wird NIE am Dokumentbaum operiert und nie die
+//  Browserauswahl ueber eine Aenderung hinweg verwendet.
+//
+//    Zeile = {
+//      art:   'p' | 'h2' | 'h3' | 'zitat' | 'ul' | 'ol' | 'check'
+//      tiefe: 0..4                      (Einzug, nur bei Listen sichtbar)
+//      haken: true|false                (nur bei 'check')
+//      teile: [{text, marken:{...}}]
+//    }
+//    Rohzeile = {art:'roh', html:'...'}  fuer Tabellen, Bilder, Linien.
+//               Sie wird unveraendert durchgereicht und von keiner
+//               Formatierung angefasst - so geht an bestehenden Notizen
+//               nichts verloren, was das Modell nicht kennt.
+//
+//  Marken: fett, kursiv, unterstrichen, durchgestrichen,
+//          farbe (CSS-Farbe), groesse (Zahl in px), link (URL)
+//
+//  Ablauf jeder Schaltflaeche:
+//    1. Auswahl lesen -> Zeichenpositionen
+//    2. Modell rechnen
+//    3. Neu zeichnen, Auswahl aus den Positionen setzen
+// ===============================================================
+const NE_MAX_VERLAUF=120;
+const NE_ARTEN=['p','h2','h3','zitat','ul','ol','check','roh'];
+const NE_LISTENARTEN=['ul','ol','check'];
+const NE_GRUNDGROESSE=16;
+const NE_GROESSEN=[10,11,12,13,14,15,16,18,20,22,24,28,32,36,42,48];
+const NE_MARKEN=['fett','kursiv','unterstrichen','durchgestrichen'];
+let noteModell=[{art:'p',tiefe:0,teile:[]}];
+let noteLetzteEingabe=0;
+let noteZeichnet=false;
+let noteLetzteAuswahl=null;
+
+function neEditor(){return $('#note-editor')}
+function neFarbeNormal(wert){
+ const farbe=safeNoteColor(wert);
+ if(!farbe)return'';
+ const rgb=farbe.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+ if(rgb){
+  const zahl=n=>Math.min(255,Math.max(0,Number(n))).toString(16).padStart(2,'0');
+  return`#${zahl(rgb[1])}${zahl(rgb[2])}${zahl(rgb[3])}`;
  }
- if(treffer.length){
-  const letzter=treffer[treffer.length-1];
-  const bereich=document.createRange();
-  bereich.setStart(treffer[0],0);
-  bereich.setEnd(letzter,letzter.nodeValue.length);
-  rtSetRange(bereich);
- }
- return treffer;
+ const kurz=farbe.match(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i);
+ if(kurz)return`#${kurz[1]}${kurz[1]}${kurz[2]}${kurz[2]}${kurz[3]}${kurz[3]}`.toLowerCase();
+ return/^#[0-9a-f]{6}$/i.test(farbe)?farbe.toLowerCase():farbe;
 }
-// Teilt ein Formatelement so auf, dass der Knoten danach ausserhalb liegt.
-// Davor und danach bleibt die Formatierung bestehen.
-function rtLiftOutOf(huelle,knoten){
- if(!huelle||!huelle.parentNode||!huelle.contains(knoten))return knoten;
- // Die Teilstuecke erhalten dieselben Attribute wie die Huelle, damit zum
- // Beispiel eine Schriftfarbe davor und danach bestehen bleibt.
- const kopie=()=>huelle.cloneNode(false);
- const davor=document.createRange();
- davor.selectNodeContents(huelle);
- davor.setEndBefore(knoten);
- const vorInhalt=davor.extractContents();
- const danach=document.createRange();
- danach.selectNodeContents(huelle);
- danach.setStartAfter(knoten);
- const nachInhalt=danach.extractContents();
- const teile=[];
- if((vorInhalt.textContent||'').length){
-  const a=kopie();
-  a.appendChild(vorInhalt);
-  teile.push(a);
- }
- // Der Rest der Huelle enthaelt jetzt genau den Knoten samt etwaiger
- // weiterer Formatierungen darum herum.
- teile.push(...huelle.childNodes);
- if((nachInhalt.textContent||'').length){
-  const b=kopie();
-  b.appendChild(nachInhalt);
-  teile.push(b);
- }
- huelle.replaceWith(...teile);
- return knoten;
+function neLeer(){return[{art:'p',tiefe:0,teile:[]}]}
+function neZeilenText(zeile){
+ if(!zeile||zeile.art==='roh')return'';
+ return(zeile.teile||[]).map(teil=>teil.text).join('');
 }
-// Aeusserstes Element oberhalb des Knotens, das die gesuchte Stilangabe setzt.
-function rtStyleWrapperOf(root,node,prop){
- let element=node&&node.nodeType===3?node.parentNode:node;
- let gefunden=null;
- while(element&&element!==root){
-  if(element.nodeType===1){
-   const perStil=element.style&&element.style[prop];
-   const perAttribut=element.tagName==='FONT'
-    &&((prop==='color'&&element.hasAttribute('color'))
-     ||(prop==='fontSize'&&element.hasAttribute('size')));
-   if(perStil||perAttribut)gefunden=element;
+function neIstListe(zeile){return Boolean(zeile)&&NE_LISTENARTEN.includes(zeile.art)}
+
+// ---------------------------------------------------------------
+//  Marken
+// ---------------------------------------------------------------
+function neMarkenGleich(a,b){
+ const links=a||{},rechts=b||{};
+ return NE_MARKEN.every(name=>Boolean(links[name])===Boolean(rechts[name]))
+  &&(links.farbe||'')===(rechts.farbe||'')
+  &&(Number(links.groesse)||0)===(Number(rechts.groesse)||0)
+  &&(links.link||'')===(rechts.link||'');
+}
+function neMarkenKopie(marken){
+ const aus={};
+ NE_MARKEN.forEach(name=>{if(marken&&marken[name])aus[name]=true});
+ if(marken&&marken.farbe)aus.farbe=marken.farbe;
+ if(marken&&marken.groesse)aus.groesse=Number(marken.groesse);
+ if(marken&&marken.link)aus.link=marken.link;
+ return aus;
+}
+function neVerdichten(teile){
+ const aus=[];
+ (teile||[]).forEach(teil=>{
+  if(!teil.text)return;
+  const letzter=aus[aus.length-1];
+  if(letzter&&neMarkenGleich(letzter.marken,teil.marken))letzter.text+=teil.text;
+  else aus.push({text:teil.text,marken:neMarkenKopie(teil.marken)});
+ });
+ return aus;
+}
+function neTeileAusschnitt(zeile,von,bis){
+ const aus=[];
+ let pos=0;
+ (zeile.teile||[]).forEach(teil=>{
+  const anfang=pos;
+  const ende=pos+teil.text.length;
+  pos=ende;
+  const s=Math.max(anfang,von);
+  const e=Math.min(ende,bis);
+  if(e<=s)return;
+  aus.push({text:teil.text.slice(s-anfang,e-anfang),marken:neMarkenKopie(teil.marken)});
+ });
+ return aus;
+}
+// Marke fuer einen Zeichenbereich einer Zeile setzen oder entfernen.
+function neAendereMarken(zeile,von,bis,aendern){
+ if(!zeile||zeile.art==='roh'||bis<=von)return;
+ const neu=[];
+ let pos=0;
+ (zeile.teile||[]).forEach(teil=>{
+  const anfang=pos;
+  const ende=pos+teil.text.length;
+  pos=ende;
+  const abschnitte=[[anfang,Math.min(ende,von),false],
+                    [Math.max(anfang,von),Math.min(ende,bis),true],
+                    [Math.max(anfang,bis),ende,false]];
+  abschnitte.forEach(([a,b,betroffen])=>{
+   if(b<=a)return;
+   const marken=neMarkenKopie(teil.marken);
+   if(betroffen)aendern(marken);
+   neu.push({text:teil.text.slice(a-anfang,b-anfang),marken});
+  });
+ });
+ zeile.teile=neVerdichten(neu);
+}
+// Laeuft ueber alle Abschnitte im Auswahlbereich.
+function neJedenAbschnitt(modell,von,bis,rueckruf){
+ for(let i=von.zeile;i<=bis.zeile;i++){
+  const zeile=modell[i];
+  if(!zeile||zeile.art==='roh')continue;
+  const laenge=neZeilenText(zeile).length;
+  const a=i===von.zeile?von.zeichen:0;
+  const b=i===bis.zeile?bis.zeichen:laenge;
+  if(b<=a&&!(von.zeile===bis.zeile&&von.zeichen===bis.zeichen))continue;
+  let pos=0;
+  (zeile.teile||[]).forEach(teil=>{
+   const anfang=pos;
+   const ende=pos+teil.text.length;
+   pos=ende;
+   const s=Math.max(anfang,a);
+   const e=Math.min(ende,b);
+   if(e<=s)return;
+   rueckruf(teil,zeile);
+  });
+ }
+}
+// Gemeinsamer Wert einer Marke im Bereich. null = gemischt, undefined = nichts.
+function neMarkeImBereich(modell,von,bis,name){
+ let wert;
+ let erster=true;
+ neJedenAbschnitt(modell,von,bis,teil=>{
+  const eigen=name==='groesse'
+   ?(Number(teil.marken?.groesse)||NE_GRUNDGROESSE)
+   :(name==='farbe'?(teil.marken?.farbe||''):Boolean(teil.marken?.[name]));
+  if(erster){wert=eigen;erster=false}
+  else if(wert!==eigen)wert=null;
+ });
+ return erster?undefined:wert;
+}
+// Marke des Abschnitts direkt vor der Einfuegeposition - fuer stehenden Cursor.
+function neMarkenAnPosition(modell,pos){
+ const zeile=modell[pos.zeile];
+ if(!zeile||zeile.art==='roh')return{};
+ const davor=neTeileAusschnitt(zeile,0,pos.zeichen);
+ if(davor.length)return neMarkenKopie(davor[davor.length-1].marken);
+ const teile=zeile.teile||[];
+ return teile.length?neMarkenKopie(teile[0].marken):{};
+}
+
+// ---------------------------------------------------------------
+//  Zeilen
+// ---------------------------------------------------------------
+function neSetzeArt(modell,von,bis,art){
+ const betroffen=[];
+ for(let i=von.zeile;i<=bis.zeile;i++){
+  const zeile=modell[i];
+  if(zeile&&zeile.art!=='roh')betroffen.push(zeile);
+ }
+ if(!betroffen.length)return;
+ const alleSchonSo=betroffen.every(zeile=>zeile.art===art);
+ betroffen.forEach(zeile=>{
+  const ziel=alleSchonSo?'p':art;
+  zeile.art=ziel;
+  if(ziel==='check'){if(typeof zeile.haken!=='boolean')zeile.haken=false}
+  else delete zeile.haken;
+  if(!NE_LISTENARTEN.includes(ziel))zeile.tiefe=0;
+ });
+}
+function neSetzeEinzug(modell,von,bis,richtung){
+ for(let i=von.zeile;i<=bis.zeile;i++){
+  const zeile=modell[i];
+  if(!zeile||zeile.art==='roh'||!neIstListe(zeile))continue;
+  zeile.tiefe=Math.min(4,Math.max(0,(Number(zeile.tiefe)||0)+richtung));
+ }
+}
+function neSetzeNormal(modell,von,bis){
+ for(let i=von.zeile;i<=bis.zeile;i++){
+  const zeile=modell[i];
+  if(!zeile||zeile.art==='roh')continue;
+  zeile.art='p';
+  zeile.tiefe=0;
+  delete zeile.haken;
+  const laenge=neZeilenText(zeile).length;
+  const a=i===von.zeile?von.zeichen:0;
+  const b=i===bis.zeile?bis.zeichen:laenge;
+  neAendereMarken(zeile,a,b,marken=>{
+   NE_MARKEN.forEach(name=>delete marken[name]);
+   delete marken.farbe;
+   delete marken.groesse;
+   delete marken.link;
+  });
+ }
+}
+function neLoescheBereich(modell,von,bis){
+ if(von.zeile===bis.zeile&&von.zeichen===bis.zeichen)return{...von};
+ const erste=modell[von.zeile];
+ const letzte=modell[bis.zeile];
+ if(!erste||!letzte)return{...von};
+ // Rohzeilen lassen sich nicht teilen: sie werden ganz entfernt, wenn die
+ // Auswahl ueber sie hinweggeht.
+ if(erste.art==='roh'||letzte.art==='roh'){
+  modell.splice(von.zeile,bis.zeile-von.zeile+1,{art:'p',tiefe:0,teile:[]});
+  return{zeile:von.zeile,zeichen:0};
+ }
+ const kopf=neTeileAusschnitt(erste,0,von.zeichen);
+ const schwanz=neTeileAusschnitt(letzte,bis.zeichen,neZeilenText(letzte).length);
+ erste.teile=neVerdichten([...kopf,...schwanz]);
+ modell.splice(von.zeile+1,bis.zeile-von.zeile);
+ return{zeile:von.zeile,zeichen:von.zeichen};
+}
+// Zeilenumbruch. Ein leerer Listenpunkt wird zum Absatz, damit man die
+// Liste verlassen kann. Ueberschriften und Zitate gehen in einen Absatz
+// ueber, wie man es von Textprogrammen kennt.
+function neZeilenumbruch(modell,von,bis){
+ const pos=neLoescheBereich(modell,von,bis);
+ const zeile=modell[pos.zeile];
+ if(!zeile)return pos;
+ if(zeile.art==='roh'){
+  modell.splice(pos.zeile+1,0,{art:'p',tiefe:0,teile:[]});
+  return{zeile:pos.zeile+1,zeichen:0};
+ }
+ const text=neZeilenText(zeile);
+ const leer=!text.replace(/[\u200b\s]/g,'');
+ if(leer&&neIstListe(zeile)){
+  if((Number(zeile.tiefe)||0)>0){zeile.tiefe-=1;return{zeile:pos.zeile,zeichen:0}}
+  zeile.art='p';
+  zeile.tiefe=0;
+  delete zeile.haken;
+  zeile.teile=[];
+  return{zeile:pos.zeile,zeichen:0};
+ }
+ const kopf=neTeileAusschnitt(zeile,0,pos.zeichen);
+ const rest=neTeileAusschnitt(zeile,pos.zeichen,text.length);
+ zeile.teile=neVerdichten(kopf);
+ // Am Zeilenende folgt bei Ueberschrift und Zitat ein normaler Absatz.
+ const amEnde=pos.zeichen>=text.length;
+ const folgeArt=amEnde&&['h2','h3','zitat'].includes(zeile.art)?'p':zeile.art;
+ const neueZeile={art:folgeArt,tiefe:neIstListe({art:folgeArt})?(Number(zeile.tiefe)||0):0,teile:neVerdichten(rest)};
+ if(folgeArt==='check')neueZeile.haken=false;
+ modell.splice(pos.zeile+1,0,neueZeile);
+ return{zeile:pos.zeile+1,zeichen:0};
+}
+function neFuegeTextEin(modell,von,bis,text){
+ let pos=neLoescheBereich(modell,von,bis);
+ const marken=neMarkenAnPosition(modell,pos);
+ const stuecke=String(text).replace(/\r\n?/g,'\n').split('\n');
+ stuecke.forEach((stueck,index)=>{
+  if(index>0)pos=neZeilenumbruch(modell,pos,pos);
+  const zeile=modell[pos.zeile];
+  if(!zeile||zeile.art==='roh'||!stueck)return;
+  const gesamt=neZeilenText(zeile).length;
+  const kopf=neTeileAusschnitt(zeile,0,pos.zeichen);
+  const schwanz=neTeileAusschnitt(zeile,pos.zeichen,gesamt);
+  zeile.teile=neVerdichten([...kopf,{text:stueck,marken:neMarkenKopie(marken)},...schwanz]);
+  pos={zeile:pos.zeile,zeichen:pos.zeichen+stueck.length};
+ });
+ return pos;
+}
+// Ganze Zeilen einfuegen (z. B. aus der Zwischenablage mit Formatierung).
+function neFuegeZeilenEin(modell,von,bis,zeilen){
+ if(!zeilen||!zeilen.length)return{...von};
+ const pos=neLoescheBereich(modell,von,bis);
+ const zeile=modell[pos.zeile];
+ const neueZeilen=zeilen.map(neZeileKopie);
+ // Neben einer Rohzeile (Tabelle, Bild) wird einfach dahinter eingefuegt.
+ if(!zeile||zeile.art==='roh'){
+  modell.splice(pos.zeile+1,0,...neueZeilen);
+  const index=pos.zeile+neueZeilen.length;
+  return{zeile:index,zeichen:neZeilenText(modell[index]||{}).length};
+ }
+ const gesamt=neZeilenText(zeile).length;
+ const kopf=neTeileAusschnitt(zeile,0,pos.zeichen);
+ const schwanz=neTeileAusschnitt(zeile,pos.zeichen,gesamt);
+ const erste=neueZeilen[0];
+ const letzte=neueZeilen[neueZeilen.length-1];
+ // Eine einzelne Textzeile wird in die bestehende Zeile eingesetzt.
+ if(neueZeilen.length===1&&erste.art!=='roh'){
+  zeile.teile=neVerdichten([...kopf,...(erste.teile||[]),...schwanz]);
+  return{zeile:pos.zeile,zeichen:pos.zeichen+neZeilenText(erste).length};
+ }
+ // Ersatzliste in einem Stueck bauen: Kopf, eingefuegte Zeilen, Schwanz.
+ const ersatz=[];
+ if(erste.art==='roh'){
+  if(kopf.length)ersatz.push({art:zeile.art,tiefe:Number(zeile.tiefe)||0,teile:neVerdichten(kopf)});
+ }else{
+  erste.teile=neVerdichten([...kopf,...(erste.teile||[])]);
+ }
+ ersatz.push(...neueZeilen);
+ let zielZeile,zielZeichen;
+ if(letzte.art==='roh'){
+  if(schwanz.length){
+   ersatz.push({art:zeile.art,tiefe:Number(zeile.tiefe)||0,teile:neVerdichten(schwanz)});
+   zielZeile=ersatz.length-1;
+   zielZeichen=0;
+  }else{
+   zielZeile=ersatz.length-1;
+   zielZeichen=0;
   }
-  element=element.parentNode;
+ }else{
+  zielZeichen=neZeilenText(letzte).length;
+  letzte.teile=neVerdichten([...(letzte.teile||[]),...schwanz]);
+  zielZeile=ersatz.indexOf(letzte);
  }
- return gefunden;
+ modell.splice(pos.zeile,1,...ersatz);
+ return{zeile:pos.zeile+Math.max(0,zielZeile),zeichen:zielZeichen};
 }
-// Loest alle Stilangaben dieser Art oberhalb des Knotens auf, ohne die
-// Nachbarn zu veraendern: die betroffenen Huellen werden aufgeteilt.
-function rtDropStyleAbove(root,knoten,prop){
- const cssName=prop==='fontSize'?'font-size':prop;
- for(let runde=0;runde<8;runde++){
-  const huelle=rtStyleWrapperOf(root,knoten,prop);
-  if(!huelle)return;
-  rtLiftOutOf(huelle,knoten);
-  if(rtStyleWrapperOf(root,knoten,prop)===huelle){
-   if(huelle.style)huelle.style.removeProperty(cssName);
-   huelle.removeAttribute(prop==='fontSize'?'size':'color');
+function neZeileKopie(zeile){
+ if(zeile.art==='roh')return{art:'roh',html:zeile.html};
+ const aus={art:zeile.art,tiefe:Number(zeile.tiefe)||0,
+  teile:(zeile.teile||[]).map(teil=>({text:teil.text,marken:neMarkenKopie(teil.marken)}))};
+ if(zeile.art==='check')aus.haken=Boolean(zeile.haken);
+ return aus;
+}
+function neModellKopie(modell){return(modell||[]).map(neZeileKopie)}
+
+// ---------------------------------------------------------------
+//  Modell -> HTML
+// ---------------------------------------------------------------
+function neTeilHtml(teil){
+ const marken=teil.marken||{};
+ let html=esc(teil.text);
+ const stile=[];
+ if(marken.farbe)stile.push(`color:${marken.farbe}`);
+ if(marken.groesse&&Number(marken.groesse)!==NE_GRUNDGROESSE)stile.push(`font-size:${Number(marken.groesse)}px`);
+ if(stile.length)html=`<span style="${stile.join(';')}">${html}</span>`;
+ if(marken.durchgestrichen)html=`<s>${html}</s>`;
+ if(marken.unterstrichen)html=`<u>${html}</u>`;
+ if(marken.kursiv)html=`<em>${html}</em>`;
+ if(marken.fett)html=`<strong>${html}</strong>`;
+ if(marken.link){
+  html=`<a href="${esc(marken.link)}" target="_blank" rel="noopener noreferrer">${html}</a>`;
+ }
+ return html;
+}
+function neZeilenInhalt(zeile){
+ const teile=zeile.teile||[];
+ return teile.length?teile.map(neTeilHtml).join(''):'<br>';
+}
+function neHtmlAusModell(modell){
+ const stuecke=[];
+ // Listenstapel fuer die Einzugstiefe.
+ const stapel=[];
+ const listeSchliessen=bisTiefe=>{
+  while(stapel.length>bisTiefe){
+   const oben=stapel.pop();
+   stuecke.push(oben.art==='ol'?'</ol>':'</ul>');
+  }
+ };
+ (modell||[]).forEach(zeile=>{
+  if(zeile.art==='roh'){
+   listeSchliessen(0);
+   stuecke.push(zeile.html||'');
    return;
   }
- }
-}
-// Setzt ein Zeichenformat ohne document.execCommand. Der Browserbefehl hat
-// nach einem Umbau des Dokumentbaums regelmaessig gar nichts getan - genau
-// das war die Ursache dafuer, dass "Fett" in der obersten Zeile nicht griff.
-function rtToggleInline(root,art){
- const tag=RT_INLINE_TAGS[art];
- if(!root||!tag)return false;
- // Lose Textzeilen erst in Absaetze heben, dabei die Auswahl retten.
- const vorher=rtOffsets(root);
- if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
- const range=rtRange(root);
- if(!range)return false;
-
- if(range.collapsed){
-  // Wartendes Format: ein leeres Formatelement mit Platzhalter aufnehmen.
-  const vorhanden=rtInlineWrapperOf(root,range.startContainer,art);
-  if(vorhanden){
-   const platzhalter=document.createTextNode('\u200b');
-   vorhanden.after(platzhalter);
-   const neu=document.createRange();
-   neu.setStart(platzhalter,1);
-   neu.collapse(true);
-   rtSetRange(neu);
-  }else{
-   const huelle=document.createElement(tag.toLowerCase());
-   huelle.appendChild(document.createTextNode('\u200b'));
-   range.insertNode(huelle);
-   const neu=document.createRange();
-   neu.setStart(huelle.firstChild,1);
-   neu.collapse(true);
-   rtSetRange(neu);
-  }
-  return true;
- }
-
- const knoten=rtTextNodesInRange(root,range);
- if(!knoten.length)return false;
- const alleSchonSo=knoten.every(eintrag=>Boolean(rtInlineWrapperOf(root,eintrag,art)));
- knoten.forEach(eintrag=>{
-  // Die Huelle je Knoten neu bestimmen: durch das Aufteilen aendert sie sich.
-  const huelle=rtInlineWrapperOf(root,eintrag,art);
-  if(alleSchonSo){
-   if(huelle)rtLiftOutOf(huelle,eintrag);
-  }else if(!huelle&&eintrag.parentNode){
-   const neu=document.createElement(tag.toLowerCase());
-   eintrag.before(neu);
-   neu.appendChild(eintrag);
-  }
- });
- const bereich=document.createRange();
- bereich.setStartBefore(knoten[0]);
- bereich.setEndAfter(knoten[knoten.length-1]);
- rtSetRange(bereich);
- return true;
-}
-// Setzt die Schriftfarbe als CSS-Angabe, ebenfalls ohne Browserbefehl.
-// Vorhandene Farben oberhalb der Auswahl werden vorher aufgeloest, damit die
-// neue Farbe wirklich greift - das war die Ursache dafuer, dass markierter
-// grauer Text sich nicht auf Schwarz stellen liess.
-function rtApplyColor(root,farbe){
- if(!root)return false;
- const sicher=safeNoteColor(farbe)||'#000000';
- const vorher=rtOffsets(root);
- if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
- const range=rtRange(root);
- if(!range)return false;
- if(range.collapsed){
-  const huelle=document.createElement('span');
-  huelle.style.color=sicher;
-  huelle.appendChild(document.createTextNode('\u200b'));
-  range.insertNode(huelle);
-  const neu=document.createRange();
-  neu.setStart(huelle.firstChild,1);
-  neu.collapse(true);
-  rtSetRange(neu);
-  return true;
- }
- const knoten=rtTextNodesInRange(root,range);
- if(!knoten.length)return false;
- knoten.forEach(eintrag=>{
-  rtDropStyleAbove(root,eintrag,'color');
-  if(!eintrag.parentNode)return;
-  const huelle=document.createElement('span');
-  huelle.style.color=sicher;
-  eintrag.before(huelle);
-  huelle.appendChild(eintrag);
- });
- const bereich=document.createRange();
- bereich.setStartBefore(knoten[0]);
- bereich.setEndAfter(knoten[knoten.length-1]);
- rtSetRange(bereich);
- return true;
-}
-// Setzt die Schriftgroesse. null bedeutet: Grundeinstellung (16 px), dann
-// werden vorhandene Groessenangaben nur entfernt.
-function rtApplyFontSize(root,px){
- if(!root)return false;
- const vorher=rtOffsets(root);
- if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
- const range=rtRange(root);
- if(!range)return false;
- if(range.collapsed){
-  const huelle=document.createElement('span');
-  if(px)huelle.style.fontSize=`${px}px`;
-  huelle.appendChild(document.createTextNode('\u200b'));
-  range.insertNode(huelle);
-  const neu=document.createRange();
-  neu.setStart(huelle.firstChild,1);
-  neu.collapse(true);
-  rtSetRange(neu);
-  return true;
- }
- const knoten=rtTextNodesInRange(root,range);
- if(!knoten.length)return false;
- knoten.forEach(eintrag=>{
-  rtDropStyleAbove(root,eintrag,'fontSize');
-  if(!px||!eintrag.parentNode)return;
-  const huelle=document.createElement('span');
-  huelle.style.fontSize=`${px}px`;
-  eintrag.before(huelle);
-  huelle.appendChild(eintrag);
- });
- const bereich=document.createRange();
- bereich.setStartBefore(knoten[0]);
- bereich.setEndAfter(knoten[knoten.length-1]);
- rtSetRange(bereich);
- return true;
-}
-// Entfernt jede Zeichenformatierung auf der Auswahl. Nachbarn behalten ihre
-// Formatierung, weil die Huellen aufgeteilt und nicht geloescht werden.
-function rtClearFormatting(root){
- if(!root)return false;
- const vorher=rtOffsets(root);
- if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
- const range=rtRange(root);
- if(!range||range.collapsed)return false;
- const knoten=rtTextNodesInRange(root,range);
- if(!knoten.length)return false;
- const inline=['STRONG','B','EM','I','U','S','STRIKE','DEL','SPAN','FONT','CODE','A'];
- knoten.forEach(eintrag=>{
-  for(let runde=0;runde<12;runde++){
-   let huelle=null;
-   let element=eintrag.parentNode;
-   while(element&&element!==root){
-    if(element.nodeType===1&&inline.includes(element.tagName))huelle=element;
-    element=element.parentNode;
+  if(neIstListe(zeile)){
+   const tiefe=Math.min(4,Math.max(0,Number(zeile.tiefe)||0));
+   // Bei Artwechsel auf gleicher Ebene die Liste neu beginnen.
+   if(stapel.length===tiefe+1&&stapel[tiefe].art!==zeile.art)listeSchliessen(tiefe);
+   else if(stapel.length>tiefe+1)listeSchliessen(tiefe+1);
+   while(stapel.length<tiefe+1){
+    const art=zeile.art;
+    stuecke.push(art==='ol'?'<ol>':(art==='check'?'<ul class="note-checklist">':'<ul>'));
+    stapel.push({art});
    }
-   if(!huelle)break;
-   rtLiftOutOf(huelle,eintrag);
+   if(stapel[tiefe].art!==zeile.art){
+    listeSchliessen(tiefe);
+    const art=zeile.art;
+    stuecke.push(art==='ol'?'<ol>':(art==='check'?'<ul class="note-checklist">':'<ul>'));
+    stapel.push({art});
+   }
+   const haken=zeile.art==='check'
+    ?` data-checked="${zeile.haken?'true':'false'}" role="checkbox" aria-checked="${zeile.haken?'true':'false'}"`
+    :'';
+   stuecke.push(`<li${haken}>${neZeilenInhalt(zeile)}</li>`);
+   return;
   }
+  listeSchliessen(0);
+  const tag=zeile.art==='zitat'?'blockquote':(zeile.art==='h2'?'h2':(zeile.art==='h3'?'h3':'p'));
+  stuecke.push(`<${tag}>${neZeilenInhalt(zeile)}</${tag}>`);
  });
- const bereich=document.createRange();
- bereich.setStartBefore(knoten[0]);
- bereich.setEndAfter(knoten[knoten.length-1]);
- rtSetRange(bereich);
- return true;
-}
-// Entfernt alle Farbangaben. Die schnellen Notizen sollen laut Vorgabe
-// immer schwarz sein, deshalb wird dort nach jeder Aenderung aufgeraeumt.
-function rtStripColors(root){
- if(!root)return;
- root.querySelectorAll('font[color]').forEach(element=>element.removeAttribute('color'));
- root.querySelectorAll('[style]').forEach(element=>{
-  if(element.style&&element.style.color)element.style.removeProperty('color');
-  if(!element.getAttribute('style'))element.removeAttribute('style');
- });
+ listeSchliessen(0);
+ return stuecke.join('');
 }
 
 // ---------------------------------------------------------------
-//  Anbindung des Notiz-Editors an den Rich-Text-Kern
+//  HTML -> Modell
 // ---------------------------------------------------------------
-// Beibehalten fuer Tests und Abwaertskompatibilitaet.
-function noteBlocksInSelection(){return rtSelectedBlocks($('#note-editor'))}
-function noteSelectionOffsets(){return rtOffsets($('#note-editor'))}
-function noteRestoreOffsets(pos){return rtRestoreOffsets($('#note-editor'),pos)}
-
-function focusNoteEditor(){
- const editor=$('#note-editor');
- if(!editor)return null;
- // Der Fokus muss VOR dem Wiederherstellen der Auswahl gesetzt werden:
- // focus() auf einem unfokussierten Editor setzt den Cursor sonst zurueck
- // an den Anfang und die gemerkte Auswahl ist verloren.
- if(document.activeElement!==editor){
-  const gemerkt=noteRange
-   &&noteRange.startContainer?.isConnected
-   &&noteRange.endContainer?.isConnected
-   &&editor.contains(noteRange.startContainer)
-   ?noteRange.cloneRange()
-   :null;
-  try{editor.focus({preventScroll:true})}catch{editor.focus()}
-  // focus() verschiebt den Cursor. Die vor dem Klick gemerkte Auswahl hat
-  // deshalb Vorrang vor dem, was der Browser gerade gesetzt hat.
-  if(gemerkt){
-   const selection=getSelection();
-   selection.removeAllRanges();
-   selection.addRange(gemerkt);
-  }
- }
- return editor;
-}
-function noteToggleList(typ){
- const editor=focusNoteEditor();
- if(!editor)return;
- restoreNoteSelection();
- noteEditorCheckpoint({force:true,inputType:'liste'});
- noteEditorState.historyLocked=true;
- rtToggleList(editor,typ);
- noteEditorState.historyLocked=false;
- normalizeChecklistDom();
- updateNoteEditorEmptyState();
- saveNoteSelection();
- updateNoteToolbarState();
- scheduleCurrentNoteSave();
-}
-
-function toggleNoteChecklist(){
- noteToggleList('checklist');
-}
-function toggleChecklistItem(item){
- if(!item?.closest('ul.note-checklist'))return false;
- noteEditorCheckpoint({force:true,inputType:'checklist-toggle'});
- const checked=item.dataset.checked!=='true';
- item.dataset.checked=String(checked);
- item.setAttribute('aria-checked',String(checked));
- scheduleCurrentNoteSave();
- updateNoteToolbarState();
- return true;
-}
-function toggleCurrentChecklistItem(){
- let node=getSelection().anchorNode;
- if(node?.nodeType===3)node=node.parentElement;
- return toggleChecklistItem(node?.closest?.('ul.note-checklist > li'));
-}
-// Der Link-Schalter wurde auf Wunsch aus der Werkzeugleiste entfernt.
-// Vorhandene Links in Notizen bleiben klickbar.
-function noteLinkCommand(){
- restoreNoteSelection();
- let selection=getSelection();
- if(!selection.rangeCount)return;
- let node=selection.anchorNode;
- if(node?.nodeType===3)node=node.parentElement;
- const existing=node?.closest?.('a');
- const currentHref=existing?.getAttribute('href')||'';
- const answer=prompt(
-  currentHref?'Link ändern oder Feld leeren, um ihn zu entfernen:':'Webadresse eingeben:',
-  currentHref
- );
- if(answer===null)return;
-
- restoreNoteSelection();
- selection=getSelection();
- if(!selection.rangeCount)return;
-
- const url=normalizeNoteUrl(answer);
- if(!answer.trim()||!url){
-  if(!answer.trim())noteCommand('unlink');
-  else alert('Bitte eine gültige Webadresse mit http://, https://, mailto: oder tel: eingeben.');
-  return;
- }
- if(selection.isCollapsed&&existing?.isConnected){
-  noteEditorCheckpoint({force:true,inputType:'command:link'});
-  existing.href=url;
-  existing.target='_blank';
-  existing.rel='noopener noreferrer';
-  scheduleCurrentNoteSave();
-  updateNoteToolbarState();
-  return;
- }
- if(selection.isCollapsed){
-  noteEditorCheckpoint({force:true,inputType:'command:link'});
-  noteEditorState.historyLocked=true;
-  const text=document.createTextNode(url);
-  const anchor=document.createElement('a');
-  anchor.href=url;
-  anchor.target='_blank';
-  anchor.rel='noopener noreferrer';
-  anchor.appendChild(text);
-  const range=selection.getRangeAt(0);
-  range.insertNode(anchor);
-  range.setStartAfter(anchor);
-  range.collapse(true);
-  selection.removeAllRanges();
-  selection.addRange(range);
-  noteEditorState.historyLocked=false;
-  saveNoteSelection();
-  scheduleCurrentNoteSave();
-  updateNoteToolbarState();
-  return;
- }
- noteCommand('createLink',url);
- const anchorAfter=getSelection().anchorNode?.parentElement?.closest?.('a');
- if(anchorAfter){
-  anchorAfter.target='_blank';
-  anchorAfter.rel='noopener noreferrer';
- }
-}
-function clearNoteFormatting(){
- const editor=focusNoteEditor();
- if(!editor)return;
- restoreNoteSelection();
- noteEditorCheckpoint({force:true,inputType:'command:clear'});
- noteEditorState.historyLocked=true;
- rtClearFormatting(editor);
- noteEditorState.historyLocked=false;
- saveNoteSelection();
- scheduleCurrentNoteSave();
- updateNoteToolbarState();
-}
-function insertSanitizedNotePaste(html,text){
- restoreNoteSelection();
- const clean=html
-  ?sanitizeNoteHtml(html,{paste:true})
-  :plainTextToNoteHtml(text);
- if(!clean)return;
- noteEditorCheckpoint({force:true,inputType:'paste'});
- noteEditorState.historyLocked=true;
- document.execCommand('insertHTML',false,clean);
- noteEditorState.historyLocked=false;
- normalizeChecklistDom();
- saveNoteSelection();
- scheduleCurrentNoteSave();
- updateNoteToolbarState();
-}
-function updateNoteToolbarState(){
- const editor=$('#note-editor');
- const selection=getSelection();
- const inside=selection.rangeCount&&editor.contains(selection.anchorNode);
- const stateFor=command=>{
-  if(!inside)return false;
-  try{return Boolean(document.queryCommandState?.(command))}
-  catch{return false}
+const NE_ROH_TAGS=['TABLE','HR','FIGURE','IMG','PRE'];
+function neTeileAusElement(element){
+ const teile=[];
+ const gehe=(knoten,marken)=>{
+  [...knoten.childNodes].forEach(kind=>{
+   if(kind.nodeType===3){
+    const text=(kind.nodeValue||'').replace(/\u200b/g,'').replace(/\u00a0/g,' ');
+    if(text)teile.push({text,marken:neMarkenKopie(marken)});
+    return;
+   }
+   if(kind.nodeType!==1)return;
+   if(kind.tagName==='BR')return;
+   const naechste=neMarkenKopie(marken);
+   const stil=kind.style||{};
+   const gewicht=String(stil.fontWeight||'').toLowerCase();
+   const deko=String(stil.textDecoration||stil.textDecorationLine||'').toLowerCase();
+   if(['STRONG','B'].includes(kind.tagName)||gewicht==='bold'||Number.parseInt(gewicht,10)>=600)naechste.fett=true;
+   if(['EM','I'].includes(kind.tagName)||String(stil.fontStyle||'').toLowerCase()==='italic')naechste.kursiv=true;
+   if(kind.tagName==='U'||deko.includes('underline'))naechste.unterstrichen=true;
+   if(['S','STRIKE','DEL'].includes(kind.tagName)||deko.includes('line-through'))naechste.durchgestrichen=true;
+   const farbe=neFarbeNormal(stil.color||kind.getAttribute?.('color'));
+   if(farbe)naechste.farbe=farbe;
+   const groesse=safeNoteFontSize(stil.fontSize);
+   if(groesse)naechste.groesse=Number.parseInt(groesse,10);
+   if(kind.tagName==='A'){
+    const ziel=normalizeNoteUrl(kind.getAttribute('href'));
+    if(ziel)naechste.link=ziel;
+   }
+   gehe(kind,naechste);
+  });
  };
-
- $$('[data-note-command]').forEach(button=>{
-  const command=button.dataset.noteCommand;
-  if(['bold','italic','underline','strikeThrough','insertUnorderedList','insertOrderedList'].includes(command)){
-   button.classList.toggle('active',stateFor(command));
+ gehe(element,{});
+ return neVerdichten(teile);
+}
+function neModellAusKnoten(wurzel,{nummerieren=false}={}){
+ const modell=[];
+ const aufnehmen=(zeile,element)=>{
+  if(nummerieren&&element&&element.dataset)element.dataset.ne=String(modell.length);
+  modell.push(zeile);
+ };
+ const listenArt=element=>element.tagName==='OL'
+  ?'ol'
+  :(element.classList.contains('note-checklist')?'check':'ul');
+ const liste=(element,art,tiefe)=>{
+  [...element.children].forEach(kind=>{
+   // Fall A: Unterliste direkt als Geschwister des Punktes.
+   if(['UL','OL'].includes(kind.tagName)){
+    liste(kind,listenArt(kind),Math.min(4,tiefe+1));
+    return;
+   }
+   if(kind.tagName!=='LI')return;
+   // Fall B: Unterliste innerhalb des Punktes.
+   const unter=[...kind.children].filter(teil=>['UL','OL'].includes(teil.tagName));
+   const eigene=kind.cloneNode(true);
+   [...eigene.children].forEach(teil=>{
+    if(['UL','OL'].includes(teil.tagName))teil.remove();
+   });
+   const zeile={art,tiefe,teile:neTeileAusElement(eigene)};
+   if(art==='check'){
+    const gesetzt=kind.dataset?kind.dataset.checked:'';
+    zeile.haken=gesetzt==='true';
+   }
+   aufnehmen(zeile,kind);
+   unter.forEach(teil=>liste(teil,listenArt(teil),Math.min(4,tiefe+1)));
+  });
+ };
+ [...wurzel.childNodes].forEach(knoten=>{
+  if(knoten.nodeType===3){
+   const text=(knoten.nodeValue||'').replace(/\u200b/g,'').replace(/\u00a0/g,' ');
+   if(text.replace(/\s/g,''))aufnehmen({art:'p',tiefe:0,teile:[{text,marken:{}}]},null);
+   return;
   }
+  if(knoten.nodeType!==1)return;
+  const tag=knoten.tagName;
+  if(NE_ROH_TAGS.includes(tag)){
+   aufnehmen({art:'roh',html:knoten.outerHTML},null);
+   return;
+  }
+  if(tag==='UL'||tag==='OL'){
+   liste(knoten,listenArt(knoten),0);
+   return;
+  }
+  if(tag==='BR'){aufnehmen({art:'p',tiefe:0,teile:[]},null);return}
+  const art=tag==='H1'||tag==='H2'?'h2':(tag==='H3'||tag==='H4'||tag==='H5'||tag==='H6'?'h3':(tag==='BLOCKQUOTE'?'zitat':'p'));
+  aufnehmen({art,tiefe:0,teile:neTeileAusElement(knoten)},knoten);
  });
+ return modell.length?modell:neLeer();
+}
+// Beim Laden laeuft der bestehende Reiniger davor: er kennt alle Altformate
+// (Checkbox-Felder, <label>-Aufbau, Textmarkierungen wie "[ ]") und liefert
+// einen einheitlichen Aufbau, den das Modell dann einliest.
+function neModellAusHtml(html){
+ const behaelter=document.createElement('div');
+ behaelter.innerHTML=sanitizeNoteHtml(html||'');
+ return neModellAusKnoten(behaelter);
+}
 
- let node=inside?selection.anchorNode:null;
- if(node?.nodeType===3)node=node.parentElement;
- const checklist=Boolean(node?.closest?.('ul.note-checklist'));
- $('#note-checklist-btn')?.classList.toggle('active',checklist);
- const bulletButton=$('[data-note-command="insertUnorderedList"]');
- if(bulletButton)bulletButton.classList.toggle('active',stateFor('insertUnorderedList')&&!checklist);
+// ---------------------------------------------------------------
+//  Auswahl <-> Zeichenpositionen
+// ---------------------------------------------------------------
+function nePositionAus(knoten,offset){
+ const editor=neEditor();
+ if(!editor||!knoten||!editor.contains(knoten))return null;
+ let element=knoten.nodeType===3?knoten.parentNode:knoten;
+ let zeilenEl=null;
+ while(element&&element!==editor){
+  if(element.dataset&&element.dataset.ne!==undefined){zeilenEl=element;break}
+  element=element.parentNode;
+ }
+ if(!zeilenEl){
+  const zeilen=[...editor.querySelectorAll('[data-ne]')];
+  if(!zeilen.length)return{zeile:0,zeichen:0};
+  const vorne=offset<=0;
+  const ziel=vorne?zeilen[0]:zeilen[zeilen.length-1];
+  return{zeile:Number(ziel.dataset.ne)||0,zeichen:vorne?0:(ziel.textContent||'').length};
+ }
+ let zeichen=0;
+ try{
+  const bereich=document.createRange();
+  bereich.selectNodeContents(zeilenEl);
+  bereich.setEnd(knoten,offset);
+  zeichen=bereich.toString().length;
+ }catch{zeichen=0}
+ return{zeile:Number(zeilenEl.dataset.ne)||0,zeichen};
+}
+function neAuswahl(){
+ const editor=neEditor();
+ const auswahl=window.getSelection();
+ if(!editor||!auswahl||!auswahl.rangeCount)return null;
+ const bereich=auswahl.getRangeAt(0);
+ if(!editor.contains(bereich.commonAncestorContainer))return null;
+ const von=nePositionAus(bereich.startContainer,bereich.startOffset);
+ const bis=nePositionAus(bereich.endContainer,bereich.endOffset);
+ if(!von||!bis)return null;
+ const vorwaerts=von.zeile<bis.zeile||(von.zeile===bis.zeile&&von.zeichen<=bis.zeichen);
+ const ergebnis=vorwaerts?{von,bis}:{von:bis,bis:von};
+ noteLetzteAuswahl={von:{...ergebnis.von},bis:{...ergebnis.bis}};
+ return ergebnis;
+}
+function neAuswahlOderEnde(){
+ const vorhanden=neAuswahl();
+ if(vorhanden)return vorhanden;
+ // Kein Bereich im Editor - zum Beispiel weil die Schriftgroessen-Auswahl
+ // den Fokus hat. Dann gilt die letzte bekannte Position.
+ if(noteLetzteAuswahl){
+  const grenze=pos=>({
+   zeile:Math.min(Math.max(0,pos.zeile),Math.max(0,noteModell.length-1)),
+   zeichen:Math.max(0,pos.zeichen)
+  });
+  return{von:grenze(noteLetzteAuswahl.von),bis:grenze(noteLetzteAuswahl.bis)};
+ }
+ const letzte=Math.max(0,noteModell.length-1);
+ const ende={zeile:letzte,zeichen:neZeilenText(noteModell[letzte]||{}).length};
+ return{von:ende,bis:{...ende}};
+}
+function neSetzeAuswahl(von,bis){
+ const editor=neEditor();
+ if(!editor||!von)return;
+ const punkt=pos=>{
+  const zeilenEl=editor.querySelector(`[data-ne="${pos.zeile}"]`)
+   ||editor.querySelector('[data-ne]');
+  if(!zeilenEl)return null;
+  let rest=Math.max(0,pos.zeichen);
+  const lauf=document.createTreeWalker(zeilenEl,NodeFilter.SHOW_TEXT);
+  let knoten,letzter=null;
+  while((knoten=lauf.nextNode())){
+   const laenge=knoten.nodeValue.length;
+   if(rest<=laenge)return{knoten,offset:rest};
+   rest-=laenge;
+   letzter={knoten,offset:laenge};
+  }
+  return letzter||{knoten:zeilenEl,offset:0};
+ };
+ const a=punkt(von);
+ if(!a)return;
+ const b=punkt(bis||von)||a;
+ try{
+  const bereich=document.createRange();
+  bereich.setStart(a.knoten,a.offset);
+  bereich.setEnd(b.knoten,b.offset);
+  const auswahl=window.getSelection();
+  auswahl.removeAllRanges();
+  auswahl.addRange(bereich);
+ }catch{/* Position nicht mehr vorhanden */}
+}
+
+// ---------------------------------------------------------------
+//  Zeichnen, Speichern, Verlauf
+// ---------------------------------------------------------------
+function neZeichne(von,bis){
+ const editor=neEditor();
+ if(!editor)return;
+ noteZeichnet=true;
+ // Rollposition sichern: ein Neuzeichnen darf die Ansicht nicht verschieben.
+ const rollen=editor.scrollTop;
+ const rollenAussen=editor.closest('.note-detail-body,.note-detail,main');
+ const rollenAussenWert=rollenAussen?rollenAussen.scrollTop:0;
+ editor.innerHTML=neHtmlAusModell(noteModell);
+ neModellAusKnoten(editor,{nummerieren:true});
+ neLeereAnzeige();
+ editor.scrollTop=rollen;
+ if(rollenAussen)rollenAussen.scrollTop=rollenAussenWert;
+ if(von){
+  if(document.activeElement!==editor){
+   try{editor.focus({preventScroll:true})}catch{editor.focus()}
+  }
+  neSetzeAuswahl(von,bis||von);
+ }
+ noteZeichnet=false;
+}
+function neLeereAnzeige(){
+ const editor=neEditor();
+ if(!editor)return;
+ const inhalt=noteModell.some(zeile=>
+  zeile.art==='roh'||neZeilenText(zeile).replace(/[\u200b\s]/g,''));
+ editor.classList.toggle('editor-empty',!inhalt);
+}
+function neSerialisiere(){
+ const inhalt=noteModell.some(zeile=>
+  zeile.art==='roh'||neZeilenText(zeile).replace(/[\u200b\s]/g,''));
+ if(!inhalt)return'';
+ return neHtmlAusModell(noteModell).replace(/\u200b/g,'');
+}
+function neVerlaufStand(modell){
+ const auswahl=noteLetzteAuswahl
+  ?{von:{...noteLetzteAuswahl.von},bis:{...noteLetzteAuswahl.bis}}
+  :null;
+ return{modell:neModellKopie(modell),auswahl};
+}
+function neVerlaufMerken(standKopie){
+ noteEditorState.historyPast.push(
+  standKopie&&standKopie.modell?standKopie:{modell:standKopie,auswahl:null});
+ if(noteEditorState.historyPast.length>NE_MAX_VERLAUF)noteEditorState.historyPast.shift();
+ noteEditorState.historyFuture=[];
+ noteLetzteEingabe=Date.now();
  renderHistoryButtons();
 }
-function placeCaretAtEnd(element){
- const range=document.createRange(),selection=getSelection();
- range.selectNodeContents(element);
- range.collapse(false);
- selection.removeAllRanges();
- selection.addRange(range);
- noteRange=range.cloneRange();
+// Schreibt den gemerkten Stand nur fest, wenn sich wirklich etwas geaendert
+// hat. Ein Befehl ohne Wirkung - etwa Einzug auf einem Absatz - erzeugt
+// damit keinen Rueckgaengig-Schritt.
+function neVerlaufFestschreiben(standKopie,standHtml){
+ if(noteZeichnet)return false;
+ if(neHtmlAusModell(noteModell)===standHtml)return false;
+ neVerlaufMerken(standKopie);
+ return true;
 }
+function neMerkeVerlauf({gruppiert=false}={}){
+ if(noteZeichnet)return;
+ const jetzt=Date.now();
+ if(gruppiert&&jetzt-noteLetzteEingabe<900){noteLetzteEingabe=jetzt;return}
+ neVerlaufMerken(neVerlaufStand(noteModell));
+}
+function neVerlaufAnwenden(stand){
+ noteModell=neModellKopie(stand.modell||stand);
+ noteLetzteEingabe=0;
+ const grenze=pos=>({
+  zeile:Math.min(Math.max(0,pos.zeile),Math.max(0,noteModell.length-1)),
+  zeichen:Math.max(0,pos.zeichen)
+ });
+ if(stand.auswahl){
+  neZeichne(grenze(stand.auswahl.von),grenze(stand.auswahl.bis));
+ }else{
+  const letzte=Math.max(0,noteModell.length-1);
+  neZeichne({zeile:letzte,zeichen:neZeilenText(noteModell[letzte]||{}).length});
+ }
+ neNachAenderung();
+}
+function neRueckgaengig(){
+ if(!noteEditorState.historyPast.length)return false;
+ noteEditorState.historyFuture.push(neVerlaufStand(noteModell));
+ neVerlaufAnwenden(noteEditorState.historyPast.pop());
+ return true;
+}
+function neWiederherstellen(){
+ if(!noteEditorState.historyFuture.length)return false;
+ noteEditorState.historyPast.push(neVerlaufStand(noteModell));
+ neVerlaufAnwenden(noteEditorState.historyFuture.pop());
+ return true;
+}
+function neNachAenderung(){
+ scheduleCurrentNoteSave();
+ neWerkzeugleiste();
+ renderHistoryButtons();
+}
+
+// ---------------------------------------------------------------
+//  Bedienung
+// ---------------------------------------------------------------
+function neBefehl(befehl,wert=null){
+ const editor=neEditor();
+ if(!editor)return;
+ const {von,bis}=neAuswahlOderEnde();
+ const stehend=von.zeile===bis.zeile&&von.zeichen===bis.zeichen;
+ // Stand sichern und erst nach der Aenderung festschreiben.
+ const standKopie=neVerlaufStand(noteModell);
+ const standHtml=neHtmlAusModell(noteModell);
+
+ const markeName={bold:'fett',italic:'kursiv',underline:'unterstrichen',strikeThrough:'durchgestrichen'}[befehl];
+ if(markeName){
+  const aktiv=stehend
+   ?Boolean(neMarkenAnPosition(noteModell,von)[markeName])
+   :neMarkeImBereich(noteModell,von,bis,markeName)===true;
+  if(stehend){
+   neVerlaufMerken(standKopie);
+   nePlatzhalter(von,marken=>{
+    if(aktiv)delete marken[markeName];
+    else marken[markeName]=true;
+   });
+   return;
+  }
+  for(let i=von.zeile;i<=bis.zeile;i++){
+   const zeile=noteModell[i];
+   if(!zeile||zeile.art==='roh')continue;
+   const laenge=neZeilenText(zeile).length;
+   const a=i===von.zeile?von.zeichen:0;
+   const b=i===bis.zeile?bis.zeichen:laenge;
+   neAendereMarken(zeile,a,b,marken=>{
+    if(aktiv)delete marken[markeName];
+    else marken[markeName]=true;
+   });
+  }
+ }else if(befehl==='farbe'){
+  const farbe=neFarbeNormal(wert)||'#000000';
+  if(stehend){neVerlaufMerken(standKopie);nePlatzhalter(von,marken=>{marken.farbe=farbe});return}
+  for(let i=von.zeile;i<=bis.zeile;i++){
+   const zeile=noteModell[i];
+   if(!zeile||zeile.art==='roh')continue;
+   const laenge=neZeilenText(zeile).length;
+   const a=i===von.zeile?von.zeichen:0;
+   const b=i===bis.zeile?bis.zeichen:laenge;
+   neAendereMarken(zeile,a,b,marken=>{marken.farbe=farbe});
+  }
+ }else if(befehl==='groesse'){
+  const zahl=Number.parseInt(wert,10);
+  const groesse=NE_GROESSEN.includes(zahl)?zahl:NE_GRUNDGROESSE;
+  if(stehend){
+   neVerlaufMerken(standKopie);
+   nePlatzhalter(von,marken=>{
+    if(groesse===NE_GRUNDGROESSE)delete marken.groesse;
+    else marken.groesse=groesse;
+   });
+   return;
+  }
+  for(let i=von.zeile;i<=bis.zeile;i++){
+   const zeile=noteModell[i];
+   if(!zeile||zeile.art==='roh')continue;
+   const laenge=neZeilenText(zeile).length;
+   const a=i===von.zeile?von.zeichen:0;
+   const b=i===bis.zeile?bis.zeichen:laenge;
+   neAendereMarken(zeile,a,b,marken=>{
+    if(groesse===NE_GRUNDGROESSE)delete marken.groesse;
+    else marken.groesse=groesse;
+   });
+  }
+ }else if(NE_ARTEN.includes(befehl)&&befehl!=='roh'){
+  neSetzeArt(noteModell,von,bis,befehl);
+ }else if(befehl==='einzug'||befehl==='ausrueckung'){
+  neSetzeEinzug(noteModell,von,bis,befehl==='einzug'?1:-1);
+ }else if(befehl==='normal'){
+  neSetzeNormal(noteModell,von,bis);
+ }else return;
+
+ if(!neVerlaufFestschreiben(standKopie,standHtml)){
+  // Nichts veraendert: Werkzeugleiste auffrischen und fertig.
+  neWerkzeugleiste();
+  return;
+ }
+ neZeichne(von,bis);
+ neNachAenderung();
+}
+// Wartendes Format bei stehendem Cursor: ein Platzhalterzeichen mit den
+// gewuenschten Marken. Beim Weitertippen uebernimmt der Browser sie, beim
+// Speichern wird der Platzhalter entfernt.
+function nePlatzhalter(pos,aendern){
+ const zeile=noteModell[pos.zeile];
+ if(!zeile||zeile.art==='roh')return;
+ const gesamt=neZeilenText(zeile).length;
+ const kopf=neTeileAusschnitt(zeile,0,pos.zeichen);
+ const schwanz=neTeileAusschnitt(zeile,pos.zeichen,gesamt);
+ const marken=neMarkenAnPosition(noteModell,pos);
+ aendern(marken);
+ zeile.teile=[...kopf,{text:'\u200b',marken},...schwanz];
+ neZeichne({zeile:pos.zeile,zeichen:pos.zeichen+1});
+ neNachAenderung();
+}
+function neZeilenumbruchEingabe(ereignis){
+ const auswahl=neAuswahl();
+ if(!auswahl)return false;
+ ereignis.preventDefault();
+ neMerkeVerlauf();
+ const pos=neZeilenumbruch(noteModell,auswahl.von,auswahl.bis);
+ neZeichne(pos);
+ neNachAenderung();
+ return true;
+}
+function neEinfuegen(html,text){
+ const editor=neEditor();
+ if(!editor)return;
+ const {von,bis}=neAuswahlOderEnde();
+ const standKopie=neVerlaufStand(noteModell);
+ const standHtml=neHtmlAusModell(noteModell);
+ let pos;
+ if(html){
+  const behaelter=document.createElement('div');
+  behaelter.innerHTML=sanitizeNoteHtml(html,{paste:true});
+  const zeilen=neModellAusKnoten(behaelter);
+  pos=neFuegeZeilenEin(noteModell,von,bis,zeilen);
+ }else{
+  pos=neFuegeTextEin(noteModell,von,bis,text||'');
+ }
+ if(!neVerlaufFestschreiben(standKopie,standHtml))return;
+ neZeichne(pos);
+ neNachAenderung();
+}
+// Haken einer Checklistenzeile umschalten.
+function neHakenUmschalten(zeilenIndex){
+ const zeile=noteModell[zeilenIndex];
+ if(!zeile||zeile.art!=='check')return false;
+ neMerkeVerlauf();
+ zeile.haken=!zeile.haken;
+ const editor=neEditor();
+ const element=editor?.querySelector(`[data-ne="${zeilenIndex}"]`);
+ if(element){
+  element.dataset.checked=zeile.haken?'true':'false';
+  element.setAttribute('aria-checked',zeile.haken?'true':'false');
+ }
+ neNachAenderung();
+ return true;
+}
+function neHakenAnPosition(){
+ const auswahl=neAuswahl();
+ if(!auswahl)return false;
+ return neHakenUmschalten(auswahl.von.zeile);
+}
+// Nach dem Tippen: Modell aus dem Dokumentbaum lesen, NICHT neu zeichnen.
+function neUebernehmeEingabe(){
+ const editor=neEditor();
+ if(!editor||noteZeichnet)return;
+ neMerkeVerlauf({gruppiert:true});
+ noteModell=neModellAusKnoten(editor,{nummerieren:true});
+ neLeereAnzeige();
+ scheduleCurrentNoteSave();
+ neWerkzeugleiste();
+}
+function neLadeInhalt(html){
+ clearTimeout(noteEditorState.saveTimer);
+ noteEditorState.saveTimer=null;
+ noteModell=neModellAusHtml(html);
+ noteEditorState.historyPast=[];
+ noteEditorState.historyFuture=[];
+ noteLetzteEingabe=0;
+ noteLetzteAuswahl=null;
+ neZeichne();
+ setNoteSaveStatus('Gespeichert');
+ neWerkzeugleiste();
+ renderHistoryButtons();
+}
+// Werkzeugleiste spiegelt den Zustand an der Cursorposition oder in der
+// Markierung - einschliesslich der Schriftgroesse.
+function neWerkzeugleiste(){
+ const editor=neEditor();
+ if(!editor)return;
+ const auswahl=neAuswahl();
+ const marke=name=>{
+  if(!auswahl)return false;
+  const {von,bis}=auswahl;
+  if(von.zeile===bis.zeile&&von.zeichen===bis.zeichen){
+   return Boolean(neMarkenAnPosition(noteModell,von)[name]);
+  }
+  return neMarkeImBereich(noteModell,von,bis,name)===true;
+ };
+ $$('[data-note-command]').forEach(schalter=>{
+  const befehl=schalter.dataset.noteCommand;
+  const name={bold:'fett',italic:'kursiv',underline:'unterstrichen',strikeThrough:'durchgestrichen'}[befehl];
+  if(name)schalter.classList.toggle('active',marke(name));
+ });
+ const arten=[];
+ if(auswahl){
+  for(let i=auswahl.von.zeile;i<=auswahl.bis.zeile;i++){
+   if(noteModell[i])arten.push(noteModell[i].art);
+  }
+ }
+ const alleArt=art=>arten.length>0&&arten.every(eintrag=>eintrag===art);
+ $$('[data-note-block]').forEach(schalter=>{
+  schalter.classList.toggle('active',alleArt(schalter.dataset.noteBlock));
+ });
+ const auswahlFeld=$('#note-font-size');
+ if(auswahlFeld){
+  let anzeige='';
+  if(auswahl){
+   const {von,bis}=auswahl;
+   if(von.zeile===bis.zeile&&von.zeichen===bis.zeichen){
+    anzeige=String(Number(neMarkenAnPosition(noteModell,von).groesse)||NE_GRUNDGROESSE);
+   }else{
+    const wert=neMarkeImBereich(noteModell,von,bis,'groesse');
+    anzeige=wert===null||wert===undefined?'':String(wert);
+   }
+  }
+  // Leerer Wert = gemischte Groessen in der Markierung.
+  auswahlFeld.value=anzeige&&NE_GROESSEN.includes(Number(anzeige))?anzeige:'';
+ }
+ const farbfeld=$('#note-color-buttons');
+ if(farbfeld&&auswahl){
+  const farbe=neMarkeImBereich(noteModell,auswahl.von,auswahl.bis,'farbe');
+  const aktiv=auswahl.von.zeile===auswahl.bis.zeile&&auswahl.von.zeichen===auswahl.bis.zeichen
+   ?(neMarkenAnPosition(noteModell,auswahl.von).farbe||'#000000')
+   :(farbe===null||farbe===undefined?'':(farbe||'#000000'));
+  $$('[data-note-color]',farbfeld).forEach(schalter=>{
+   schalter.classList.toggle('active',
+    String(schalter.dataset.noteColor).toLowerCase()===String(aktiv).toLowerCase());
+  });
+ }
+}
+
+// Weiterleitungen der frueheren Schnittstelle. Sie werden im Programm nicht
+// mehr aufgerufen, bleiben aber bestehen, damit bestehende Aufrufwege und
+// Erweiterungen unveraendert funktionieren.
+function updateNoteEditorEmptyState(){neLeereAnzeige()}
+function serializeNoteEditorHtml(){return neSerialisiere()}
+function loadNoteEditorContent(html){
+ noteEditorState.loading=true;
+ neLadeInhalt(html);
+ noteEditorState.savedHtml=neSerialisiere();
+ noteEditorState.loading=false;
+}
+// Die alten Einstiegspunkte bleiben als duenne Weiterleitungen bestehen,
+// damit alle bisherigen Aufrufwege unveraendert funktionieren.
+const NOTE_BEFEHL_ZUORDNUNG={
+ bold:'bold',italic:'italic',underline:'underline',strikeThrough:'strikeThrough',
+ insertUnorderedList:'ul',insertOrderedList:'ol',
+ indent:'einzug',outdent:'ausrueckung',
+ foreColor:'farbe'
+};
+function noteCommand(command,value=null){
+ const befehl=NOTE_BEFEHL_ZUORDNUNG[command];
+ if(!befehl)return;
+ neBefehl(befehl,value);
+}
+function applyNoteBlockFormat(tag){
+ const zuordnung={p:'p',h2:'h2',h3:'h3',blockquote:'zitat'};
+ neBefehl(zuordnung[String(tag||'p').toLowerCase()]||'p');
+}
+function applyNoteFontSize(value){
+ // Leerer Wert bedeutet "gemischt" und ist nur eine Anzeige.
+ if(value===''||value===null||value===undefined)return;
+ neBefehl('groesse',value);
+}
+
+
+function noteToggleListNeu(typ){
+ neBefehl(typ==='ordered'?'ol':(typ==='checklist'?'check':'ul'));
+}
+
+function noteToggleList(typ){noteToggleListNeu(typ)}
+function toggleNoteChecklist(){neBefehl('check')}
+function toggleChecklistItem(item){
+ const index=Number(item&&item.dataset?item.dataset.ne:NaN);
+ if(!Number.isFinite(index))return false;
+ return neHakenUmschalten(index);
+}
+function toggleCurrentChecklistItem(){return neHakenAnPosition()}
+function clearNoteFormatting(){neBefehl('normal')}
+function insertSanitizedNotePaste(html,text){neEinfuegen(html,text)}
+function updateNoteToolbarState(){neWerkzeugleiste()}
 
 function closeFilters(except=null){$$('.filter.open').forEach(item=>{if(item!==except)item.classList.remove('open')})}
 // ── Volltextsuche über Notizen, Aufgaben, Projekte und Unteraufgaben ───────
@@ -8600,36 +8594,19 @@ document.addEventListener('keydown',event=>{
  if(noteEditor){
   if(modifier&&key==='z'){
    event.preventDefault();
-   event.shiftKey?noteEditorRedo():noteEditorUndo();
+   event.shiftKey?neWiederherstellen():neRueckgaengig();
    return;
   }
-  if(modifier&&key==='y'){
-   event.preventDefault();
-   noteEditorRedo();
-   return;
-  }
-  if(modifier&&event.key==='Enter'){
-   event.preventDefault();
-   toggleCurrentChecklistItem();
-   return;
-  }
-  if(event.key==='Enter'&&!event.shiftKey&&!modifier
-     &&rtExitListOnEmptyLine(noteEditor,event)){
-   normalizeChecklistDom();
-   updateNoteEditorEmptyState();
-   saveNoteSelection();
-   scheduleCurrentNoteSave();
-   updateNoteToolbarState();
-   return;
-  }
+  if(modifier&&key==='y'){event.preventDefault();neWiederherstellen();return}
+  if(modifier&&key==='b'){event.preventDefault();neBefehl('bold');return}
+  if(modifier&&key==='i'){event.preventDefault();neBefehl('italic');return}
+  if(modifier&&key==='u'){event.preventDefault();neBefehl('underline');return}
+  if(modifier&&event.key==='Enter'){event.preventDefault();neHakenAnPosition();return}
+  if(event.key==='Enter'&&!modifier&&neZeilenumbruchEingabe(event))return;
   if(event.key==='Tab'){
-   let node=getSelection().anchorNode;
-   if(node?.nodeType===3)node=node.parentElement;
-   if(node?.closest?.('li')){
-    event.preventDefault();
-    noteCommand(event.shiftKey?'outdent':'indent');
-    return;
-   }
+   event.preventDefault();
+   neBefehl(event.shiftKey?'ausrueckung':'einzug');
+   return;
   }
  }
 
@@ -8669,38 +8646,12 @@ document.addEventListener('keydown',event=>{
 });
 
 bind('#note-editor','beforeinput',event=>{
- if(noteEditorState.loading||noteEditorState.historyLocked)return;
- if(event.inputType==='historyUndo'){
-  event.preventDefault();
-  noteEditorUndo();
-  return;
- }
- if(event.inputType==='historyRedo'){
-  event.preventDefault();
-  noteEditorRedo();
-  return;
- }
- noteEditorState.lastBeforeInputType=event.inputType||'edit';
- noteEditorCheckpoint({inputType:event.inputType||'edit'});
-});
-bind('#note-editor','input',()=>{
  if(noteEditorState.loading)return;
- normalizeChecklistDom();
- updateNoteEditorEmptyState();
- if(noteEditorState.lastBeforeInputType==='insertParagraph'){
-  let node=getSelection().anchorNode;
-  if(node?.nodeType===3)node=node.parentElement;
-  const item=node?.closest?.('ul.note-checklist > li');
-  if(item){
-   item.dataset.checked='false';
-   item.setAttribute('aria-checked','false');
-  }
- }
- noteEditorState.lastBeforeInputType='';
- saveNoteSelection();
- scheduleCurrentNoteSave();
- updateNoteToolbarState();
+ // Der eigene Verlauf ersetzt den des Browsers vollstaendig.
+ if(event.inputType==='historyUndo'){event.preventDefault();neRueckgaengig();return}
+ if(event.inputType==='historyRedo'){event.preventDefault();neWiederherstellen();return}
 });
+bind('#note-editor','input',neUebernehmeEingabe);
 bind('#note-editor','paste',event=>{
  event.preventDefault();
  const clipboard=event.clipboardData;
@@ -8713,8 +8664,7 @@ document.addEventListener('selectionchange',()=>{
  const editor=$('#note-editor');
  const selection=getSelection();
  if(selection.rangeCount&&editor.contains(selection.anchorNode)){
-  saveNoteSelection();
-  updateNoteToolbarState();
+  neWerkzeugleiste();
  }
 });
 
@@ -9371,8 +9321,10 @@ bind('#note-undo-btn','mousedown',event=>event.preventDefault());
 bind('#note-redo-btn','mousedown',event=>event.preventDefault());
 bind('#note-undo-btn','click',noteEditorUndo);
 bind('#note-redo-btn','click',noteEditorRedo);
-bind('#note-editor','mouseup',saveNoteSelection);
-bind('#note-editor','keyup',saveNoteSelection);
+bind('#note-editor','mouseup',neWerkzeugleiste);
+bind('#note-editor','keyup',neWerkzeugleiste);
+bind('#note-editor','focus',neWerkzeugleiste);
+bind('#note-editor','blur',neWerkzeugleiste);
 window.addEventListener('resize',()=>{applyMobileMode();closeFilters();closeNavContextMenu()});window.addEventListener('scroll',()=>{closeFilters();closeNavContextMenu()},true);
 
 
@@ -9501,6 +9453,22 @@ window.__dashboardTest={
  insertSanitizedNotePaste,
  toggleNoteChecklist,
  toggleChecklistItem,
+ neBefehl,
+ neLadeInhalt,
+ neSerialisiere,
+ neEinfuegen,
+ neZeilenumbruchEingabe,
+ neUebernehmeEingabe,
+ neRueckgaengig,
+ neWiederherstellen,
+ neWerkzeugleiste,
+ neHakenUmschalten,
+ neHakenAnPosition,
+ neAuswahl,
+ neSetzeAuswahl,
+ neHtmlAusModell,
+ neModellAusHtml,
+ getNoteModell:()=>neModellKopie(noteModell),
  noteCommand,
  noteToggleList,
  qnBefehl,
@@ -9517,18 +9485,6 @@ window.__dashboardTest={
  qnAuswahl,
  qnSetzeAuswahl,
  getQuickNoteModell:()=>qnModellKopie(quickNoteModell),
- rtToggleList,
- rtToggleInline,
- rtApplyColor,
- rtApplyFontSize,
- rtDropStyleAbove,
- rtClearFormatting,
- rtStripColors,
- rtSelectedBlocks,
- rtTextNodesInRange,
- rtOffsetsOfRange,
- rtEnsureBlocks,
- rtExitListOnEmptyLine,
  noteEditorUndo,
  noteEditorRedo,
  noteEditorCheckpoint,
