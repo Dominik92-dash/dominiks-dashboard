@@ -24,7 +24,7 @@
 .note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:16px;letter-spacing:-.01em;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid var(--category-border);border-radius:var(--radius)}.group.own{background:var(--own)}.group.project{background:var(--project)}.group.delegated-group{background:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
-.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 175px auto;gap:10px;align-items:center;padding:11px;background:var(--work-card-bg);border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 170px auto}.todo-row.completed{opacity:.62;background:var(--work-card-bg)}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.todo-row.delegated>.person-select{font-size:13px}
+.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 132px 175px auto;gap:10px;align-items:center;padding:11px;background:var(--work-card-bg);border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 132px 170px auto}.todo-row.completed{opacity:.62;background:var(--work-card-bg)}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.todo-row.delegated>.person-select{font-size:13px}
 .project-card{
  display:block;
  overflow:hidden;
@@ -1226,6 +1226,62 @@ body:not(.mobile) .tools{justify-content:space-between;gap:0}
 
 /* Statusanzeige in Aufgaben etwas kompakter */
 .todo-row>.status-select{font-size:13px}
+/* Deadline auf den Aufgabenkarten. Ueberfaellige Termine werden farblich
+   hervorgehoben, solange die Aufgabe nicht erledigt ist. */
+.todo-date-wrap{position:relative;min-width:0}
+.todo-date-wrap .subtask-deadline{width:100%;max-width:100%;box-sizing:border-box;color-scheme:light}
+.todo-date-wrap.is-overdue .subtask-deadline{
+ border-color:var(--danger);
+ background:#fdf1f1;
+ color:var(--danger);
+ font-weight:600
+}
+/* Schalter in der Kopfzeile der Aufgabenansicht. */
+.editor-head .head-action{
+ flex:0 0 auto;
+ height:32px;
+ padding:0 13px;
+ font-size:13px;
+ white-space:nowrap
+}
+.todo-mail-note{
+ margin-top:-4px;
+ color:var(--muted);
+ font-size:12px
+}
+.icon.mail-btn{font-family:Arial,Helvetica,sans-serif}
+.option-row .option-email{min-width:0;flex:1 1 190px;font-size:13px}
+.mail-body{
+ width:100%;
+ min-height:260px;
+ outline:0;
+ overflow:auto;
+ max-height:46vh;
+ padding:11px 12px;
+ border:1px solid var(--border);
+ border-radius:8px;
+ background:#fff;
+ color:#000;
+ font-family:inherit;
+ font-size:14px;
+ line-height:1.5;
+ resize:vertical
+}
+.mail-hint{
+ grid-column:1/-1;
+ margin:0;
+ padding:9px 11px;
+ border-radius:8px;
+ background:var(--accent-soft);
+ color:var(--text);
+ font-size:13px
+}
+.mail-status{flex:1;color:var(--muted);font-size:13px}
+.mail-foot-hint{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.4}
+.mail-field-row{display:flex;gap:8px;align-items:center}
+.mail-field-row>input{flex:1;min-width:0}
+.mail-copy-small{flex:0 0 auto;height:34px;padding:0 12px;font-size:13px;white-space:nowrap}
+.option-row .option-anrede{width:92px;flex:0 0 92px;font-size:13px}
 
 /* Notizvorschau: echte Umbrüche statt zusammenhängender Zeile */
 .preview{
@@ -1974,6 +2030,7 @@ body.mobile .delegated-card{
 }
 body.mobile .delegated-card>.work-meta,
 body.mobile .delegated-card>.work-note,
+body.mobile .delegated-card>.todo-date-wrap,
 body.mobile .delegated-card>.status-select,
 body.mobile .delegated-card>.work-actions{
  grid-column:1;
@@ -2105,7 +2162,7 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
 .delegated-card{
  display:grid;
  grid-template-columns:minmax(154px,.7fr) minmax(327px,1.35fr)
-                       var(--status-width) auto;
+                       132px var(--status-width) auto;
  gap:10px;
  align-items:center;
  min-height:58px;
@@ -2148,7 +2205,7 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
 @media(max-width:1180px){
  .delegated-card{
   grid-template-columns:minmax(140px,.7fr) minmax(210px,1.1fr)
-                        var(--status-width) auto
+                        120px var(--status-width) auto
  }
 }
 @media(max-width:980px){
@@ -2419,6 +2476,35 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
 
 <div id="nav-context-menu" class="nav-context-menu" role="menu" hidden></div>
 
+<section id="mail-overlay" class="overlay"><div class="shell">
+  <header class="editor-head">
+   <h2 class="title-large">Als Mail vorbereiten</h2>
+   <button type="button" class="close-btn" data-close-overlay="mail">×</button>
+  </header>
+  <div class="detail-body"><div class="detail-grid">
+   <div class="field full"><label for="mail-recipient">An</label>
+    <div class="mail-field-row">
+     <input id="mail-recipient" type="email" placeholder="E-Mail-Adresse">
+     <button type="button" id="mail-copy-recipient" class="secondary mail-copy-small">Kopieren</button>
+    </div></div>
+   <p id="mail-hint" class="mail-hint" hidden></p>
+   <div class="field full"><label for="mail-subject">Betreff</label>
+    <div class="mail-field-row">
+     <input id="mail-subject" type="text">
+     <button type="button" id="mail-copy-subject" class="secondary mail-copy-small">Kopieren</button>
+    </div></div>
+   <div class="field full"><label for="mail-body">Text</label>
+    <div id="mail-body" class="mail-body" contenteditable="true" role="textbox"
+         aria-multiline="true" aria-label="Mailtext"></div>
+    <p class="mail-foot-hint">Der Text wird mit Formatierung kopiert – in der Mail
+     einfach einfügen, Fett und Kursiv kommen mit. Vorher kannst du hier noch ändern.</p></div>
+  </div></div>
+  <footer class="editor-foot">
+   <span id="mail-status" class="mail-status"></span>
+   <button type="button" id="mail-copy-btn" class="primary">Text kopieren</button>
+  </footer>
+</div></section>
+
 <section id="vault-overlay" class="overlay"><div class="shell vault-shell">
   <header class="editor-head"><h2 id="vault-dialog-title" class="title-large">Passwörter</h2><button type="button" class="close-btn" data-close-overlay="vault">×</button></header>
   <div class="detail-body">
@@ -2436,13 +2522,20 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
 </div></section>
 
 <section id="todo-overlay" class="overlay"><div class="shell">
-  <header class="editor-head"><input id="todo-title" class="title-large" placeholder="Bezeichnung"><button type="button" class="close-btn" data-close-overlay="todo">×</button></header>
+  <header class="editor-head">
+   <input id="todo-title" class="title-large" placeholder="Bezeichnung">
+   <button type="button" id="todo-mail-btn" class="secondary head-action">Als Mail vorbereiten</button>
+   <button type="button" id="todo-save-btn" class="primary head-action">Speichern</button>
+   <button type="button" class="close-btn" data-close-overlay="todo">×</button>
+  </header>
   <div class="detail-body"><div class="detail-grid">
     <div class="field full"><label>Anmerkungen für die Übersicht</label><textarea id="todo-summary"></textarea></div>
     <div class="field"><label>Aufgabenbereich</label><select id="todo-area"></select></div>
     <div id="todo-person-field" class="field"><label>Verantwortliche Person</label><select id="todo-person"></select></div>
     <div class="field"><label>Aktueller Stand</label><select id="todo-status"></select></div>
     <div class="field"><label>Priorität</label><select id="todo-priority"></select></div>
+    <div class="field"><label>Deadline</label><input id="todo-deadline" type="date" min="2000-01-01" max="2100-12-31"></div>
+    <div id="todo-mail-note" class="field full todo-mail-note" hidden></div>
     <div class="field full"><label>Ausführliche Notizen</label><textarea id="todo-details" class="details-text"></textarea></div>
   </div></div>
   <footer class="editor-foot"><span>Automatische Speicherung</span><button type="button" id="delete-todo-detail" class="danger">Aufgabe löschen</button></footer>
@@ -2710,7 +2803,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 41.1 vom 14.10.2026, 16:55';
+const DASHBOARD_RELEASE='Dashboard 42.2 vom 14.10.2026, 19:35';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben & Projekte',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -3030,6 +3123,7 @@ function createDefaults(){
     hiddenTaskCategories:[],
     delegatedOrder:[],
     selfPersonId:'',
+    signatureName:'',
     collapsedCategories:[],
     expandedCompleted:[]
    },
@@ -3073,7 +3167,19 @@ function normalizeOptions(raw,fallback,{statusGroup=false}={}){
   while(used.has(id))id=`${id}-${index+1}`;
   used.add(id);
   const color=String(item?.color||fallbackMatch?.color||'#eeeeee');
-  return statusGroup?{id,label,color,kind:['open','active','done'].includes(item?.kind)?item.kind:(fallbackMatch?.kind||inferKind(id,label)),textColor:String(item?.textColor||fallbackMatch?.textColor||defaultStatusTextColor(color))}:{id,label};
+  if(statusGroup){
+   return{id,label,color,
+    kind:['open','active','done'].includes(item?.kind)?item.kind:(fallbackMatch?.kind||inferKind(id,label)),
+    textColor:String(item?.textColor||fallbackMatch?.textColor||defaultStatusTextColor(color))};
+  }
+  // Verantwortlichkeiten koennen eine E-Mail-Adresse tragen. Sie muss die
+  // Normalisierung ueberstehen, sonst waere sie nach jedem Laden weg.
+  const eintrag={id,label};
+  const adresse=String(item?.email||fallbackMatch?.email||'').trim();
+  if(adresse)eintrag.email=adresse;
+  const anrede=String(item?.anrede||fallbackMatch?.anrede||'').trim();
+  if(anrede)eintrag.anrede=anrede;
+  return eintrag;
  });
 }
 function normalizeSection(raw,fallback){
@@ -3211,6 +3317,7 @@ function normalizeState(raw){
    delegatedOrder:Array.isArray(source.config.shared.delegatedOrder)
     ?source.config.shared.delegatedOrder.filter(id=>typeof id==='string')
     :[],
+   signatureName:String(source.config.shared.signatureName||'').slice(0,80),
    selfPersonId:typeof source.config.shared.selfPersonId==='string'
     ?source.config.shared.selfPersonId
     :'',
@@ -3247,6 +3354,7 @@ function normalizeState(raw){
     :defaults.config.shared.showDailyOwn,
    hiddenTaskCategories:[],
    delegatedOrder:[],
+   signatureName:'',
    selfPersonId:'',
    collapsedCategories:[],
    expandedCompleted:[]
@@ -3517,6 +3625,8 @@ function normalizeState(raw){
     ),
     priorityId:priorityId||ownFallbackPriority,
     previousPriorityId:previousPriorityId||priorityId||ownFallbackPriority,
+    deadline:String(item.deadline??item.dueDate??''),
+    mailPreparedAt:String(item.mailPreparedAt??''),
     completed:migratedDone,
     updatedAt:String(item.updatedAt||item.modifiedAt||now())
    };
@@ -3564,6 +3674,8 @@ function normalizeState(raw){
      legacy.delegated.priorities,
      {allowRecurring:true}
     ),
+    deadline:String(item.deadline??item.dueDate??''),
+    mailPreparedAt:String(item.mailPreparedAt??''),
     completed:migratedDone,
     updatedAt:String(item.updatedAt||item.modifiedAt||now())
    };
@@ -4696,6 +4808,18 @@ function setTodoStatus(todo,type,statusId){
 }
 function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button type="button" class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button type="button" class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
 function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))}
+// Eine Aufgabe ist ueberfaellig, wenn ihre Deadline vor heute liegt und sie
+// noch nicht erledigt ist.
+function istUeberfaellig(eintrag){
+ const frist=String(eintrag&&eintrag.deadline||'').trim();
+ if(!frist)return false;
+ const heute=new Date();
+ const heuteWert=`${heute.getFullYear()}-${String(heute.getMonth()+1).padStart(2,'0')}-${String(heute.getDate()).padStart(2,'0')}`;
+ if(frist>=heuteWert)return false;
+ if(eintrag._kind==='subtask')return !isSubtaskDone(eintrag);
+ if(eintrag.personId!==undefined&&eintrag.personId!=='')return !todoIsCompleted(eintrag,'delegated');
+ return !todoIsCompleted(eintrag,'own');
+}
 function renderTodoRow(todo,type,{draggable=false}={}){
  ensureTodoDoneStatus(type);
  const completed=todoIsCompleted(todo,type);
@@ -4713,6 +4837,10 @@ function renderTodoRow(todo,type,{draggable=false}={}){
   <textarea class="inline summary-input" data-todo-field="summary"
             rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>
   ${delegatedPerson}
+  <div class="todo-date-wrap${todo.deadline?'':' is-empty'}${istUeberfaellig(todo)?' is-overdue':''}" data-empty-label="Deadline">
+   <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31"
+          data-todo-field="deadline" value="${esc(todo.deadline||'')}" aria-label="Deadline">
+  </div>
   <select class="status-select" data-todo-field="statusId"
           style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select>
   <div class="actions">
@@ -5188,9 +5316,15 @@ function renderDelegatedEntryRow(entry){
   </div>
   <textarea class="work-note" data-todo-field="summary"
             placeholder="Anmerkungen">${esc(entry.summary)}</textarea>
+  <div class="todo-date-wrap${entry.deadline?'':' is-empty'}${istUeberfaellig(entry)?' is-overdue':''}" data-empty-label="Deadline">
+   <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31"
+          data-todo-field="deadline" value="${esc(entry.deadline||'')}" aria-label="Deadline">
+  </div>
   <select class="status-select" data-todo-field="statusId"
           style="${statusStyle('delegated',entry.statusId)}">${selectOptions('delegated','statuses',entry.statusId)}</select>
   <div class="work-actions">
+   <button type="button" class="icon mail-btn" data-action="mail-todo"
+           title="Als Mail vorbereiten" aria-label="Als Mail vorbereiten">✉︎</button>
    <button type="button" class="icon open-btn" data-action="open-todo"
            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗︎</button>
    <button type="button" class="icon delete-btn" data-action="delete-todo"
@@ -5412,6 +5546,14 @@ function renderSettings(){
        ${options('shared','people').map(p=>`<option value="${esc(p.id)}" ${state.config.shared.selfPersonId===p.id?'selected':''}>${esc(p.label)}</option>`).join('')}
       </select>
       <span style="font-size:12px;color:var(--muted);margin-left:8px">Diese Person bekommt keinen eigenen Block in „Vergebene Aufgaben".</span>
+     </div>
+     <div class="settings-hint" style="margin-bottom:8px">
+      <strong>Name für die Unterschrift:</strong>
+      <input type="text" id="signature-name-input" maxlength="80"
+             value="${esc(state.config.shared.signatureName||'')}"
+             placeholder="${esc(selbstBezeichnung()||'z. B. Max Mustermann')}"
+             style="margin-left:8px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-width:200px">
+      <span style="font-size:12px;color:var(--muted);margin-left:8px">Steht unter vorbereiteten Nachrichten. Leer: es wird „Ich bin" verwendet.</span>
      </div>`:''}
     <div class="option-list" data-option-section="shared" data-option-group="${group}">
      ${options('shared',group).map(item=>renderOptionRow('shared',group,item,{locked})).join('')}
@@ -5440,6 +5582,15 @@ function renderOptionRow(section,group,item,{locked=false}={}){
              data-option-section="${section}" data-option-group="${group}">
   <span class="drag-handle">⋮⋮</span>
   <input type="text" data-setting-field="label" value="${esc(item.label)}">
+  ${group==='people'?`
+   <input type="text" class="option-anrede" data-setting-field="anrede"
+          value="${esc(item.anrede||'')}" placeholder="Herr/Frau"
+          title="Anrede für vorbereitete Nachrichten, zum Beispiel Herr oder Frau"
+          aria-label="Anrede">
+   <input type="email" class="option-email" data-setting-field="email"
+          value="${esc(item.email||'')}" placeholder="E-Mail (optional)"
+          title="E-Mail-Adresse für vorbereitete Nachrichten"
+          aria-label="E-Mail-Adresse">`:''}
   ${group==='statuses'?`
    <input type="color" data-setting-field="color" value="${esc(item.color||'#eeeeee')}" title="Hintergrundfarbe" aria-label="Hintergrundfarbe">
    <input type="color" data-setting-field="textColor" value="${esc(item.textColor||defaultStatusTextColor(item.color))}" title="Schriftfarbe" aria-label="Schriftfarbe">
@@ -5514,9 +5665,254 @@ function deleteNote(id){
  closeOverlays();
 }
 
-function createTodo(type,{open=true,priorityId=null,completed=false,personId=null}={}){const config=sectionConfig(type);const shouldComplete=completed||priorityId==='__completed__';const normalStatus=todoOpenStatus(type)?.id||config.statuses[0]?.id||'';const doneStatus=todoDoneStatus(type)?.id||normalStatus;const effectivePriority=priorityId&&priorityId!=='__completed__'?priorityId:(config.priorities[0]?.id||'');const todo={id:uid(),title:'',summary:'',details:'',statusId:shouldComplete?doneStatus:normalStatus,areaId:config.areas[0]?.id||'',personId:type==='delegated'?(personId||config.people[0]?.id||''):'',priorityId:effectivePriority,previousPriorityId:effectivePriority,completed:shouldComplete,updatedAt:now()};commit(()=>state[type==='own'?'ownTodos':'delegatedTodos'].unshift(todo));if(open)openTodo(todo.id,type)}
-function openTodo(id,type){ensureTodoDoneStatus(type);const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});openOverlay('todo')}
-function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===current.todoId);if(!todo)return;todo.title=$('#todo-title').value.trim();todo.summary=$('#todo-summary').value;todo.details=$('#todo-details').value;todo.areaId=$('#todo-area').value;const selectedPriority=$('#todo-priority').value;if(!todoIsCompleted(todo,current.todoType)){todo.priorityId=selectedPriority;todo.previousPriorityId=selectedPriority}else{todo.previousPriorityId=selectedPriority}setTodoStatus(todo,current.todoType,$('#todo-status').value);if(current.todoType==='delegated')todo.personId=$('#todo-person').value;todo.updatedAt=now();$('#todo-status').style.cssText=statusStyle(current.todoType,todo.statusId);saveState()}
+function createTodo(type,{open=true,priorityId=null,completed=false,personId=null}={}){const config=sectionConfig(type);const shouldComplete=completed||priorityId==='__completed__';const normalStatus=todoOpenStatus(type)?.id||config.statuses[0]?.id||'';const doneStatus=todoDoneStatus(type)?.id||normalStatus;const effectivePriority=priorityId&&priorityId!=='__completed__'?priorityId:(config.priorities[0]?.id||'');const todo={id:uid(),title:'',summary:'',details:'',statusId:shouldComplete?doneStatus:normalStatus,areaId:config.areas[0]?.id||'',personId:type==='delegated'?(personId||config.people[0]?.id||''):'',priorityId:effectivePriority,previousPriorityId:effectivePriority,deadline:'',mailPreparedAt:'',completed:shouldComplete,updatedAt:now()};commit(()=>state[type==='own'?'ownTodos':'delegatedTodos'].unshift(todo));if(open)openTodo(todo.id,type)}
+function openTodo(id,type){ensureTodoDoneStatus(type);const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo)return;current.todoId=id;current.todoType=type;$('#todo-title').value=todo.title;$('#todo-summary').value=todo.summary;$('#todo-details').value=todo.details;$('#todo-area').innerHTML=selectOptions(type,'areas',todo.areaId,{custom:true});$('#todo-status').innerHTML=selectOptions(type,'statuses',todo.statusId);$('#todo-status').style.cssText=statusStyle(type,todo.statusId);$('#todo-priority').innerHTML=selectOptions(type,'priorities',todo.priorityId);$('#todo-deadline').value=todo.deadline||'';$('#todo-person-field').hidden=type!=='delegated';if(type==='delegated')$('#todo-person').innerHTML=selectOptions(type,'people',todo.personId,{custom:true});$('#todo-mail-btn').hidden=type!=='delegated';renderTodoMailNote(todo);openOverlay('todo')}
+function saveCurrentTodo(){const list=current.todoType==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===current.todoId);if(!todo)return;todo.title=$('#todo-title').value.trim();todo.summary=$('#todo-summary').value;todo.details=$('#todo-details').value;todo.areaId=$('#todo-area').value;const selectedPriority=$('#todo-priority').value;if(!todoIsCompleted(todo,current.todoType)){todo.priorityId=selectedPriority;todo.previousPriorityId=selectedPriority}else{todo.previousPriorityId=selectedPriority}setTodoStatus(todo,current.todoType,$('#todo-status').value);todo.deadline=$('#todo-deadline').value;if(current.todoType==='delegated')todo.personId=$('#todo-person').value;todo.updatedAt=now();$('#todo-status').style.cssText=statusStyle(current.todoType,todo.statusId);saveState()}
+// Eine Aufgabe gilt als leer, wenn weder Bezeichnung noch eines der beiden
+// Notizfelder noch eine Deadline gefuellt ist. Nur dann wird sie beim
+// Schliessen verworfen - sobald irgendetwas drinsteht, bleibt sie erhalten.
+function todoIstLeer(todo){
+ if(!todo)return false;
+ return !String(todo.title||'').trim()
+     && !String(todo.summary||'').trim()
+     && !String(todo.details||'').trim()
+     && !String(todo.deadline||'').trim();
+}
+// Schliesst den Aufgabendialog: speichert, und verwirft die Aufgabe, wenn
+// nichts eingetragen wurde.
+function beendeTodoBearbeitung(){
+ if(!current.todoId)return;
+ saveCurrentTodo();
+ const typ=current.todoType;
+ const liste=typ==='own'?state.ownTodos:state.delegatedTodos;
+ const todo=liste.find(item=>item.id===current.todoId);
+ if(todo&&todoIstLeer(todo)){
+  if(typ==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==todo.id);
+  else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==todo.id);
+  saveState();
+ }
+ current.todoId=null;
+}
+// ===============================================================
+//  Mailvorlage fuer vergebene Aufgaben
+//
+//  Die Vorlage wird gleichzeitig als formatierter Text (HTML) und als
+//  Klartext in die Zwischenablage gelegt. Outlook und Word nehmen das
+//  HTML, damit kommen Fett und Kursiv beim Einfuegen mit; einfachere
+//  Empfaenger greifen auf den Klartext zurueck. Ein Weg ueber mailto
+//  waere hier eine Verschlechterung: das Format kennt nur Klartext und
+//  ist je nach Mailprogramm bei rund 2000 Zeichen zu Ende.
+// ===============================================================
+let mailVorlageTodoId=null;
+
+function formatiereDatumDeutsch(wert){
+ const text=String(wert||'').trim();
+ const teile=text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+ return teile?`${teile[3]}.${teile[2]}.${teile[1]}`:text;
+}
+function verantwortlicherVonTodo(todo){
+ return options('shared','people').find(person=>person.id===todo.personId)||null;
+}
+// Eigene Bezeichnung aus der Auswahl "Ich bin".
+function selbstBezeichnung(){
+ const id=state.config.shared.selfPersonId||'';
+ return String(options('shared','people').find(person=>person.id===id)?.label||'').trim();
+}
+// Name unter der Nachricht: eigenes Feld, sonst "Ich bin", sonst der
+// Name von der Startseite.
+function unterschriftName(){
+ return String(state.config.shared.signatureName||'').trim()
+  ||selbstBezeichnung()
+  ||String(state.meta.userName||'').trim();
+}
+// "Hallo Herr Dawid," - die Anrede kommt aus den Einstellungen, der
+// Nachname aus der Bezeichnung. Enthaelt das Anredefeld bereits mehrere
+// Woerter ("Herr Dawid"), wird es unveraendert uebernommen.
+function anredeFuerPerson(person){
+ const bezeichnung=String(person?.label||'').trim();
+ const anrede=String(person?.anrede||'').trim();
+ if(!anrede)return bezeichnung||'zusammen';
+ if(/\s/.test(anrede))return anrede;
+ const teile=bezeichnung.split(/\s+/).filter(Boolean);
+ const nachname=teile.length>1?teile[teile.length-1]:bezeichnung;
+ return nachname?`${anrede} ${nachname}`:anrede;
+}
+// Baut die Nachricht als Liste von Zeilen. Jede Zeile kennt ihre
+// Auszeichnung, daraus entstehen HTML und Klartext in einem Durchgang.
+function baueMailZeilen(todo){
+ const person=verantwortlicherVonTodo(todo);
+ const bezeichnung=String(todo.title||'').trim()||'Ohne Bezeichnung';
+ const zeilen=[];
+ zeilen.push({text:`Hallo ${anredeFuerPerson(person)},`});
+ zeilen.push({leer:true});
+ zeilen.push({text:'ich bitte um die Bearbeitung des folgenden ToDos:'});
+ zeilen.push({text:bezeichnung,fett:true});
+
+ const anmerkung=String(todo.summary||'').trim();
+ const notizen=String(todo.details||'').trim();
+ if(anmerkung||notizen){
+  zeilen.push({leer:true});
+  zeilen.push({text:'Infos:'});
+  if(anmerkung){
+   anmerkung.split(/\n/).forEach(stueck=>{
+    const inhalt=stueck.trim();
+    if(inhalt)zeilen.push({text:inhalt,kursiv:true});
+    else zeilen.push({leer:true});
+   });
+  }
+  if(anmerkung&&notizen)zeilen.push({leer:true});
+  if(notizen){
+   notizen.split(/\n/).forEach(stueck=>{
+    const inhalt=stueck.trim();
+    if(inhalt)zeilen.push({text:inhalt,kursiv:true});
+    else zeilen.push({leer:true});
+   });
+  }
+ }
+ const frist=String(todo.deadline||'').trim();
+ if(frist){
+  zeilen.push({leer:true});
+  zeilen.push({text:`Ich bitte um Erledigung bis zum: ${formatiereDatumDeutsch(frist)}`});
+ }
+ zeilen.push({leer:true});
+ zeilen.push({text:'Vielen Dank und viele Grüße,'});
+ const name=unterschriftName();
+ if(name)zeilen.push({text:name});
+ return{person,bezeichnung,zeilen};
+}
+function mailZeilenAlsHtml(zeilen){
+ return zeilen.map(zeile=>{
+  if(zeile.leer)return'<div><br></div>';
+  let inhalt=esc(zeile.text);
+  if(zeile.kursiv)inhalt=`<em>${inhalt}</em>`;
+  if(zeile.fett)inhalt=`<strong>${inhalt}</strong>`;
+  return`<div>${inhalt}</div>`;
+ }).join('');
+}
+function mailZeilenAlsText(zeilen){
+ return zeilen.map(zeile=>zeile.leer?'':zeile.text).join('\n');
+}
+function baueMailVorlage(todo){
+ const {person,bezeichnung,zeilen}=baueMailZeilen(todo);
+ return{
+  empfaenger:String(person?.email||'').trim(),
+  empfaengerName:String(person?.label||'').trim(),
+  betreff:`ToDo - ${bezeichnung}`,
+  text:mailZeilenAlsText(zeilen),
+  html:mailZeilenAlsHtml(zeilen)
+ };
+}
+// Klartext aus dem Vorschaufeld lesen, damit auch nachtraegliche
+// Aenderungen im Mailprogramm ankommen.
+function mailTextAusVorschau(){
+ const feld=$('#mail-body');
+ if(!feld)return'';
+ const zeilen=[];
+ [...feld.childNodes].forEach(knoten=>{
+  if(knoten.nodeType===3){
+   const text=(knoten.nodeValue||'').replace(/\u00a0/g,' ').trim();
+   if(text)zeilen.push(text);
+   return;
+  }
+  if(knoten.nodeType!==1)return;
+  if(knoten.tagName==='BR'){zeilen.push('');return}
+  zeilen.push((knoten.textContent||'').replace(/\u00a0/g,' ').replace(/\s+$/,''));
+ });
+ return zeilen.join('\n').replace(/\n{3,}/g,'\n\n');
+}
+function oeffneMailVorlage(todoId){
+ const todo=(state.delegatedTodos||[]).find(item=>item.id===todoId);
+ if(!todo)return;
+ mailVorlageTodoId=todoId;
+ const vorlage=baueMailVorlage(todo);
+ $('#mail-recipient').value=vorlage.empfaenger;
+ $('#mail-subject').value=vorlage.betreff;
+ $('#mail-body').innerHTML=vorlage.html;
+ const hinweis=$('#mail-hint');
+ if(hinweis){
+  if(vorlage.empfaenger){
+   hinweis.textContent='';
+   hinweis.hidden=true;
+  }else{
+   hinweis.textContent=vorlage.empfaengerName
+    ? `Für „${vorlage.empfaengerName}“ ist keine E-Mail-Adresse hinterlegt. Du kannst sie hier eintragen oder dauerhaft in den Einstellungen bei den Verantwortlichkeiten ergänzen.`
+    : 'Für diese Aufgabe ist keine verantwortliche Person mit E-Mail-Adresse hinterlegt.';
+   hinweis.hidden=false;
+  }
+ }
+ setMailStatus('');
+ openOverlay('mail');
+}
+function setMailStatus(text){
+ const ziel=$('#mail-status');
+ if(ziel)ziel.textContent=text||'';
+}
+function merkeMailVorbereitet(){
+ const todo=(state.delegatedTodos||[]).find(item=>item.id===mailVorlageTodoId);
+ if(!todo)return;
+ todo.mailPreparedAt=now();
+ todo.updatedAt=now();
+ saveState();
+ if(current.todoId===todo.id)renderTodoMailNote(todo);
+}
+function renderTodoMailNote(todo){
+ const ziel=$('#todo-mail-note');
+ if(!ziel)return;
+ const zeitpunkt=String(todo&&todo.mailPreparedAt||'').trim();
+ if(!zeitpunkt||current.todoType!=='delegated'){
+  ziel.hidden=true;
+  ziel.textContent='';
+  return;
+ }
+ ziel.hidden=false;
+ ziel.textContent=`Mail vorbereitet am ${formatiereZeitpunkt(zeitpunkt)}`;
+}
+// Kopiert gleichzeitig als formatierten Text und als Klartext. Outlook
+// und Word nehmen das HTML und behalten damit Fett und Kursiv.
+// Kopiert eine einzelne Zeile, etwa Empfaenger oder Betreff.
+async function kopiereMailFeld(feldId,bezeichnung){
+ const wert=String($(`#${feldId}`)?.value||'').trim();
+ if(!wert){setMailStatus(`${bezeichnung} ist leer.`);return}
+ try{
+  await navigator.clipboard.writeText(wert);
+  setMailStatus(`${bezeichnung} wurde kopiert.`);
+ }catch{
+  const feld=$(`#${feldId}`);
+  feld.focus();
+  feld.select();
+  setMailStatus(`Bitte mit Strg+C kopieren – ${bezeichnung.toLowerCase()} ist markiert.`);
+ }
+}
+async function kopiereMailText(){
+ const html=`<div>${$('#mail-body').innerHTML}</div>`;
+ const text=mailTextAusVorschau();
+ let erfolg=false;
+ try{
+  if(globalThis.ClipboardItem&&navigator.clipboard?.write){
+   await navigator.clipboard.write([new ClipboardItem({
+    'text/html':new Blob([html],{type:'text/html'}),
+    'text/plain':new Blob([text],{type:'text/plain'})
+   })]);
+   erfolg=true;
+   setMailStatus('Text mit Formatierung kopiert – jetzt in die Mail einfügen.');
+  }else if(navigator.clipboard?.writeText){
+   await navigator.clipboard.writeText(text);
+   erfolg=true;
+   setMailStatus('Text kopiert – dieser Browser überträgt keine Formatierung.');
+  }
+ }catch{erfolg=false}
+ if(!erfolg){
+  // Rueckfallebene: Inhalt markieren, damit Strg+C greift.
+  const bereich=document.createRange();
+  bereich.selectNodeContents($('#mail-body'));
+  const auswahl=window.getSelection();
+  auswahl.removeAllRanges();
+  auswahl.addRange(bereich);
+  setMailStatus('Bitte mit Strg+C kopieren – der Text ist markiert.');
+ }
+ merkeMailVorbereitet();
+}
+
 function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});closeOverlays()}
 // Legt ein neues Projekt im bisherigen Projektbereich an.
 // Der Bereich ist bei diesem Nutzer geloescht; die Funktion bleibt fuer
@@ -8289,6 +8685,11 @@ document.addEventListener('click',event=>{
    case'delete-quick-todo':deleteQuickTodo(action.closest('[data-quick-todo-id]').dataset.quickTodoId);break;
    case'toggle-quick-todo-archive':quickTodoArchiveOpen=!quickTodoArchiveOpen;renderTasks();break;
    case'clear-quick-todo-archive':clearCompletedQuickTodos();break;
+   case'mail-todo':{
+    const id=action.closest('[data-todo-id]')?.dataset.todoId;
+    if(id)oeffneMailVorlage(id);
+    break;
+   }
    case'toggle-note-pin':{
     const id=action.closest('[data-note-id]')?.dataset.noteId;
     const note=state.notes.find(item=>item.id===id);
@@ -8380,7 +8781,13 @@ document.addEventListener('click',event=>{
   return;
  }
  const noteMain=event.target.closest('.note-main');if(noteMain){openNote(noteMain.closest('[data-note-id]').dataset.noteId);return}
- const close=event.target.closest('[data-close-overlay]');if(close){if(close.dataset.closeOverlay==='todo')saveCurrentTodo();if(close.dataset.closeOverlay==='work')saveCurrentWork();if(close.dataset.closeOverlay==='project')saveCurrentProject();closeOverlays();renderAll();return}
+ const close=event.target.closest('[data-close-overlay]');if(close){if(close.dataset.closeOverlay==='mail'){
+  mailVorlageTodoId=null;
+  // Der Aufgabendialog wurde beim Oeffnen der Vorschau geschlossen. Die
+  // Bearbeitung muss trotzdem sauber beendet werden.
+  beendeTodoBearbeitung();
+ }
+ if(close.dataset.closeOverlay==='todo')beendeTodoBearbeitung();if(close.dataset.closeOverlay==='work')saveCurrentWork();if(close.dataset.closeOverlay==='project')saveCurrentProject();closeOverlays();renderAll();return}
  const colorButton=event.target.closest('[data-note-color]');if(colorButton){noteCommand('foreColor',colorButton.dataset.noteColor);return}
 });
 
@@ -9292,6 +9699,26 @@ bind('#app-title','click',()=>{const value=prompt('Name der Übersicht:',state.m
 bind('#app-subtitle','click',()=>{const value=prompt('Untertitel der Übersicht:',state.meta.subtitle);if(value!==null&&value.trim())commit(()=>state.meta.subtitle=value.trim())});
 bind('#delete-note-detail','click',()=>current.noteId&&deleteNote(current.noteId));
 bind('#delete-todo-detail','click',()=>current.todoId&&deleteTodo(current.todoId,current.todoType));
+bind('#todo-save-btn','click',()=>{
+ if(!current.todoId)return;
+ saveCurrentTodo();
+ closeOverlays();
+ current.todoId=null;
+ renderAll();
+});
+bind('#todo-mail-btn','click',()=>{
+ if(!current.todoId)return;
+ saveCurrentTodo();
+ oeffneMailVorlage(current.todoId);
+});
+bind('#mail-copy-btn','click',kopiereMailText);
+bind('#mail-copy-recipient','click',()=>kopiereMailFeld('mail-recipient','Die Adresse'));
+bind('#mail-copy-subject','click',()=>kopiereMailFeld('mail-subject','Der Betreff'));
+bind('#settings-overlay','input',event=>{
+ if(event.target.id!=='signature-name-input')return;
+ state.config.shared.signatureName=event.target.value.slice(0,80);
+ saveState();
+});
 bind('#delete-work-detail','click',()=>current.workId&&deleteWorkItem(current.workId));
 bind('#delete-project-detail','click',()=>current.projectId&&deleteProject(current.projectId));
 $$('[data-note-command]').forEach(button=>{
@@ -9458,6 +9885,19 @@ window.__dashboardTest={
  insertSanitizedNotePaste,
  toggleNoteChecklist,
  toggleChecklistItem,
+ createTodo,
+ openTodo,
+ saveCurrentTodo,
+ beendeTodoBearbeitung,
+ todoIstLeer,
+ istUeberfaellig,
+ baueMailVorlage,
+ anredeFuerPerson,
+ unterschriftName,
+ selbstBezeichnung,
+ mailTextAusVorschau,
+ oeffneMailVorlage,
+ formatiereDatumDeutsch,
  neBefehl,
  neLadeInhalt,
  neSerialisiere,
