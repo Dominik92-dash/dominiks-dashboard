@@ -2698,7 +2698,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 39.1 vom 14.10.2026, 12:20';
+const DASHBOARD_RELEASE='Dashboard 39.2 vom 14.10.2026, 13:10';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -6605,13 +6605,15 @@ function rtSelectedBlocks(root){
 }
 // Merkt sich die Auswahl als Textposition, damit sie den Umbau des
 // Dokumentbaums ueberlebt.
-function rtOffsets(root){
- const range=rtRange(root);
- if(!range)return null;
- const vor=range.cloneRange();
+function rtOffsetsOfRange(root,range){
+ if(!root||!range)return null;
+ const vor=document.createRange();
  vor.selectNodeContents(root);
  vor.setEnd(range.startContainer,range.startOffset);
  return{start:vor.toString().length,laenge:range.toString().length};
+}
+function rtOffsets(root){
+ return rtOffsetsOfRange(root,rtRange(root));
 }
 function rtRestoreOffsets(root,pos){
  if(!root||!pos)return;
@@ -6795,40 +6797,52 @@ function rtInlineWrapperOf(root,node,art){
  }
  return gefunden;
 }
-// Alle Textknoten, die der Bereich vollstaendig umfasst. Die Raender werden
-// vorher geteilt, damit wirklich nur die Auswahl betroffen ist.
+// Teilt den Textknoten, in dem die Zeichenposition liegt, genau dort auf.
+function rtSplitAtOffset(root,ziel){
+ const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ let gezaehlt=0,knoten;
+ while((knoten=lauf.nextNode())){
+  const laenge=knoten.nodeValue.length;
+  if(ziel>gezaehlt&&ziel<gezaehlt+laenge){
+   knoten.splitText(ziel-gezaehlt);
+   return true;
+  }
+  gezaehlt+=laenge;
+ }
+ return false;
+}
+// Alle Textknoten, die die Auswahl vollstaendig umfasst. Die Grenzen werden
+// vorher als ZEICHENPOSITIONEN festgehalten und erst danach die Textknoten
+// geteilt.
+//
+// Warum nicht direkt mit startContainer/startOffset arbeiten? Markiert man
+// mit der Maus von rechts nach links, setzt der Browser die Endgrenze gern
+// auf den Elternknoten, zum Beispiel (p, 1) statt (Text, 14). Sobald dann
+// ein Textknoten geteilt wird, waechst die Kindanzahl von p - und (p, 1)
+// zeigt plotzlich VOR den gesuchten Text. Die Auswahl war damit leer und
+// "Fett" tat nichts. Bei einem Doppelklick liegen beide Grenzen im
+// Textknoten, deshalb hat es dort funktioniert.
 function rtTextNodesInRange(root,range){
- let sKnoten=range.startContainer,sOffset=range.startOffset;
- let eKnoten=range.endContainer,eOffset=range.endOffset;
- // Zuerst das Ende teilen, dann den Anfang - andernfalls verschiebt sich die
- // Endposition, wenn Anfang und Ende im selben Textknoten liegen.
- if(eKnoten.nodeType===3&&eOffset>0&&eOffset<eKnoten.nodeValue.length){
-  eKnoten.splitText(eOffset);
-  eOffset=eKnoten.nodeValue.length;
- }
- if(sKnoten.nodeType===3&&sOffset>0&&sOffset<sKnoten.nodeValue.length){
-  const rest=sKnoten.splitText(sOffset);
-  if(eKnoten===sKnoten){eKnoten=rest;eOffset=rest.nodeValue.length}
-  sKnoten=rest;
-  sOffset=0;
- }
- const bereich=document.createRange();
- bereich.setStart(sKnoten,sOffset);
- bereich.setEnd(eKnoten,eOffset);
+ const pos=rtOffsetsOfRange(root,range);
+ if(!pos||!pos.laenge)return[];
+ const ende=pos.start+pos.laenge;
+ rtSplitAtOffset(root,ende);
+ rtSplitAtOffset(root,pos.start);
  const treffer=[];
  const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
- let knoten;
+ let gezaehlt=0,knoten;
  while((knoten=lauf.nextNode())){
-  if(!knoten.nodeValue.length)continue;
-  // selectNodeContents und nicht selectNode: die Grenzen muessen INNERHALB
-  // des Textknotens liegen, sonst vergleicht man Positionen im Elternknoten.
-  const eigen=document.createRange();
-  eigen.selectNodeContents(knoten);
-  const drin=bereich.compareBoundaryPoints(Range.START_TO_START,eigen)<=0
-          && bereich.compareBoundaryPoints(Range.END_TO_END,eigen)>=0;
-  if(drin)treffer.push(knoten);
+  const laenge=knoten.nodeValue.length;
+  if(laenge&&gezaehlt>=pos.start&&gezaehlt+laenge<=ende)treffer.push(knoten);
+  gezaehlt+=laenge;
  }
- rtSetRange(bereich);
+ if(treffer.length){
+  const letzter=treffer[treffer.length-1];
+  const bereich=document.createRange();
+  bereich.setStart(treffer[0],0);
+  bereich.setEnd(letzter,letzter.nodeValue.length);
+  rtSetRange(bereich);
+ }
  return treffer;
 }
 // Teilt ein Formatelement so auf, dass der Knoten danach ausserhalb liegt.
@@ -9025,6 +9039,8 @@ window.__dashboardTest={
  rtClearFormatting,
  rtStripColors,
  rtSelectedBlocks,
+ rtTextNodesInRange,
+ rtOffsetsOfRange,
  rtEnsureBlocks,
  rtExitListOnEmptyLine,
  noteEditorUndo,
