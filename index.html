@@ -20,7 +20,7 @@
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
-.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
+.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;color:#000;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
 .note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:16px;letter-spacing:-.01em;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid var(--category-border);border-radius:var(--radius)}.group.own{background:var(--own)}.group.project{background:var(--project)}.group.delegated-group{background:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
@@ -149,7 +149,7 @@
 .color-btn.active{box-shadow:0 0 0 2px var(--accent)}
 
 .note-toolbar{position:sticky;top:0;z-index:3}
-.rich-editor{position:relative;flex:1;min-height:420px;padding:27px 31px 48px;outline:0;line-height:1.6;background:#fff}
+.rich-editor{position:relative;flex:1;min-height:420px;padding:27px 31px 48px;outline:0;line-height:1.6;background:#fff;color:#000}
 .rich-editor:empty::before,.rich-editor.editor-empty::before{content:attr(data-placeholder);position:absolute;top:27px;left:31px;color:#9099a3;pointer-events:none}
 .rich-editor p{margin:0 0 .72em}
 .rich-editor h2{margin:1.15em 0 .45em;font-size:1.55em;line-height:1.25}
@@ -2708,7 +2708,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 38.2 vom 10.09.2026, 18:26';
+const DASHBOARD_RELEASE='Dashboard 39.0 vom 14.10.2026, 11:45';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -3005,7 +3005,7 @@ function createDefaults(){
     quickNoteBg:'#f3f8fe',
     quickNoteTitle:'#2a6ccc'
    },
-   noteColors:['#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
+   noteColors:['#000000','#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
    shared:{
     areas:clone(legacy.projects.areas),
     statuses:[
@@ -3384,6 +3384,11 @@ function normalizeState(raw){
   &&source.config.noteColors.length
   ?source.config.noteColors.map(String)
   :clone(defaults.config.noteColors);
+ // Einmalige Ergaenzung: echtes Schwarz als erste Schriftfarbe. Eigene
+ // Farben bleiben dabei unveraendert erhalten, es wird nichts ersetzt.
+ if(!result.config.noteColors.some(color=>/^#?(?:000|000000)$/i.test(String(color).trim()))){
+  result.config.noteColors=['#000000',...result.config.noteColors];
+ }
 
  const allowed=['home','notes','tasks','projects','own','delegated'];
  result.config.deletedPages=Array.isArray(source.config?.deletedPages)
@@ -4192,8 +4197,7 @@ function richEditorHistory(command){
  if(quickEditor&&document.activeElement===quickEditor){
   restoreQuickNoteSelection();
   if(document.queryCommandEnabled?.(command)!==false&&document.execCommand(command)){
-   state.meta.quickNote=quickEditor.innerHTML;
-   saveState();
+   saveQuickNoteValue();
    return true;
   }
  }
@@ -4399,7 +4403,13 @@ function renderBrand(){
  const quickEditor=$('#quick-note-editor');
  if(quickEditor&&document.activeElement!==quickEditor){
   const nextHtml=richTextValueToHtml(state.meta.quickNote);
-  if(quickEditor.innerHTML!==nextHtml)quickEditor.innerHTML=nextHtml;
+  if(quickEditor.innerHTML!==nextHtml){
+   quickEditor.innerHTML=nextHtml;
+   // Schnelle Notizen sind immer schwarz, egal was eingefuegt wurde.
+   rtStripColors(quickEditor);
+   // Die gemerkte Auswahl zeigt nach dem Neuaufbau ins Leere.
+   quickNoteRange=null;
+  }
  }
 }
 function renderNav(){
@@ -5768,8 +5778,21 @@ function saveNoteSelection(){
 }
 function restoreNoteSelection(){
  const editor=$('#note-editor');
- if(noteRange&&noteRange.startContainer?.isConnected&&noteRange.endContainer?.isConnected){
-  const selection=getSelection();
+ if(!editor)return;
+ const selection=getSelection();
+ // Eine Auswahl, die bereits im Editor liegt, ist immer die aktuellste. Sie
+ // darf nicht durch einen gemerkten Bereich ueberschrieben werden - sonst
+ // springt der Cursor beim Klick auf die Werkzeugleiste woanders hin.
+ if(selection.rangeCount&&editor.contains(selection.getRangeAt(0).commonAncestorContainer)){
+  noteRange=selection.getRangeAt(0).cloneRange();
+  noteEditorState.selection=captureNoteSelectionBookmark();
+  return;
+ }
+ const gueltig=noteRange
+  &&noteRange.startContainer?.isConnected
+  &&noteRange.endContainer?.isConnected
+  &&editor.contains(noteRange.startContainer);
+ if(gueltig){
   selection.removeAllRanges();
   selection.addRange(noteRange);
  }else if(noteEditorState.selection&&restoreNoteSelectionBookmark(noteEditorState.selection)){
@@ -5788,23 +5811,54 @@ function saveQuickNoteSelection(){
 }
 function restoreQuickNoteSelection(){
  const editor=$('#quick-note-editor');
- if(quickNoteRange){
+ if(!editor)return null;
+ // Erst fokussieren, dann die Auswahl setzen - andernfalls verwirft der
+ // Browser die wiederhergestellte Auswahl sofort wieder.
+ if(document.activeElement!==editor){
+  try{editor.focus({preventScroll:true})}catch{editor.focus()}
+ }
+ const gueltig=quickNoteRange
+  &&quickNoteRange.startContainer
+  &&quickNoteRange.startContainer.isConnected
+  &&quickNoteRange.endContainer
+  &&quickNoteRange.endContainer.isConnected
+  &&editor.contains(quickNoteRange.startContainer);
+ if(gueltig){
   const selection=getSelection();
   selection.removeAllRanges();
   selection.addRange(quickNoteRange);
- }else editor.focus();
+  return editor;
+ }
+ // Gemerkte Auswahl ist veraltet (der Bereich wird bei jedem Neuzeichnen
+ // neu aufgebaut). Dann die vorhandene Auswahl behalten oder ans Ende.
+ const selection=getSelection();
+ if(selection.rangeCount&&editor.contains(selection.anchorNode))return editor;
+ rtPlaceCaretAtEnd(editor);
+ return editor;
+}
+// Beim Speichern die Platzhalter fuer wartende Formate entfernen.
+function quickNoteHtml(){
+ const editor=$('#quick-note-editor');
+ return editor?editor.innerHTML.replace(/\u200b/g,''):'';
+}
+function saveQuickNoteValue(){
+ state.meta.quickNote=quickNoteHtml();
+ saveState();
 }
 function quickNoteCommand(command){
- restoreQuickNoteSelection();
- if(command==='bullet'||command==='ordered'){
-  // Auch hier ohne Browserbefehl, damit sich beide Editoren gleich verhalten.
-  document.execCommand(command==='ordered'?'insertOrderedList':'insertUnorderedList',false,null);
+ const editor=restoreQuickNoteSelection();
+ if(!editor)return;
+ if(command==='bullet'||command==='ordered'||command==='checklist'){
+  rtToggleList(editor,command);
+ }else if(RT_INLINE_TAGS[command]){
+  rtToggleInline(editor,command);
  }else{
-  document.execCommand(command,false,null);
+  try{document.execCommand(command,false,null)}catch{/* nicht unterstuetzt */}
  }
+ // In den schnellen Notizen ist die Schrift laut Vorgabe immer schwarz.
+ rtStripColors(editor);
  saveQuickNoteSelection();
- state.meta.quickNote=$('#quick-note-editor').innerHTML;
- saveState();
+ saveQuickNoteValue();
 }
 function nodePathFromRoot(root,node){
  const path=[];
@@ -6022,7 +6076,7 @@ function wrapInlineFormatting(target,formats){
 }
 function sanitizeNoteNode(node,{paste=false}={}){
  if(node.nodeType===3){
-  return document.createTextNode((node.nodeValue||'').replace(/\u00a0/g,' '));
+  return document.createTextNode((node.nodeValue||'').replace(/\u00a0/g,' ').replace(/\u200b/g,''));
  }
  if(node.nodeType!==1)return document.createDocumentFragment();
 
@@ -6411,15 +6465,22 @@ function noteCommand(command,value=null){
  // Listen werden bewusst selbst aufgebaut, nicht ueber den Browserbefehl.
  if(command==='insertUnorderedList')return noteToggleList('bullet');
  if(command==='insertOrderedList')return noteToggleList('ordered');
+ focusNoteEditor();
  restoreNoteSelection();
  noteEditorCheckpoint({force:true,inputType:`command:${command}`});
  noteEditorState.historyLocked=true;
- editor.focus();
 
- let effectiveValue=value;
- if(command==='formatBlock')effectiveValue=String(value||'p').toLowerCase();
- const supported=document.queryCommandSupported?.(command)!==false;
- if(supported)document.execCommand(command,false,effectiveValue);
+ const inlineArt={bold:'bold',italic:'italic',underline:'underline',strikeThrough:'strike'}[command];
+ if(inlineArt){
+  rtToggleInline(editor,inlineArt);
+ }else if(command==='foreColor'){
+  rtApplyColor(editor,value);
+ }else{
+  let effectiveValue=value;
+  if(command==='formatBlock')effectiveValue=String(value||'p').toLowerCase();
+  const supported=document.queryCommandSupported?.(command)!==false;
+  if(supported)document.execCommand(command,false,effectiveValue);
+ }
 
  noteEditorState.historyLocked=false;
  normalizeChecklistDom();
@@ -6453,48 +6514,118 @@ function applyNoteFontSize(value){
  scheduleCurrentNoteSave();
  updateNoteToolbarState();
 }
-// ---------------------------------------------------------------
-//  Listenlogik ohne document.execCommand
-//  Der Browserbefehl arbeitet bei Listen je nach Cursorposition
-//  unterschiedlich. Deshalb werden Listen hier selbst aufgebaut.
-// ---------------------------------------------------------------
+// ===============================================================
+//  Rich-Text-Kern
+//  Gemeinsame Grundlage fuer den Notiz-Editor und die schnellen
+//  Notizen. Listen, Zeichenformate und Schriftfarben werden bewusst
+//  selbst aufgebaut: document.execCommand arbeitet je nach
+//  Cursorposition unterschiedlich und liefert bei Listen regelmaessig
+//  unbrauchbare Ergebnisse (ganze Listen statt einer Zeile, geloeschter
+//  Inhalt beim Zuruecknehmen). Die Logik hier arbeitet deshalb immer
+//  genau auf den Bloecken, die die Auswahl tatsaechlich beruehrt.
+// ===============================================================
+const RT_BLOCK_TAGS=['P','H2','H3','BLOCKQUOTE','LI','TD','TH'];
+const RT_BLOCK_SELECTOR='p,h2,h3,blockquote,li,td,th';
+const RT_CONTAINER_TAGS=['P','H2','H3','BLOCKQUOTE','UL','OL','TABLE','HR','DIV'];
+const RT_INLINE_TAGS={bold:'STRONG',italic:'EM',underline:'U',strike:'S'};
+const RT_INLINE_COMMANDS={bold:'bold',italic:'italic',underline:'underline',strike:'strikeThrough'};
 
-// Liefert alle Bloecke, die von der aktuellen Auswahl beruehrt werden.
-function noteBlocksInSelection(){
- const editor=$('#note-editor');
- const sel=window.getSelection();
- if(!editor||!sel||!sel.rangeCount)return[];
- const range=sel.getRangeAt(0);
- const bloecke=[...editor.children].filter(el=>{
-  const r=document.createRange();
-  r.selectNodeContents(el);
-  return range.compareBoundaryPoints(Range.END_TO_START,r)<0
-      && range.compareBoundaryPoints(Range.START_TO_END,r)>0;
+// Aktueller Bereich, aber nur wenn er wirklich im uebergebenen Editor liegt.
+function rtRange(root){
+ const selection=window.getSelection();
+ if(!root||!selection||!selection.rangeCount)return null;
+ const range=selection.getRangeAt(0);
+ return root.contains(range.commonAncestorContainer)?range:null;
+}
+function rtSetRange(range){
+ const selection=window.getSelection();
+ selection.removeAllRanges();
+ selection.addRange(range);
+}
+function rtPlaceCaretAtEnd(root){
+ if(!root)return;
+ const range=document.createRange();
+ range.selectNodeContents(root);
+ range.collapse(false);
+ rtSetRange(range);
+}
+function rtPlaceCaretAtStart(element){
+ if(!element)return;
+ const range=document.createRange();
+ range.selectNodeContents(element);
+ range.collapse(true);
+ rtSetRange(range);
+}
+// Innerster Block, in dem der Knoten liegt. Wichtig: Ein <li> zaehlt selbst
+// als Block, nicht die umgebende Liste. Genau daran scheiterte die alte
+// Logik, die immer die komplette Liste erwischt hat.
+function rtBlockOf(root,node){
+ let element=node;
+ if(element&&element.nodeType===3)element=element.parentNode;
+ while(element&&element!==root){
+  if(RT_BLOCK_TAGS.includes(element.tagName))return element;
+  element=element.parentNode;
+ }
+ return null;
+}
+// Hebt lose Textknoten direkt unter der Wurzel in Absaetze, damit jede Zeile
+// einen eindeutigen Block besitzt. Ohne diesen Schritt hat eine frisch
+// getippte erste Zeile gar keinen Block und laesst sich nicht formatieren.
+function rtEnsureBlocks(root){
+ if(!root)return false;
+ let geaendert=false;
+ let absatz=null;
+ [...root.childNodes].forEach(node=>{
+  if(node.nodeType===1&&RT_CONTAINER_TAGS.includes(node.tagName)){absatz=null;return}
+  if(node.nodeType===8){node.remove();return}
+  if(node.nodeType===3&&!node.nodeValue.replace(/[​\s]/g,'')&&!absatz)return;
+  if(!absatz){
+   absatz=document.createElement('p');
+   node.before(absatz);
+  }
+  absatz.appendChild(node);
+  geaendert=true;
  });
- if(bloecke.length)return bloecke;
- let knoten=range.startContainer;
- while(knoten&&knoten.parentNode!==editor)knoten=knoten.parentNode;
- return knoten?[knoten]:[];
+ if(!root.firstChild){
+  const leer=document.createElement('p');
+  leer.appendChild(document.createElement('br'));
+  root.appendChild(leer);
+  geaendert=true;
+ }
+ return geaendert;
 }
-
-// Merkt sich die Auswahl anhand von Textpositionen, damit sie nach dem
-// Umbau des Dokumentbaums wiederhergestellt werden kann.
-function noteSelectionOffsets(){
- const editor=$('#note-editor');
- const sel=window.getSelection();
- if(!editor||!sel||!sel.rangeCount)return null;
- const range=sel.getRangeAt(0);
+// Alle Bloecke, die die Auswahl beruehrt. Bei zusammengefallener Auswahl
+// genau ein Block - die Zeile, in der der Cursor steht.
+function rtSelectedBlocks(root){
+ const range=rtRange(root);
+ if(!range)return[];
+ if(range.collapsed){
+  const block=rtBlockOf(root,range.startContainer);
+  return block?[block]:[];
+ }
+ const treffer=[...root.querySelectorAll(RT_BLOCK_SELECTOR)].filter(element=>{
+  const vergleich=document.createRange();
+  vergleich.selectNodeContents(element);
+  return range.compareBoundaryPoints(Range.END_TO_START,vergleich)<=0
+      && range.compareBoundaryPoints(Range.START_TO_END,vergleich)>=0;
+ });
+ // Bei verschachtelten Listen nur die innersten Bloecke verwenden.
+ return treffer.filter(element=>!treffer.some(other=>other!==element&&element.contains(other)));
+}
+// Merkt sich die Auswahl als Textposition, damit sie den Umbau des
+// Dokumentbaums ueberlebt.
+function rtOffsets(root){
+ const range=rtRange(root);
+ if(!range)return null;
  const vor=range.cloneRange();
- vor.selectNodeContents(editor);
+ vor.selectNodeContents(root);
  vor.setEnd(range.startContainer,range.startOffset);
- const start=vor.toString().length;
- return{start,laenge:range.toString().length};
+ return{start:vor.toString().length,laenge:range.toString().length};
 }
-function noteRestoreOffsets(pos){
- const editor=$('#note-editor');
- if(!editor||!pos)return;
- const gehe=(ziel)=>{
-  const lauf=document.createTreeWalker(editor,NodeFilter.SHOW_TEXT);
+function rtRestoreOffsets(root,pos){
+ if(!root||!pos)return;
+ const finde=ziel=>{
+  const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
   let gezaehlt=0,knoten;
   while((knoten=lauf.nextNode())){
    const laenge=knoten.textContent.length;
@@ -6503,77 +6634,283 @@ function noteRestoreOffsets(pos){
   }
   return null;
  };
- const a=gehe(pos.start),b=gehe(pos.start+pos.laenge);
- if(!a)return;
+ const start=finde(pos.start);
+ if(!start){rtPlaceCaretAtEnd(root);return}
  const range=document.createRange();
- range.setStart(a.knoten,a.offset);
- if(b)range.setEnd(b.knoten,b.offset); else range.collapse(true);
- const sel=window.getSelection();
- sel.removeAllRanges();
- sel.addRange(range);
+ range.setStart(start.knoten,start.offset);
+ const ende=pos.laenge?finde(pos.start+pos.laenge):null;
+ if(ende)range.setEnd(ende.knoten,ende.offset);
+ else range.collapse(true);
+ rtSetRange(range);
 }
 
-// Wandelt die ausgewaehlten Bloecke in eine Liste des gewuenschten Typs
-// um. Ist der Typ bereits gesetzt, wird die Liste wieder aufgeloest.
-function noteToggleList(typ){
- const editor=$('#note-editor');
- if(!editor)return;
- // Die Auswahl muss VOR dem Fokussieren gelesen werden: Ein Klick auf die
- // Werkzeugleiste nimmt dem Editor den Fokus, und focus() setzt den Cursor
- // dann an den Anfang zurueck.
- restoreNoteSelection();
- noteEditorCheckpoint({inputType:'liste'});
- const pos=noteSelectionOffsets();
- const bloecke=noteBlocksInSelection();
- if(!bloecke.length){noteEditorCheckpoint({inputType:'liste'});return}
-
- const tag=typ==='ordered'?'OL':'UL';
- const istChecklist=typ==='checklist';
- const passend=el=>{
-  if(el.tagName!=='UL'&&el.tagName!=='OL')return false;
-  if(istChecklist)return el.classList.contains('note-checklist');
-  return el.tagName===tag&&!el.classList.contains('note-checklist');
- };
- const alleSchonSo=bloecke.every(passend);
-
- if(alleSchonSo){
-  // Liste aufloesen: jedes Element wird ein eigener Absatz
-  bloecke.forEach(liste=>{
-   const absaetze=[...liste.children].map(li=>{
-    const p=document.createElement('p');
-    p.innerHTML=li.innerHTML.replace(/^<label[^>]*>.*?<\/label>/,'')||'<br>';
-    return p;
-   });
-   absaetze.forEach(x=>liste.parentNode.insertBefore(x,liste));
-   liste.remove();
-  });
- }else{
-  // In eine gemeinsame Liste umwandeln
-  const liste=document.createElement(istChecklist?'ul':tag.toLowerCase());
-  if(istChecklist)liste.className='note-checklist';
-  bloecke[0].parentNode.insertBefore(liste,bloecke[0]);
-  bloecke.forEach(block=>{
-   if(block.tagName==='UL'||block.tagName==='OL'){
-    [...block.children].forEach(li=>liste.appendChild(li));
-    block.remove();
-   }else{
-    const li=document.createElement('li');
-    li.innerHTML=block.innerHTML||'<br>';
-    liste.appendChild(li);
-    block.remove();
-   }
-  });
-  if(istChecklist)[...liste.children].forEach(li=>{
-   if(!li.querySelector('input[type="checkbox"]')){
-    li.innerHTML='<label><input type="checkbox"><span>'+li.innerHTML+'</span></label>';
-   }
-  });
+// ---------------------------------------------------------------
+//  Listen
+// ---------------------------------------------------------------
+function rtListTyp(item){
+ const liste=item&&item.parentElement;
+ if(!liste||!['UL','OL'].includes(liste.tagName))return null;
+ if(liste.classList.contains('note-checklist'))return'checklist';
+ return liste.tagName==='OL'?'ordered':'bullet';
+}
+// Loest genau einen Listenpunkt heraus und teilt die Liste dabei auf. Der
+// Inhalt bleibt in jedem Fall erhalten - auch bei der alten Struktur
+// <label><input type="checkbox"><span>Text</span></label>, die frueher samt
+// Text weggeworfen wurde.
+function rtUnwrapItem(item){
+ const liste=item&&item.parentElement;
+ if(!liste||!['UL','OL'].includes(liste.tagName))return null;
+ const absatz=document.createElement('p');
+ let quelle=item;
+ const label=[...item.children].find(child=>child.tagName==='LABEL');
+ if(label){
+  const span=[...label.children].find(child=>child.tagName==='SPAN');
+  quelle=span||label;
  }
+ quelle.querySelectorAll('input').forEach(input=>input.remove());
+ while(quelle.firstChild)absatz.appendChild(quelle.firstChild);
+ if(!absatz.firstChild)absatz.appendChild(document.createElement('br'));
+ const geschwister=[...liste.children];
+ const danach=geschwister.slice(geschwister.indexOf(item)+1);
+ liste.after(absatz);
+ if(danach.length){
+  const rest=document.createElement(liste.tagName.toLowerCase());
+  if(liste.className)rest.className=liste.className;
+  danach.forEach(eintrag=>rest.appendChild(eintrag));
+  absatz.after(rest);
+ }
+ item.remove();
+ if(!liste.children.length)liste.remove();
+ return absatz;
+}
+// Fuegt eine neue Liste mit gleichartigen Nachbarlisten zusammen, damit aus
+// einer angehaengten Zeile keine zweite Liste entsteht.
+function rtMergeAdjacentList(liste){
+ let ziel=liste;
+ const gleichartig=other=>Boolean(other)
+  &&['UL','OL'].includes(other.tagName)
+  &&other.tagName===ziel.tagName
+  &&other.classList.contains('note-checklist')===ziel.classList.contains('note-checklist');
+ const davor=ziel.previousElementSibling;
+ if(gleichartig(davor)){
+  while(ziel.firstChild)davor.appendChild(ziel.firstChild);
+  ziel.remove();
+  ziel=davor;
+ }
+ const danach=ziel.nextElementSibling;
+ if(gleichartig(danach)){
+  while(danach.firstChild)ziel.appendChild(danach.firstChild);
+  danach.remove();
+ }
+ return ziel;
+}
+function rtWrapBlocksIntoList(root,bloecke,typ){
+ // Zuerst alles auf Absatzebene bringen, damit Listenpunkte anderer Art
+ // einzeln herausgeloest werden und die uebrige Liste bestehen bleibt.
+ const absaetze=bloecke
+  .map(block=>block.tagName==='LI'?rtUnwrapItem(block):block)
+  .filter(Boolean);
+ if(!absaetze.length)return;
+ const gruppen=[];
+ absaetze.forEach(absatz=>{
+  const letzte=gruppen[gruppen.length-1];
+  if(letzte&&letzte[letzte.length-1].nextElementSibling===absatz)letzte.push(absatz);
+  else gruppen.push([absatz]);
+ });
+ gruppen.forEach(gruppe=>{
+  const liste=document.createElement(typ==='ordered'?'ol':'ul');
+  if(typ==='checklist')liste.className='note-checklist';
+  gruppe[0].before(liste);
+  gruppe.forEach(absatz=>{
+   const eintrag=document.createElement('li');
+   while(absatz.firstChild)eintrag.appendChild(absatz.firstChild);
+   if(!eintrag.firstChild)eintrag.appendChild(document.createElement('br'));
+   if(typ==='checklist'){
+    eintrag.dataset.checked='false';
+    eintrag.setAttribute('aria-checked','false');
+   }
+   liste.appendChild(eintrag);
+   absatz.remove();
+  });
+  rtMergeAdjacentList(liste);
+ });
+}
+// Schaltet die beruehrten Zeilen auf den gewuenschten Listentyp um. Sind sie
+// alle schon so, wird nur fuer diese Zeilen die Liste aufgeloest.
+function rtToggleList(root,typ){
+ if(!root)return false;
+ const vorher=rtOffsets(root);
+ if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
+ const pos=rtOffsets(root);
+ const bloecke=rtSelectedBlocks(root);
+ if(!bloecke.length)return false;
+ const alleSchonSo=bloecke.every(block=>block.tagName==='LI'&&rtListTyp(block)===typ);
+ if(alleSchonSo)bloecke.forEach(block=>rtUnwrapItem(block));
+ else rtWrapBlocksIntoList(root,bloecke,typ);
+ rtRestoreOffsets(root,pos);
+ return true;
+}
+// Enter auf einer leeren Listenzeile verlaesst die Liste. Ohne das kommt man
+// aus einer Aufzaehlung nicht mehr heraus.
+function rtExitListOnEmptyLine(root,event){
+ const range=rtRange(root);
+ if(!range||!range.collapsed)return false;
+ const block=rtBlockOf(root,range.startContainer);
+ if(!block||block.tagName!=='LI')return false;
+ if((block.textContent||'').replace(/[​\s]/g,''))return false;
+ if(block.querySelector('img,table'))return false;
+ event.preventDefault();
+ const absatz=rtUnwrapItem(block);
+ if(absatz)rtPlaceCaretAtStart(absatz);
+ return true;
+}
+
+// ---------------------------------------------------------------
+//  Zeichenformate und Schriftfarbe
+// ---------------------------------------------------------------
+function rtInlineActive(root,art){
+ const range=rtRange(root);
+ if(!range)return false;
+ const tag=RT_INLINE_TAGS[art];
+ let knoten=range.startContainer;
+ if(knoten&&knoten.nodeType===3)knoten=knoten.parentNode;
+ while(knoten&&knoten!==root){
+  if(knoten.nodeName===tag)return true;
+  if(knoten.nodeType===1&&knoten.style){
+   const style=knoten.style;
+   const gewicht=String(style.fontWeight||'').toLowerCase();
+   const deko=String(style.textDecoration||style.textDecorationLine||'').toLowerCase();
+   if(art==='bold'&&(gewicht==='bold'||Number.parseInt(gewicht,10)>=600))return true;
+   if(art==='italic'&&String(style.fontStyle||'').toLowerCase()==='italic')return true;
+   if(art==='underline'&&deko.includes('underline'))return true;
+   if(art==='strike'&&deko.includes('line-through'))return true;
+  }
+  knoten=knoten.parentNode;
+ }
+ return false;
+}
+// Setzt ein Zeichenformat. Bei echter Auswahl uebernimmt der Browserbefehl,
+// bei stehendem Cursor wird ein leeres Formatelement eingefuegt. Letzteres
+// war die Ursache dafuer, dass "Fett" in der ersten Zeile oben nicht griff:
+// Der Browser verwirft die wartende Formatierung am Dokumentanfang.
+function rtToggleInline(root,art){
+ const tag=RT_INLINE_TAGS[art];
+ if(!root||!tag)return false;
+ // Lose Textzeilen erst in Absaetze heben, dabei die Auswahl retten.
+ const vorher=rtOffsets(root);
+ if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
+ const range=rtRange(root);
+ if(!range)return false;
+ const befehl=RT_INLINE_COMMANDS[art];
+ if(!range.collapsed||rtInlineActive(root,art)){
+  try{document.execCommand(befehl,false,null)}catch{/* nicht unterstuetzt */}
+  return true;
+ }
+ const huelle=document.createElement(tag.toLowerCase());
+ huelle.appendChild(document.createTextNode('​'));
+ range.insertNode(huelle);
+ const neu=document.createRange();
+ neu.setStart(huelle.firstChild,1);
+ neu.collapse(true);
+ rtSetRange(neu);
+ return true;
+}
+// Setzt die Schriftfarbe als CSS-Angabe. styleWithCSS sorgt dafuer, dass
+// kein <font>-Element entsteht und vorhandene Farben wirklich ersetzt werden.
+function rtApplyColor(root,farbe){
+ if(!root)return false;
+ const sicher=safeNoteColor(farbe)||'#000000';
+ const vorher=rtOffsets(root);
+ if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
+ const range=rtRange(root);
+ if(!range)return false;
+ if(range.collapsed){
+  const huelle=document.createElement('span');
+  huelle.style.color=sicher;
+  huelle.appendChild(document.createTextNode('​'));
+  range.insertNode(huelle);
+  const neu=document.createRange();
+  neu.setStart(huelle.firstChild,1);
+  neu.collapse(true);
+  rtSetRange(neu);
+  return true;
+ }
+ const bereich=range.commonAncestorContainer;
+ const umgebung=bereich.nodeType===1?bereich:bereich.parentElement;
+ try{document.execCommand('styleWithCSS',false,true)}catch{/* nicht unterstuetzt */}
+ let erfolg=false;
+ try{erfolg=document.execCommand('foreColor',false,sicher)}catch{erfolg=false}
+ if(!erfolg){
+  // Rueckfallebene ohne Browserbefehl: Auswahl in ein eigenes span legen.
+  const inhalt=range.extractContents();
+  const huelle=document.createElement('span');
+  huelle.style.color=sicher;
+  huelle.appendChild(inhalt);
+  range.insertNode(huelle);
+  const neu=document.createRange();
+  neu.selectNodeContents(huelle);
+  rtSetRange(neu);
+ }
+ // Verschachtelte Farbangaben entfernen, damit die neue Farbe oben liegt.
+ if(umgebung&&umgebung.querySelectorAll){
+  umgebung.querySelectorAll('font[color]').forEach(element=>element.removeAttribute('color'));
+ }
+ return true;
+}
+// Entfernt alle Farbangaben. Die schnellen Notizen sollen laut Vorgabe
+// immer schwarz sein, deshalb wird dort nach jeder Aenderung aufgeraeumt.
+function rtStripColors(root){
+ if(!root)return;
+ root.querySelectorAll('font[color]').forEach(element=>element.removeAttribute('color'));
+ root.querySelectorAll('[style]').forEach(element=>{
+  if(element.style&&element.style.color)element.style.removeProperty('color');
+  if(!element.getAttribute('style'))element.removeAttribute('style');
+ });
+}
+
+// ---------------------------------------------------------------
+//  Anbindung des Notiz-Editors an den Rich-Text-Kern
+// ---------------------------------------------------------------
+// Beibehalten fuer Tests und Abwaertskompatibilitaet.
+function noteBlocksInSelection(){return rtSelectedBlocks($('#note-editor'))}
+function noteSelectionOffsets(){return rtOffsets($('#note-editor'))}
+function noteRestoreOffsets(pos){return rtRestoreOffsets($('#note-editor'),pos)}
+
+function focusNoteEditor(){
+ const editor=$('#note-editor');
+ if(!editor)return null;
+ // Der Fokus muss VOR dem Wiederherstellen der Auswahl gesetzt werden:
+ // focus() auf einem unfokussierten Editor setzt den Cursor sonst zurueck
+ // an den Anfang und die gemerkte Auswahl ist verloren.
+ if(document.activeElement!==editor){
+  const gemerkt=noteRange
+   &&noteRange.startContainer?.isConnected
+   &&noteRange.endContainer?.isConnected
+   &&editor.contains(noteRange.startContainer)
+   ?noteRange.cloneRange()
+   :null;
+  try{editor.focus({preventScroll:true})}catch{editor.focus()}
+  // focus() verschiebt den Cursor. Die vor dem Klick gemerkte Auswahl hat
+  // deshalb Vorrang vor dem, was der Browser gerade gesetzt hat.
+  if(gemerkt){
+   const selection=getSelection();
+   selection.removeAllRanges();
+   selection.addRange(gemerkt);
+  }
+ }
+ return editor;
+}
+function noteToggleList(typ){
+ const editor=focusNoteEditor();
+ if(!editor)return;
+ restoreNoteSelection();
+ noteEditorCheckpoint({force:true,inputType:'liste'});
+ noteEditorState.historyLocked=true;
+ rtToggleList(editor,typ);
+ noteEditorState.historyLocked=false;
  normalizeChecklistDom();
- editor.focus();
- noteRestoreOffsets(pos);
- saveNoteSelection();
  updateNoteEditorEmptyState();
+ saveNoteSelection();
  updateNoteToolbarState();
  scheduleCurrentNoteSave();
 }
@@ -7535,7 +7872,7 @@ document.addEventListener('change',event=>{
 
 document.addEventListener('input',event=>{
  if(event.target.matches?.('.subtask-deadline'))syncSubtaskDeadlineAppearance(event.target);
- if(event.target.id==='quick-note-editor'){state.meta.quickNote=event.target.innerHTML;saveState();return}
+ if(event.target.id==='quick-note-editor'){saveQuickNoteSelection();saveQuickNoteValue();return}
  const quickTodoField=event.target.closest('[data-quick-todo-field]');if(quickTodoField){updateQuickTodoTitle(quickTodoField);return}
  const workField=event.target.closest('[data-work-field]');
  if(workField&&['title','summary'].includes(workField.dataset.workField)){updateInlineWork(workField);return}
@@ -7615,6 +7952,15 @@ document.addEventListener('keydown',event=>{
    toggleCurrentChecklistItem();
    return;
   }
+  if(event.key==='Enter'&&!event.shiftKey&&!modifier
+     &&rtExitListOnEmptyLine(noteEditor,event)){
+   normalizeChecklistDom();
+   updateNoteEditorEmptyState();
+   saveNoteSelection();
+   scheduleCurrentNoteSave();
+   updateNoteToolbarState();
+   return;
+  }
   if(event.key==='Tab'){
    let node=getSelection().anchorNode;
    if(node?.nodeType===3)node=node.parentElement;
@@ -7624,6 +7970,14 @@ document.addEventListener('keydown',event=>{
     return;
    }
   }
+ }
+
+ const quickNoteEditor=event.target.closest?.('#quick-note-editor');
+ if(quickNoteEditor&&event.key==='Enter'&&!event.shiftKey&&!modifier
+    &&rtExitListOnEmptyLine(quickNoteEditor,event)){
+  saveQuickNoteSelection();
+  saveQuickNoteValue();
+  return;
  }
 
  const quickTodoTitle=event.target.closest?.('[data-quick-todo-field="title"]');
@@ -8322,6 +8676,20 @@ $$('[data-quick-command]').forEach(button=>{
 });
 bind('#quick-note-editor','mouseup',saveQuickNoteSelection);
 bind('#quick-note-editor','keyup',saveQuickNoteSelection);
+bind('#quick-note-editor','focus',saveQuickNoteSelection);
+bind('#quick-note-editor','paste',event=>{
+ event.preventDefault();
+ const clipboard=event.clipboardData;
+ const clean=clipboard&&clipboard.getData('text/html')
+  ?sanitizeNoteHtml(clipboard.getData('text/html'),{paste:true})
+  :plainTextToNoteHtml(clipboard?clipboard.getData('text/plain'):'');
+ if(!clean)return;
+ const editor=restoreQuickNoteSelection();
+ try{document.execCommand('insertHTML',false,clean)}catch{/* nicht unterstuetzt */}
+ rtStripColors(editor);
+ saveQuickNoteSelection();
+ saveQuickNoteValue();
+});
 
 bind('#note-block-format','change',event=>applyNoteBlockFormat(event.target.value));
 bind('#note-font-size','change',event=>applyNoteFontSize(event.target.value));
@@ -8465,6 +8833,16 @@ window.__dashboardTest={
  insertSanitizedNotePaste,
  toggleNoteChecklist,
  toggleChecklistItem,
+ noteCommand,
+ noteToggleList,
+ quickNoteCommand,
+ rtToggleList,
+ rtToggleInline,
+ rtApplyColor,
+ rtStripColors,
+ rtSelectedBlocks,
+ rtEnsureBlocks,
+ rtExitListOnEmptyLine,
  noteEditorUndo,
  noteEditorRedo,
  noteEditorCheckpoint,
