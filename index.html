@@ -20,7 +20,7 @@
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
-.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;color:#000;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor p{margin:0 0 .4em}.quick-note-editor p:last-child{margin-bottom:0}.quick-note-editor ul,.quick-note-editor ol{margin:.2em 0 .4em;padding-left:24px}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
+.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;color:#000;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor p{margin:0 0 .4em}.quick-note-editor p:last-child{margin-bottom:0}.quick-note-editor ul,.quick-note-editor ol{margin:.2em 0 .4em;padding-left:24px}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor{position:relative}.quick-note-editor.quick-note-empty::before{content:attr(data-placeholder);position:absolute;top:10px;left:11px;color:#9099a3;pointer-events:none}.quick-note-tool.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:16px;letter-spacing:-.01em;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid var(--category-border);border-radius:var(--radius)}.group.own{background:var(--own)}.group.project{background:var(--project)}.group.delegated-group{background:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
@@ -2295,6 +2295,7 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
           <div class="quick-note-head">
             <label for="quick-note-editor"><span class="quick-note-icon" aria-hidden="true">⚡︎</span>Schnelle Notizen</label>
             <div class="quick-note-toolbar" aria-label="Formatierung für schnelle Notizen">
+              <button type="button" class="quick-note-tool" data-quick-command="normal" title="Normal – Formatierung der Zeile entfernen">Normal</button>
               <button type="button" class="quick-note-tool" data-quick-command="bold" title="Fett"><strong>F</strong></button>
               <button type="button" class="quick-note-tool" data-quick-command="bullet" title="Aufzählung">• Liste</button>
               <button type="button" class="quick-note-tool" data-quick-command="ordered" title="Nummerierte Liste">1. Liste</button>
@@ -2698,7 +2699,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 39.2 vom 14.10.2026, 13:10';
+const DASHBOARD_RELEASE='Dashboard 40.0 vom 14.10.2026, 14:05';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -3680,7 +3681,7 @@ const expandedWorkItemIds=new Set();
 const expandedProjectIds=new Set();
 let current={noteId:null,todoId:null,todoType:'own',workId:null,projectId:null};
 let filters={tasks:{status:new Set(),area:new Set()},own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set()},projects:{status:new Set(),area:new Set()}};
-let historyPast=[],historyFuture=[],editKey=null,noteRange=null,quickNoteRange=null;
+let historyPast=[],historyFuture=[],editKey=null,noteRange=null;
 const noteEditorState={
  saveTimer:null,
  historyPast:[],
@@ -4188,11 +4189,7 @@ function richEditorHistory(command){
 
  const quickEditor=$('#quick-note-editor');
  if(quickEditor&&document.activeElement===quickEditor){
-  restoreQuickNoteSelection();
-  if(document.queryCommandEnabled?.(command)!==false&&document.execCommand(command)){
-   saveQuickNoteValue();
-   return true;
-  }
+  return command==='undo'?qnRueckgaengig():qnWiederherstellen();
  }
  return false;
 }
@@ -4393,17 +4390,7 @@ function renderBrand(){
  if(state.meta.title)document.title=state.meta.title;
  const versionPatch=$('#app-version-patch');
  if(versionPatch)versionPatch.textContent=DASHBOARD_RELEASE;
- const quickEditor=$('#quick-note-editor');
- if(quickEditor&&document.activeElement!==quickEditor){
-  const nextHtml=richTextValueToHtml(state.meta.quickNote);
-  if(quickEditor.innerHTML!==nextHtml){
-   quickEditor.innerHTML=nextHtml;
-   // Schnelle Notizen sind immer schwarz, egal was eingefuegt wurde.
-   rtStripColors(quickEditor);
-   // Die gemerkte Auswahl zeigt nach dem Neuaufbau ins Leere.
-   quickNoteRange=null;
-  }
- }
+ qnAktualisiereAnzeige();
 }
 function renderNav(){
  const deleted=new Set(state.config.deletedPages||[]);
@@ -5795,64 +5782,540 @@ function restoreNoteSelection(){
   placeCaretAtEnd(editor);
  }
 }
-function saveQuickNoteSelection(){
- const selection=getSelection();
- const editor=$('#quick-note-editor');
- if(selection.rangeCount&&editor.contains(selection.anchorNode)){
-  quickNoteRange=selection.getRangeAt(0).cloneRange();
+// ===============================================================
+//  Schnelle Notizen - vollstaendig neu aufgebaut
+//
+//  Grundgedanke: Nicht am Dokumentbaum herumoperieren, sondern ein
+//  eigenes Modell fuehren und den Bereich daraus neu zeichnen.
+//
+//    Zeile  = {art:'p'|'ul'|'ol', teile:[{text, fett}]}
+//    Modell = Liste von Zeilen
+//
+//  Jede Schaltflaeche arbeitet in drei festen Schritten:
+//    1. Auswahl aus dem Dokumentbaum in Zeichenpositionen umrechnen
+//    2. Das Modell veraendern - reine Rechenschritte, kein Dokumentbaum
+//    3. Bereich neu zeichnen und die Auswahl aus den Positionen setzen
+//
+//  Damit entfallen alle bisherigen Fehlerquellen: document.execCommand,
+//  veraltete Bereiche nach einem Umbau und elementbezogene Grenzen, die
+//  sich beim Teilen von Textknoten verschieben. Die Richtung, in die
+//  markiert wurde, spielt keine Rolle mehr, weil nur noch mit
+//  Zeichenpositionen gerechnet wird.
+//
+//  Gespeichert wird weiterhin HTML in state.meta.quickNote - das Format
+//  bleibt also unveraendert und mit Sicherungen und Cloud vertraeglich.
+// ===============================================================
+const QN_MAX_VERLAUF=60;
+let quickNoteModell=[{art:'p',teile:[]}];
+let quickNoteVerlauf=[];
+let quickNoteZukunft=[];
+let quickNoteLetzteEingabe=0;
+let quickNoteZeichnet=false;
+
+function qnEditor(){return $('#quick-note-editor')}
+
+// ---------------------------------------------------------------
+//  Modell: Grundrechenschritte
+// ---------------------------------------------------------------
+function qnLeer(){return[{art:'p',teile:[]}]}
+function qnZeilenText(zeile){return(zeile.teile||[]).map(teil=>teil.text).join('')}
+// Benachbarte Abschnitte mit gleicher Auszeichnung zusammenfassen.
+function qnVerdichten(teile){
+ const aus=[];
+ teile.forEach(teil=>{
+  if(!teil.text)return;
+  const letzter=aus[aus.length-1];
+  if(letzter&&letzter.fett===teil.fett)letzter.text+=teil.text;
+  else aus.push({text:teil.text,fett:Boolean(teil.fett)});
+ });
+ return aus;
+}
+// Auszeichnung fuer einen Zeichenbereich innerhalb einer Zeile setzen.
+function qnSetzeFettInZeile(zeile,von,bis,fett){
+ if(bis<=von)return;
+ const neu=[];
+ let pos=0;
+ (zeile.teile||[]).forEach(teil=>{
+  const anfang=pos;
+  const ende=pos+teil.text.length;
+  pos=ende;
+  const abschnitte=[
+   [anfang,Math.min(ende,von),teil.fett],
+   [Math.max(anfang,von),Math.min(ende,bis),fett],
+   [Math.max(anfang,bis),ende,teil.fett]
+  ];
+  abschnitte.forEach(([a,b,wert])=>{
+   if(b<=a)return;
+   neu.push({text:teil.text.slice(a-anfang,b-anfang),fett:Boolean(wert)});
+  });
+ });
+ zeile.teile=qnVerdichten(neu);
+}
+// Ist der gesamte Bereich bereits fett? Dann schaltet die Schaltflaeche ab.
+function qnBereichIstFett(modell,von,bis){
+ let gefunden=false;
+ for(let i=von.zeile;i<=bis.zeile;i++){
+  const zeile=modell[i];
+  if(!zeile)continue;
+  const laenge=qnZeilenText(zeile).length;
+  const a=i===von.zeile?von.zeichen:0;
+  const b=i===bis.zeile?bis.zeichen:laenge;
+  let pos=0;
+  for(const teil of zeile.teile||[]){
+   const anfang=pos;
+   const ende=pos+teil.text.length;
+   pos=ende;
+   const s=Math.max(anfang,a);
+   const e=Math.min(ende,b);
+   if(e<=s)continue;
+   gefunden=true;
+   if(!teil.fett)return false;
+  }
+ }
+ return gefunden;
+}
+function qnSetzeFett(modell,von,bis,fett){
+ for(let i=von.zeile;i<=bis.zeile;i++){
+  const zeile=modell[i];
+  if(!zeile)continue;
+  const laenge=qnZeilenText(zeile).length;
+  const a=i===von.zeile?von.zeichen:0;
+  const b=i===bis.zeile?bis.zeichen:laenge;
+  qnSetzeFettInZeile(zeile,a,b,fett);
  }
 }
-function restoreQuickNoteSelection(){
- const editor=$('#quick-note-editor');
- if(!editor)return null;
- // Erst fokussieren, dann die Auswahl setzen - andernfalls verwirft der
- // Browser die wiederhergestellte Auswahl sofort wieder.
- if(document.activeElement!==editor){
-  try{editor.focus({preventScroll:true})}catch{editor.focus()}
- }
- const gueltig=quickNoteRange
-  &&quickNoteRange.startContainer
-  &&quickNoteRange.startContainer.isConnected
-  &&quickNoteRange.endContainer
-  &&quickNoteRange.endContainer.isConnected
-  &&editor.contains(quickNoteRange.startContainer);
- if(gueltig){
-  const selection=getSelection();
-  selection.removeAllRanges();
-  selection.addRange(quickNoteRange);
-  return editor;
- }
- // Gemerkte Auswahl ist veraltet (der Bereich wird bei jedem Neuzeichnen
- // neu aufgebaut). Dann die vorhandene Auswahl behalten oder ans Ende.
- const selection=getSelection();
- if(selection.rangeCount&&editor.contains(selection.anchorNode))return editor;
- rtPlaceCaretAtEnd(editor);
- return editor;
+// Listenart der beruehrten Zeilen umschalten. Sind alle schon so, werden
+// genau diese Zeilen wieder zu normalen Absaetzen.
+function qnSetzeArt(modell,von,bis,art){
+ const betroffen=[];
+ for(let i=von.zeile;i<=bis.zeile;i++)if(modell[i])betroffen.push(modell[i]);
+ if(!betroffen.length)return;
+ const alleSchonSo=betroffen.every(zeile=>zeile.art===art);
+ betroffen.forEach(zeile=>{zeile.art=alleSchonSo?'p':art});
 }
-// Beim Speichern die Platzhalter fuer wartende Formate entfernen.
-function quickNoteHtml(){
- const editor=$('#quick-note-editor');
- return editor?editor.innerHTML.replace(/\u200b/g,''):'';
+// Alles zuruecksetzen: kein Fett, keine Liste.
+function qnSetzeNormal(modell,von,bis){
+ for(let i=von.zeile;i<=bis.zeile;i++){
+  const zeile=modell[i];
+  if(!zeile)continue;
+  zeile.art='p';
+  const laenge=qnZeilenText(zeile).length;
+  const a=i===von.zeile?von.zeichen:0;
+  const b=i===bis.zeile?bis.zeichen:laenge;
+  qnSetzeFettInZeile(zeile,a,b,false);
+ }
 }
-function saveQuickNoteValue(){
- state.meta.quickNote=quickNoteHtml();
+// Auswahl loeschen und die Einfuegeposition zurueckgeben.
+function qnLoescheBereich(modell,von,bis){
+ if(von.zeile===bis.zeile&&von.zeichen===bis.zeichen)return{...von};
+ const erste=modell[von.zeile];
+ const letzte=modell[bis.zeile];
+ if(!erste||!letzte)return{...von};
+ const kopf=qnTeileAusschnitt(erste,0,von.zeichen);
+ const schwanz=qnTeileAusschnitt(letzte,bis.zeichen,qnZeilenText(letzte).length);
+ erste.teile=qnVerdichten([...kopf,...schwanz]);
+ modell.splice(von.zeile+1,bis.zeile-von.zeile);
+ return{zeile:von.zeile,zeichen:von.zeichen};
+}
+function qnTeileAusschnitt(zeile,von,bis){
+ const aus=[];
+ let pos=0;
+ (zeile.teile||[]).forEach(teil=>{
+  const anfang=pos;
+  const ende=pos+teil.text.length;
+  pos=ende;
+  const s=Math.max(anfang,von);
+  const e=Math.min(ende,bis);
+  if(e<=s)return;
+  aus.push({text:teil.text.slice(s-anfang,e-anfang),fett:Boolean(teil.fett)});
+ });
+ return aus;
+}
+// Zeilenumbruch: Zeile an der Position teilen. Ein leerer Listenpunkt wird
+// stattdessen zu einem normalen Absatz - so kommt man aus einer Liste heraus.
+function qnZeilenumbruch(modell,von,bis){
+ const pos=qnLoescheBereich(modell,von,bis);
+ const zeile=modell[pos.zeile];
+ if(!zeile)return pos;
+ const text=qnZeilenText(zeile);
+ if(zeile.art!=='p'&&!text.replace(/[\u200b\s]/g,'')){
+  zeile.art='p';
+  zeile.teile=[];
+  return{zeile:pos.zeile,zeichen:0};
+ }
+ const kopf=qnTeileAusschnitt(zeile,0,pos.zeichen);
+ const rest=qnTeileAusschnitt(zeile,pos.zeichen,text.length);
+ zeile.teile=qnVerdichten(kopf);
+ modell.splice(pos.zeile+1,0,{art:zeile.art,teile:qnVerdichten(rest)});
+ return{zeile:pos.zeile+1,zeichen:0};
+}
+// Text an der Einfuegeposition einsetzen (mehrere Zeilen moeglich).
+function qnFuegeTextEin(modell,von,bis,text){
+ let pos=qnLoescheBereich(modell,von,bis);
+ const zeilen=String(text).replace(/\r\n?/g,'\n').split('\n');
+ zeilen.forEach((stueck,index)=>{
+  if(index>0)pos=qnZeilenumbruch(modell,pos,pos);
+  const zeile=modell[pos.zeile];
+  if(!zeile||!stueck)return;
+  const gesamt=qnZeilenText(zeile).length;
+  const kopf=qnTeileAusschnitt(zeile,0,pos.zeichen);
+  const schwanz=qnTeileAusschnitt(zeile,pos.zeichen,gesamt);
+  const fett=kopf.length?Boolean(kopf[kopf.length-1].fett):false;
+  zeile.teile=qnVerdichten([...kopf,{text:stueck,fett},...schwanz]);
+  pos={zeile:pos.zeile,zeichen:pos.zeichen+stueck.length};
+ });
+ return pos;
+}
+
+// ---------------------------------------------------------------
+//  Modell <-> HTML
+// ---------------------------------------------------------------
+function qnHtmlAusModell(modell){
+ const stuecke=[];
+ let offeneListe=null;
+ (modell||[]).forEach(zeile=>{
+  const inhalt=(zeile.teile||[]).length
+   ?zeile.teile.map(teil=>teil.fett?`<strong>${esc(teil.text)}</strong>`:esc(teil.text)).join('')
+   :'<br>';
+  if(zeile.art==='ul'||zeile.art==='ol'){
+   if(offeneListe!==zeile.art){
+    if(offeneListe)stuecke.push(`</${offeneListe}>`);
+    stuecke.push(`<${zeile.art}>`);
+    offeneListe=zeile.art;
+   }
+   stuecke.push(`<li>${inhalt}</li>`);
+  }else{
+   if(offeneListe){stuecke.push(`</${offeneListe}>`);offeneListe=null}
+   stuecke.push(`<p>${inhalt}</p>`);
+  }
+ });
+ if(offeneListe)stuecke.push(`</${offeneListe}>`);
+ return stuecke.join('');
+}
+// Liest Abschnitte aus einem Element. Fett zaehlt sowohl ueber <strong>/<b>
+// als auch ueber eine Formatvorlage, damit Eingefuegtes mitgenommen wird.
+function qnTeileAusElement(element){
+ const teile=[];
+ const gehe=(knoten,fett)=>{
+  [...knoten.childNodes].forEach(kind=>{
+   if(kind.nodeType===3){
+    const text=(kind.nodeValue||'').replace(/\u200b/g,'').replace(/\u00a0/g,' ');
+    if(text)teile.push({text,fett});
+    return;
+   }
+   if(kind.nodeType!==1)return;
+   if(kind.tagName==='BR')return;
+   const gewicht=kind.style?String(kind.style.fontWeight||'').toLowerCase():'';
+   const nunFett=fett
+    ||['STRONG','B'].includes(kind.tagName)
+    ||gewicht==='bold'||Number.parseInt(gewicht,10)>=600;
+   gehe(kind,nunFett);
+  });
+ };
+ gehe(element,false);
+ return qnVerdichten(teile);
+}
+function qnModellAusKnoten(wurzel,{nummerieren=false}={}){
+ const modell=[];
+ const aufnehmen=(zeile,element)=>{
+  if(nummerieren&&element&&element.dataset)element.dataset.qn=String(modell.length);
+  modell.push(zeile);
+ };
+ [...wurzel.childNodes].forEach(knoten=>{
+  if(knoten.nodeType===3){
+   const text=(knoten.nodeValue||'').replace(/\u200b/g,'').replace(/\u00a0/g,' ');
+   if(text.replace(/\s/g,''))aufnehmen({art:'p',teile:[{text,fett:false}]},null);
+   return;
+  }
+  if(knoten.nodeType!==1)return;
+  if(knoten.tagName==='UL'||knoten.tagName==='OL'){
+   const art=knoten.tagName==='OL'?'ol':'ul';
+   [...knoten.children].forEach(punkt=>{
+    if(punkt.tagName==='LI')aufnehmen({art,teile:qnTeileAusElement(punkt)},punkt);
+   });
+   return;
+  }
+  if(knoten.tagName==='BR'){aufnehmen({art:'p',teile:[]},null);return}
+  aufnehmen({art:'p',teile:qnTeileAusElement(knoten)},knoten);
+ });
+ return modell.length?modell:qnLeer();
+}
+function qnModellAusHtml(html){
+ const behaelter=document.createElement('div');
+ behaelter.innerHTML=richTextValueToHtml(html||'');
+ return qnModellAusKnoten(behaelter);
+}
+
+// ---------------------------------------------------------------
+//  Auswahl <-> Zeichenpositionen
+// ---------------------------------------------------------------
+function qnZeilenElemente(){
+ const editor=qnEditor();
+ return editor?[...editor.querySelectorAll('[data-qn]')]:[];
+}
+// Rechnet eine Dokumentbaum-Position in {zeile, zeichen} um. Bewusst ueber
+// Range.toString(): damit ist es gleich, ob die Grenze im Textknoten oder im
+// Elternknoten liegt - genau daran sind die frueheren Versuche gescheitert.
+function qnPositionAus(knoten,offset){
+ const editor=qnEditor();
+ if(!editor||!knoten||!editor.contains(knoten))return null;
+ let element=knoten.nodeType===3?knoten.parentNode:knoten;
+ let zeilenEl=null;
+ while(element&&element!==editor){
+  if(element.dataset&&element.dataset.qn!==undefined){zeilenEl=element;break}
+  element=element.parentNode;
+ }
+ if(!zeilenEl){
+  // Die Grenze liegt direkt im Bereich, nicht in einer Zeile: auf die
+  // naechstgelegene Zeile abbilden.
+  const zeilen=qnZeilenElemente();
+  if(!zeilen.length)return{zeile:0,zeichen:0};
+  const vorne=offset<=0;
+  const ziel=vorne?zeilen[0]:zeilen[zeilen.length-1];
+  const index=Number(ziel.dataset.qn);
+  return{zeile:index,zeichen:vorne?0:(ziel.textContent||'').length};
+ }
+ let zeichen=0;
+ try{
+  const bereich=document.createRange();
+  bereich.selectNodeContents(zeilenEl);
+  bereich.setEnd(knoten,offset);
+  zeichen=bereich.toString().length;
+ }catch{zeichen=0}
+ return{zeile:Number(zeilenEl.dataset.qn)||0,zeichen};
+}
+function qnAuswahl(){
+ const editor=qnEditor();
+ const auswahl=window.getSelection();
+ if(!editor||!auswahl||!auswahl.rangeCount)return null;
+ const bereich=auswahl.getRangeAt(0);
+ if(!editor.contains(bereich.commonAncestorContainer))return null;
+ const von=qnPositionAus(bereich.startContainer,bereich.startOffset);
+ const bis=qnPositionAus(bereich.endContainer,bereich.endOffset);
+ if(!von||!bis)return null;
+ // Immer vorwaerts sortiert - die Zugrichtung der Maus ist damit belanglos.
+ const vorwaerts=von.zeile<bis.zeile||(von.zeile===bis.zeile&&von.zeichen<=bis.zeichen);
+ return vorwaerts?{von,bis}:{von:bis,bis:von};
+}
+function qnAuswahlOderEnde(){
+ const vorhanden=qnAuswahl();
+ if(vorhanden)return vorhanden;
+ const letzte=Math.max(0,quickNoteModell.length-1);
+ const ende={zeile:letzte,zeichen:qnZeilenText(quickNoteModell[letzte]||{}).length};
+ return{von:ende,bis:{...ende}};
+}
+// Setzt die Auswahl aus Zeichenpositionen. Der Bereich wurde vorher neu
+// gezeichnet, deshalb kann hier nichts veraltet sein.
+function qnSetzeAuswahl(von,bis){
+ const editor=qnEditor();
+ if(!editor)return;
+ const punkt=(pos)=>{
+  const zeilenEl=editor.querySelector(`[data-qn="${pos.zeile}"]`)
+   ||editor.querySelector('[data-qn]');
+  if(!zeilenEl)return null;
+  let rest=Math.max(0,pos.zeichen);
+  const lauf=document.createTreeWalker(zeilenEl,NodeFilter.SHOW_TEXT);
+  let knoten,letzter=null;
+  while((knoten=lauf.nextNode())){
+   const laenge=knoten.nodeValue.length;
+   if(rest<=laenge)return{knoten,offset:rest};
+   rest-=laenge;
+   letzter={knoten,offset:laenge};
+  }
+  if(letzter)return letzter;
+  return{knoten:zeilenEl,offset:0};
+ };
+ const a=punkt(von);
+ const b=punkt(bis)||a;
+ if(!a)return;
+ try{
+  const bereich=document.createRange();
+  bereich.setStart(a.knoten,a.offset);
+  bereich.setEnd(b.knoten,b.offset);
+  const auswahl=window.getSelection();
+  auswahl.removeAllRanges();
+  auswahl.addRange(bereich);
+ }catch{/* Position nicht mehr vorhanden */}
+}
+
+// ---------------------------------------------------------------
+//  Zeichnen, Speichern, Verlauf
+// ---------------------------------------------------------------
+function qnZeichne(von,bis){
+ const editor=qnEditor();
+ if(!editor)return;
+ quickNoteZeichnet=true;
+ editor.innerHTML=qnHtmlAusModell(quickNoteModell);
+ // Jede Zeile bekommt ihre Nummer, damit Positionen eindeutig sind.
+ qnModellAusKnoten(editor,{nummerieren:true});
+ qnLeereAnzeige();
+ if(von){
+  if(document.activeElement!==editor){
+   try{editor.focus({preventScroll:true})}catch{editor.focus()}
+  }
+  qnSetzeAuswahl(von,bis||von);
+ }
+ quickNoteZeichnet=false;
+}
+function qnLeereAnzeige(){
+ const editor=qnEditor();
+ if(!editor)return;
+ const leer=!quickNoteModell.some(zeile=>qnZeilenText(zeile).replace(/[\u200b\s]/g,''));
+ editor.classList.toggle('quick-note-empty',leer&&quickNoteModell.length<=1);
+}
+function qnSpeichere(){
+ const leer=!quickNoteModell.some(zeile=>qnZeilenText(zeile).replace(/[\u200b\s]/g,''));
+ state.meta.quickNote=leer?'':qnHtmlAusModell(quickNoteModell).replace(/\u200b/g,'');
  saveState();
 }
-function quickNoteCommand(command){
- const editor=restoreQuickNoteSelection();
- if(!editor)return;
- if(command==='bullet'||command==='ordered'||command==='checklist'){
-  rtToggleList(editor,command);
- }else if(RT_INLINE_TAGS[command]){
-  rtToggleInline(editor,command);
- }else{
-  try{document.execCommand(command,false,null)}catch{/* nicht unterstuetzt */}
- }
- // In den schnellen Notizen ist die Schrift laut Vorgabe immer schwarz.
- rtStripColors(editor);
- saveQuickNoteSelection();
- saveQuickNoteValue();
+function qnModellKopie(modell){
+ return(modell||[]).map(zeile=>({
+  art:zeile.art,
+  teile:(zeile.teile||[]).map(teil=>({text:teil.text,fett:Boolean(teil.fett)}))
+ }));
 }
+function qnMerkeVerlauf({gruppiert=false}={}){
+ const jetzt=Date.now();
+ if(gruppiert&&jetzt-quickNoteLetzteEingabe<900){
+  quickNoteLetzteEingabe=jetzt;
+  return;
+ }
+ quickNoteLetzteEingabe=jetzt;
+ quickNoteVerlauf.push(qnModellKopie(quickNoteModell));
+ if(quickNoteVerlauf.length>QN_MAX_VERLAUF)quickNoteVerlauf.shift();
+ quickNoteZukunft=[];
+}
+function qnRueckgaengig(){
+ if(!quickNoteVerlauf.length)return false;
+ quickNoteZukunft.push(qnModellKopie(quickNoteModell));
+ quickNoteModell=quickNoteVerlauf.pop();
+ quickNoteLetzteEingabe=0;
+ const letzte=Math.max(0,quickNoteModell.length-1);
+ qnZeichne({zeile:letzte,zeichen:qnZeilenText(quickNoteModell[letzte]||{}).length});
+ qnSpeichere();
+ return true;
+}
+function qnWiederherstellen(){
+ if(!quickNoteZukunft.length)return false;
+ quickNoteVerlauf.push(qnModellKopie(quickNoteModell));
+ quickNoteModell=quickNoteZukunft.pop();
+ quickNoteLetzteEingabe=0;
+ const letzte=Math.max(0,quickNoteModell.length-1);
+ qnZeichne({zeile:letzte,zeichen:qnZeilenText(quickNoteModell[letzte]||{}).length});
+ qnSpeichere();
+ return true;
+}
+
+// ---------------------------------------------------------------
+//  Bedienung
+// ---------------------------------------------------------------
+function qnBefehl(befehl){
+ const editor=qnEditor();
+ if(!editor)return;
+ // Die Auswahl wird VOR jeder Aenderung gelesen. Danach wird nur noch im
+ // Modell gerechnet, deshalb kann sie nicht mehr verloren gehen.
+ const {von,bis}=qnAuswahlOderEnde();
+ qnMerkeVerlauf();
+ if(befehl==='bold'){
+  const schonFett=qnBereichIstFett(quickNoteModell,von,bis);
+  if(von.zeile===bis.zeile&&von.zeichen===bis.zeichen){
+   // Kein markierter Text: Platzhalter setzen, damit das Weitertippen
+   // fett wird. Der Platzhalter wird beim Speichern entfernt.
+   const zeile=quickNoteModell[von.zeile];
+   if(zeile){
+    const gesamt=qnZeilenText(zeile).length;
+    const kopf=qnTeileAusschnitt(zeile,0,von.zeichen);
+    const schwanz=qnTeileAusschnitt(zeile,von.zeichen,gesamt);
+    const umgebend=kopf.length?Boolean(kopf[kopf.length-1].fett):false;
+    zeile.teile=[...kopf,{text:'\u200b',fett:!umgebend},...schwanz];
+    qnZeichne({zeile:von.zeile,zeichen:von.zeichen+1});
+    qnSpeichere();
+    return;
+   }
+  }
+  qnSetzeFett(quickNoteModell,von,bis,!schonFett);
+ }else if(befehl==='bullet'){
+  qnSetzeArt(quickNoteModell,von,bis,'ul');
+ }else if(befehl==='ordered'){
+  qnSetzeArt(quickNoteModell,von,bis,'ol');
+ }else if(befehl==='normal'){
+  qnSetzeNormal(quickNoteModell,von,bis);
+ }else return;
+ qnZeichne(von,bis);
+ qnSpeichere();
+ qnWerkzeugleiste();
+}
+function qnWerkzeugleiste(){
+ const editor=qnEditor();
+ if(!editor)return;
+ const aktiv=document.activeElement===editor;
+ const auswahl=aktiv?qnAuswahl():null;
+ const zustand={bold:false,bullet:false,ordered:false};
+ if(auswahl){
+  const {von,bis}=auswahl;
+  zustand.bold=qnBereichIstFett(quickNoteModell,von,bis);
+  const arten=[];
+  for(let i=von.zeile;i<=bis.zeile;i++)if(quickNoteModell[i])arten.push(quickNoteModell[i].art);
+  zustand.bullet=arten.length>0&&arten.every(art=>art==='ul');
+  zustand.ordered=arten.length>0&&arten.every(art=>art==='ol');
+ }
+ $$('[data-quick-command]').forEach(schalter=>{
+  const befehl=schalter.dataset.quickCommand;
+  if(befehl in zustand)schalter.classList.toggle('active',zustand[befehl]);
+ });
+}
+// Nach dem Tippen wird das Modell aus dem Dokumentbaum neu gelesen. Der
+// Bereich wird dabei bewusst NICHT neu gezeichnet, damit der Cursor und die
+// Eingabehilfen des Browsers unangetastet bleiben.
+function qnUebernehmeEingabe(){
+ const editor=qnEditor();
+ if(!editor||quickNoteZeichnet)return;
+ qnMerkeVerlauf({gruppiert:true});
+ // Einlesen und Nummerieren in einem Schritt: beide koennen nicht
+ // auseinanderlaufen, auch wenn der Browser beim Tippen eigene Elemente
+ // angelegt hat.
+ quickNoteModell=qnModellAusKnoten(editor,{nummerieren:true});
+ qnLeereAnzeige();
+ qnSpeichere();
+ qnWerkzeugleiste();
+}
+function qnZeilenumbruchEingabe(ereignis){
+ const editor=qnEditor();
+ if(!editor)return false;
+ const auswahl=qnAuswahl();
+ if(!auswahl)return false;
+ ereignis.preventDefault();
+ qnMerkeVerlauf();
+ const pos=qnZeilenumbruch(quickNoteModell,auswahl.von,auswahl.bis);
+ qnZeichne(pos);
+ qnSpeichere();
+ qnWerkzeugleiste();
+ return true;
+}
+function qnEinfuegen(text){
+ const editor=qnEditor();
+ if(!editor)return;
+ const {von,bis}=qnAuswahlOderEnde();
+ qnMerkeVerlauf();
+ const pos=qnFuegeTextEin(quickNoteModell,von,bis,text);
+ qnZeichne(pos);
+ qnSpeichere();
+ qnWerkzeugleiste();
+}
+// Beim Neuzeichnen der Uebersicht: Stand aus dem Speicher uebernehmen,
+// solange nicht gerade im Feld gearbeitet wird.
+function qnAktualisiereAnzeige(){
+ const editor=qnEditor();
+ if(!editor||document.activeElement===editor)return;
+ const ohnePlatzhalter=wert=>String(wert).replace(/\u200b/g,'');
+ const html=ohnePlatzhalter(qnHtmlAusModell(qnModellAusHtml(state.meta.quickNote)));
+ if(ohnePlatzhalter(qnHtmlAusModell(quickNoteModell))!==html
+    ||!editor.querySelector('[data-qn]')){
+  quickNoteModell=qnModellAusHtml(state.meta.quickNote);
+  qnZeichne();
+ }
+}
+
 function nodePathFromRoot(root,node){
  const path=[];
  let currentNode=node;
@@ -6569,7 +7032,7 @@ function rtEnsureBlocks(root){
  [...root.childNodes].forEach(node=>{
   if(node.nodeType===1&&RT_CONTAINER_TAGS.includes(node.tagName)){absatz=null;return}
   if(node.nodeType===8){node.remove();return}
-  if(node.nodeType===3&&!node.nodeValue.replace(/[​\s]/g,'')&&!absatz)return;
+  if(node.nodeType===3&&!node.nodeValue.replace(/[\u200b\s]/g,'')&&!absatz)return;
   if(!absatz){
    absatz=document.createElement('p');
    node.before(absatz);
@@ -6754,7 +7217,7 @@ function rtExitListOnEmptyLine(root,event){
  if(!range||!range.collapsed)return false;
  const block=rtBlockOf(root,range.startContainer);
  if(!block||block.tagName!=='LI')return false;
- if((block.textContent||'').replace(/[​\s]/g,''))return false;
+ if((block.textContent||'').replace(/[\u200b\s]/g,''))return false;
  if(block.querySelector('img,table'))return false;
  event.preventDefault();
  const absatz=rtUnwrapItem(block);
@@ -8075,7 +8538,7 @@ document.addEventListener('change',event=>{
 
 document.addEventListener('input',event=>{
  if(event.target.matches?.('.subtask-deadline'))syncSubtaskDeadlineAppearance(event.target);
- if(event.target.id==='quick-note-editor'){saveQuickNoteSelection();saveQuickNoteValue();return}
+ if(event.target.id==='quick-note-editor')return; // eigener Handler, siehe qnUebernehmeEingabe
  const quickTodoField=event.target.closest('[data-quick-todo-field]');if(quickTodoField){updateQuickTodoTitle(quickTodoField);return}
  const workField=event.target.closest('[data-work-field]');
  if(workField&&['title','summary'].includes(workField.dataset.workField)){updateInlineWork(workField);return}
@@ -8171,11 +8634,23 @@ document.addEventListener('keydown',event=>{
  }
 
  const quickNoteEditor=event.target.closest?.('#quick-note-editor');
- if(quickNoteEditor&&event.key==='Enter'&&!event.shiftKey&&!modifier
-    &&rtExitListOnEmptyLine(quickNoteEditor,event)){
-  saveQuickNoteSelection();
-  saveQuickNoteValue();
-  return;
+ if(quickNoteEditor){
+  if(modifier&&key==='z'){
+   event.preventDefault();
+   event.shiftKey?qnWiederherstellen():qnRueckgaengig();
+   return;
+  }
+  if(modifier&&key==='y'){
+   event.preventDefault();
+   qnWiederherstellen();
+   return;
+  }
+  if(modifier&&key==='b'){
+   event.preventDefault();
+   qnBefehl('bold');
+   return;
+  }
+  if(event.key==='Enter'&&!modifier&&qnZeilenumbruchEingabe(event))return;
  }
 
  const quickTodoTitle=event.target.closest?.('[data-quick-todo-field="title"]');
@@ -8869,24 +9344,22 @@ $$('[data-note-command]').forEach(button=>{
  button.addEventListener('click',()=>noteCommand(button.dataset.noteCommand));
 });
 $$('[data-quick-command]').forEach(button=>{
+ // Kein Fokuswechsel beim Klick: so bleibt die Auswahl im Feld erhalten.
  button.addEventListener('mousedown',event=>event.preventDefault());
- button.addEventListener('click',()=>quickNoteCommand(button.dataset.quickCommand));
+ button.addEventListener('click',()=>qnBefehl(button.dataset.quickCommand));
 });
-bind('#quick-note-editor','mouseup',saveQuickNoteSelection);
-bind('#quick-note-editor','keyup',saveQuickNoteSelection);
-bind('#quick-note-editor','focus',saveQuickNoteSelection);
+bind('#quick-note-editor','input',qnUebernehmeEingabe);
+bind('#quick-note-editor','mouseup',qnWerkzeugleiste);
+bind('#quick-note-editor','keyup',qnWerkzeugleiste);
+bind('#quick-note-editor','focus',qnWerkzeugleiste);
+bind('#quick-note-editor','blur',qnWerkzeugleiste);
 bind('#quick-note-editor','paste',event=>{
  event.preventDefault();
  const clipboard=event.clipboardData;
- const clean=clipboard&&clipboard.getData('text/html')
-  ?sanitizeNoteHtml(clipboard.getData('text/html'),{paste:true})
-  :plainTextToNoteHtml(clipboard?clipboard.getData('text/plain'):'');
- if(!clean)return;
- const editor=restoreQuickNoteSelection();
- try{document.execCommand('insertHTML',false,clean)}catch{/* nicht unterstuetzt */}
- rtStripColors(editor);
- saveQuickNoteSelection();
- saveQuickNoteValue();
+ const text=clipboard?clipboard.getData('text/plain'):'';
+ // Schnelle Notizen kennen nur Fett und Listen. Eingefuegtes kommt deshalb
+ // als reiner Text herein - damit gibt es auch keine fremden Farben.
+ if(text)qnEinfuegen(text);
 });
 
 bind('#note-font-size','change',event=>applyNoteFontSize(event.target.value));
@@ -9030,7 +9503,20 @@ window.__dashboardTest={
  toggleChecklistItem,
  noteCommand,
  noteToggleList,
- quickNoteCommand,
+ qnBefehl,
+ qnEinfuegen,
+ qnRueckgaengig,
+ qnWiederherstellen,
+ qnZeilenumbruchEingabe,
+ qnUebernehmeEingabe,
+ qnAktualisiereAnzeige,
+ setQuickNoteHtml:html=>{state.meta.quickNote=html;qnAktualisiereAnzeige()},
+ getQuickNoteHtml:()=>state.meta.quickNote,
+ qnHtmlAusModell,
+ qnModellAusHtml,
+ qnAuswahl,
+ qnSetzeAuswahl,
+ getQuickNoteModell:()=>qnModellKopie(quickNoteModell),
  rtToggleList,
  rtToggleInline,
  rtApplyColor,
