@@ -20,7 +20,7 @@
 .nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
-.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;color:#000;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
+.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;color:#000;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor p{margin:0 0 .4em}.quick-note-editor p:last-child{margin-bottom:0}.quick-note-editor ul,.quick-note-editor ol{margin:.2em 0 .4em;padding-left:24px}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor:empty::before{content:attr(data-placeholder);color:#9099a3;pointer-events:none}
 .note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:16px;letter-spacing:-.01em;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
 .group{padding:14px;border:1px solid var(--category-border);border-radius:var(--radius)}.group.own{background:var(--own)}.group.project{background:var(--project)}.group.delegated-group{background:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
@@ -2332,14 +2332,6 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
         </div>
 <div id="note-toolbar" class="toolbar note-toolbar" role="toolbar" aria-label="Textformatierung">
     <div class="toolbar-group">
-      <select id="note-block-format" class="toolbar-select" aria-label="Absatzformat" title="Absatzformat">
-        <option value="p">Standardtext</option>
-        <option value="h2">Überschrift 1</option>
-        <option value="h3">Überschrift 2</option>
-        <option value="blockquote">Zitat</option>
-      </select>
-    </div>
-    <div class="toolbar-group">
       <button type="button" class="toolbar-btn" data-note-command="bold" aria-label="Fett" title="Fett (Strg+B)"><strong>F</strong></button>
       <button type="button" class="toolbar-btn" data-note-command="italic" aria-label="Kursiv" title="Kursiv (Strg+I)"><em>K</em></button>
       <button type="button" class="toolbar-btn" data-note-command="underline" aria-label="Unterstrichen" title="Unterstrichen (Strg+U)"><u>U</u></button>
@@ -2347,10 +2339,9 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
     </div>
     <div class="toolbar-group">
       <select id="note-font-size" class="toolbar-select compact" aria-label="Schriftgröße" title="Schriftgröße">
-        <option value="">Standard</option>
         <option value="12">12 px</option>
         <option value="14">14 px</option>
-        <option value="16">16 px</option>
+        <option value="">16 px</option>
         <option value="18">18 px</option>
         <option value="22">22 px</option>
         <option value="28">28 px</option>
@@ -2365,7 +2356,6 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
       <button type="button" class="toolbar-btn" data-note-command="indent" aria-label="Einzug vergrößern" title="Einzug vergrößern">→</button>
     </div>
     <div class="toolbar-group">
-      <button type="button" id="note-link-btn" class="toolbar-btn" aria-label="Link einfügen oder ändern" title="Link einfügen oder ändern (Strg+K)">Link</button>
       <button type="button" id="note-clear-format-btn" class="toolbar-btn" aria-label="Formatierung entfernen" title="Formatierung entfernen">Format löschen</button>
     </div>
     <div class="toolbar-group toolbar-history">
@@ -2708,7 +2698,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 39.0 vom 14.10.2026, 11:45';
+const DASHBOARD_RELEASE='Dashboard 39.1 vom 14.10.2026, 12:20';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -3005,7 +2995,7 @@ function createDefaults(){
     quickNoteBg:'#f3f8fe',
     quickNoteTitle:'#2a6ccc'
    },
-   noteColors:['#000000','#4f5964','#6f98bd','#73a982','#c97977','#c7a950'],
+   noteColors:['#000000','#6f98bd','#73a982','#c97977','#c7a950'],
    shared:{
     areas:clone(legacy.projects.areas),
     statuses:[
@@ -3384,8 +3374,11 @@ function normalizeState(raw){
   &&source.config.noteColors.length
   ?source.config.noteColors.map(String)
   :clone(defaults.config.noteColors);
- // Einmalige Ergaenzung: echtes Schwarz als erste Schriftfarbe. Eigene
- // Farben bleiben dabei unveraendert erhalten, es wird nichts ersetzt.
+ // Auf ausdrueckliche Anweisung: echtes Schwarz als erste Schriftfarbe, das
+ // frueher voreingestellte Grau (#4f5964) entfaellt. Alle uebrigen eigenen
+ // Farben bleiben unveraendert erhalten.
+ result.config.noteColors=result.config.noteColors
+  .filter(color=>String(color).trim().toLowerCase()!=='#4f5964');
  if(!result.config.noteColors.some(color=>/^#?(?:000|000000)$/i.test(String(color).trim()))){
   result.config.noteColors=['#000000',...result.config.noteColors];
  }
@@ -6478,8 +6471,11 @@ function noteCommand(command,value=null){
  }else{
   let effectiveValue=value;
   if(command==='formatBlock')effectiveValue=String(value||'p').toLowerCase();
-  const supported=document.queryCommandSupported?.(command)!==false;
-  if(supported)document.execCommand(command,false,effectiveValue);
+  // Nur noch Einzug vergroessern/verkleinern laufen ueber den Browserbefehl.
+  try{
+   const supported=document.queryCommandSupported?.(command)!==false;
+   if(supported)document.execCommand(command,false,effectiveValue);
+  }catch{/* nicht unterstuetzt */}
  }
 
  noteEditorState.historyLocked=false;
@@ -6488,27 +6484,21 @@ function noteCommand(command,value=null){
  scheduleCurrentNoteSave();
  updateNoteToolbarState();
 }
+// Die Absatzformat-Auswahl wurde auf Wunsch aus der Werkzeugleiste entfernt.
+// Die Funktion bleibt erhalten, damit bestehende Aufrufwege nicht brechen.
 function applyNoteBlockFormat(tag){
  const allowed=['p','h2','h3','blockquote'];
  noteCommand('formatBlock',allowed.includes(tag)?tag:'p');
 }
 function applyNoteFontSize(value){
  const size=value?Number.parseInt(value,10):null;
- if(size!==null&&![12,14,16,18,22,28].includes(size))return;
+ if(size!==null&&![12,14,18,22,28].includes(size))return;
+ const editor=focusNoteEditor();
+ if(!editor)return;
  restoreNoteSelection();
  noteEditorCheckpoint({force:true,inputType:'command:fontSize'});
  noteEditorState.historyLocked=true;
- document.execCommand('fontSize',false,size===null?'3':'7');
- $$(`font[size="${size===null?'3':'7'}"]`,$('#note-editor')).forEach(font=>{
-  if(size===null){
-   font.replaceWith(...font.childNodes);
-  }else{
-   const span=document.createElement('span');
-   span.style.fontSize=`${size}px`;
-   span.innerHTML=font.innerHTML;
-   font.replaceWith(span);
-  }
- });
+ rtApplyFontSize(editor,size);
  noteEditorState.historyLocked=false;
  saveNoteSelection();
  scheduleCurrentNoteSave();
@@ -6528,7 +6518,8 @@ const RT_BLOCK_TAGS=['P','H2','H3','BLOCKQUOTE','LI','TD','TH'];
 const RT_BLOCK_SELECTOR='p,h2,h3,blockquote,li,td,th';
 const RT_CONTAINER_TAGS=['P','H2','H3','BLOCKQUOTE','UL','OL','TABLE','HR','DIV'];
 const RT_INLINE_TAGS={bold:'STRONG',italic:'EM',underline:'U',strike:'S'};
-const RT_INLINE_COMMANDS={bold:'bold',italic:'italic',underline:'underline',strike:'strikeThrough'};
+// Auch alte Schreibweisen erkennen, damit bestehende Notizen funktionieren.
+const RT_INLINE_MATCH={bold:['STRONG','B'],italic:['EM','I'],underline:['U'],strike:['S','STRIKE','DEL']};
 
 // Aktueller Bereich, aber nur wenn er wirklich im uebergebenen Editor liegt.
 function rtRange(root){
@@ -6626,13 +6617,17 @@ function rtRestoreOffsets(root,pos){
  if(!root||!pos)return;
  const finde=ziel=>{
   const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-  let gezaehlt=0,knoten;
+  let gezaehlt=0,knoten,randtreffer=null;
   while((knoten=lauf.nextNode())){
    const laenge=knoten.textContent.length;
-   if(gezaehlt+laenge>=ziel)return{knoten,offset:ziel-gezaehlt};
+   // Liegt die Position genau auf einer Blockgrenze, passt sie auf das Ende
+   // des vorigen und auf den Anfang des naechsten Textknotens. Der naechste
+   // ist der richtige - sonst springt der Cursor eine Zeile nach oben.
+   if(gezaehlt+laenge>ziel)return{knoten,offset:ziel-gezaehlt};
+   if(gezaehlt+laenge===ziel)randtreffer={knoten,offset:laenge};
    gezaehlt+=laenge;
   }
-  return null;
+  return randtreffer;
  };
  const start=finde(pos.start);
  if(!start){rtPlaceCaretAtEnd(root);return}
@@ -6771,11 +6766,11 @@ function rtExitListOnEmptyLine(root,event){
 function rtInlineActive(root,art){
  const range=rtRange(root);
  if(!range)return false;
- const tag=RT_INLINE_TAGS[art];
+ const namen=RT_INLINE_MATCH[art]||[];
  let knoten=range.startContainer;
  if(knoten&&knoten.nodeType===3)knoten=knoten.parentNode;
  while(knoten&&knoten!==root){
-  if(knoten.nodeName===tag)return true;
+  if(namen.includes(knoten.nodeName))return true;
   if(knoten.nodeType===1&&knoten.style){
    const style=knoten.style;
    const gewicht=String(style.fontWeight||'').toLowerCase();
@@ -6789,10 +6784,119 @@ function rtInlineActive(root,art){
  }
  return false;
 }
-// Setzt ein Zeichenformat. Bei echter Auswahl uebernimmt der Browserbefehl,
-// bei stehendem Cursor wird ein leeres Formatelement eingefuegt. Letzteres
-// war die Ursache dafuer, dass "Fett" in der ersten Zeile oben nicht griff:
-// Der Browser verwirft die wartende Formatierung am Dokumentanfang.
+// Aeusserstes Formatelement der gesuchten Art oberhalb des Knotens.
+function rtInlineWrapperOf(root,node,art){
+ const namen=RT_INLINE_MATCH[art]||[];
+ let element=node&&node.nodeType===3?node.parentNode:node;
+ let gefunden=null;
+ while(element&&element!==root){
+  if(namen.includes(element.nodeName))gefunden=element;
+  element=element.parentNode;
+ }
+ return gefunden;
+}
+// Alle Textknoten, die der Bereich vollstaendig umfasst. Die Raender werden
+// vorher geteilt, damit wirklich nur die Auswahl betroffen ist.
+function rtTextNodesInRange(root,range){
+ let sKnoten=range.startContainer,sOffset=range.startOffset;
+ let eKnoten=range.endContainer,eOffset=range.endOffset;
+ // Zuerst das Ende teilen, dann den Anfang - andernfalls verschiebt sich die
+ // Endposition, wenn Anfang und Ende im selben Textknoten liegen.
+ if(eKnoten.nodeType===3&&eOffset>0&&eOffset<eKnoten.nodeValue.length){
+  eKnoten.splitText(eOffset);
+  eOffset=eKnoten.nodeValue.length;
+ }
+ if(sKnoten.nodeType===3&&sOffset>0&&sOffset<sKnoten.nodeValue.length){
+  const rest=sKnoten.splitText(sOffset);
+  if(eKnoten===sKnoten){eKnoten=rest;eOffset=rest.nodeValue.length}
+  sKnoten=rest;
+  sOffset=0;
+ }
+ const bereich=document.createRange();
+ bereich.setStart(sKnoten,sOffset);
+ bereich.setEnd(eKnoten,eOffset);
+ const treffer=[];
+ const lauf=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ let knoten;
+ while((knoten=lauf.nextNode())){
+  if(!knoten.nodeValue.length)continue;
+  // selectNodeContents und nicht selectNode: die Grenzen muessen INNERHALB
+  // des Textknotens liegen, sonst vergleicht man Positionen im Elternknoten.
+  const eigen=document.createRange();
+  eigen.selectNodeContents(knoten);
+  const drin=bereich.compareBoundaryPoints(Range.START_TO_START,eigen)<=0
+          && bereich.compareBoundaryPoints(Range.END_TO_END,eigen)>=0;
+  if(drin)treffer.push(knoten);
+ }
+ rtSetRange(bereich);
+ return treffer;
+}
+// Teilt ein Formatelement so auf, dass der Knoten danach ausserhalb liegt.
+// Davor und danach bleibt die Formatierung bestehen.
+function rtLiftOutOf(huelle,knoten){
+ if(!huelle||!huelle.parentNode||!huelle.contains(knoten))return knoten;
+ // Die Teilstuecke erhalten dieselben Attribute wie die Huelle, damit zum
+ // Beispiel eine Schriftfarbe davor und danach bestehen bleibt.
+ const kopie=()=>huelle.cloneNode(false);
+ const davor=document.createRange();
+ davor.selectNodeContents(huelle);
+ davor.setEndBefore(knoten);
+ const vorInhalt=davor.extractContents();
+ const danach=document.createRange();
+ danach.selectNodeContents(huelle);
+ danach.setStartAfter(knoten);
+ const nachInhalt=danach.extractContents();
+ const teile=[];
+ if((vorInhalt.textContent||'').length){
+  const a=kopie();
+  a.appendChild(vorInhalt);
+  teile.push(a);
+ }
+ // Der Rest der Huelle enthaelt jetzt genau den Knoten samt etwaiger
+ // weiterer Formatierungen darum herum.
+ teile.push(...huelle.childNodes);
+ if((nachInhalt.textContent||'').length){
+  const b=kopie();
+  b.appendChild(nachInhalt);
+  teile.push(b);
+ }
+ huelle.replaceWith(...teile);
+ return knoten;
+}
+// Aeusserstes Element oberhalb des Knotens, das die gesuchte Stilangabe setzt.
+function rtStyleWrapperOf(root,node,prop){
+ let element=node&&node.nodeType===3?node.parentNode:node;
+ let gefunden=null;
+ while(element&&element!==root){
+  if(element.nodeType===1){
+   const perStil=element.style&&element.style[prop];
+   const perAttribut=element.tagName==='FONT'
+    &&((prop==='color'&&element.hasAttribute('color'))
+     ||(prop==='fontSize'&&element.hasAttribute('size')));
+   if(perStil||perAttribut)gefunden=element;
+  }
+  element=element.parentNode;
+ }
+ return gefunden;
+}
+// Loest alle Stilangaben dieser Art oberhalb des Knotens auf, ohne die
+// Nachbarn zu veraendern: die betroffenen Huellen werden aufgeteilt.
+function rtDropStyleAbove(root,knoten,prop){
+ const cssName=prop==='fontSize'?'font-size':prop;
+ for(let runde=0;runde<8;runde++){
+  const huelle=rtStyleWrapperOf(root,knoten,prop);
+  if(!huelle)return;
+  rtLiftOutOf(huelle,knoten);
+  if(rtStyleWrapperOf(root,knoten,prop)===huelle){
+   if(huelle.style)huelle.style.removeProperty(cssName);
+   huelle.removeAttribute(prop==='fontSize'?'size':'color');
+   return;
+  }
+ }
+}
+// Setzt ein Zeichenformat ohne document.execCommand. Der Browserbefehl hat
+// nach einem Umbau des Dokumentbaums regelmaessig gar nichts getan - genau
+// das war die Ursache dafuer, dass "Fett" in der obersten Zeile nicht griff.
 function rtToggleInline(root,art){
  const tag=RT_INLINE_TAGS[art];
  if(!root||!tag)return false;
@@ -6801,22 +6905,53 @@ function rtToggleInline(root,art){
  if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
  const range=rtRange(root);
  if(!range)return false;
- const befehl=RT_INLINE_COMMANDS[art];
- if(!range.collapsed||rtInlineActive(root,art)){
-  try{document.execCommand(befehl,false,null)}catch{/* nicht unterstuetzt */}
+
+ if(range.collapsed){
+  // Wartendes Format: ein leeres Formatelement mit Platzhalter aufnehmen.
+  const vorhanden=rtInlineWrapperOf(root,range.startContainer,art);
+  if(vorhanden){
+   const platzhalter=document.createTextNode('\u200b');
+   vorhanden.after(platzhalter);
+   const neu=document.createRange();
+   neu.setStart(platzhalter,1);
+   neu.collapse(true);
+   rtSetRange(neu);
+  }else{
+   const huelle=document.createElement(tag.toLowerCase());
+   huelle.appendChild(document.createTextNode('\u200b'));
+   range.insertNode(huelle);
+   const neu=document.createRange();
+   neu.setStart(huelle.firstChild,1);
+   neu.collapse(true);
+   rtSetRange(neu);
+  }
   return true;
  }
- const huelle=document.createElement(tag.toLowerCase());
- huelle.appendChild(document.createTextNode('​'));
- range.insertNode(huelle);
- const neu=document.createRange();
- neu.setStart(huelle.firstChild,1);
- neu.collapse(true);
- rtSetRange(neu);
+
+ const knoten=rtTextNodesInRange(root,range);
+ if(!knoten.length)return false;
+ const alleSchonSo=knoten.every(eintrag=>Boolean(rtInlineWrapperOf(root,eintrag,art)));
+ knoten.forEach(eintrag=>{
+  // Die Huelle je Knoten neu bestimmen: durch das Aufteilen aendert sie sich.
+  const huelle=rtInlineWrapperOf(root,eintrag,art);
+  if(alleSchonSo){
+   if(huelle)rtLiftOutOf(huelle,eintrag);
+  }else if(!huelle&&eintrag.parentNode){
+   const neu=document.createElement(tag.toLowerCase());
+   eintrag.before(neu);
+   neu.appendChild(eintrag);
+  }
+ });
+ const bereich=document.createRange();
+ bereich.setStartBefore(knoten[0]);
+ bereich.setEndAfter(knoten[knoten.length-1]);
+ rtSetRange(bereich);
  return true;
 }
-// Setzt die Schriftfarbe als CSS-Angabe. styleWithCSS sorgt dafuer, dass
-// kein <font>-Element entsteht und vorhandene Farben wirklich ersetzt werden.
+// Setzt die Schriftfarbe als CSS-Angabe, ebenfalls ohne Browserbefehl.
+// Vorhandene Farben oberhalb der Auswahl werden vorher aufgeloest, damit die
+// neue Farbe wirklich greift - das war die Ursache dafuer, dass markierter
+// grauer Text sich nicht auf Schwarz stellen liess.
 function rtApplyColor(root,farbe){
  if(!root)return false;
  const sicher=safeNoteColor(farbe)||'#000000';
@@ -6827,7 +6962,7 @@ function rtApplyColor(root,farbe){
  if(range.collapsed){
   const huelle=document.createElement('span');
   huelle.style.color=sicher;
-  huelle.appendChild(document.createTextNode('​'));
+  huelle.appendChild(document.createTextNode('\u200b'));
   range.insertNode(huelle);
   const neu=document.createRange();
   neu.setStart(huelle.firstChild,1);
@@ -6835,26 +6970,84 @@ function rtApplyColor(root,farbe){
   rtSetRange(neu);
   return true;
  }
- const bereich=range.commonAncestorContainer;
- const umgebung=bereich.nodeType===1?bereich:bereich.parentElement;
- try{document.execCommand('styleWithCSS',false,true)}catch{/* nicht unterstuetzt */}
- let erfolg=false;
- try{erfolg=document.execCommand('foreColor',false,sicher)}catch{erfolg=false}
- if(!erfolg){
-  // Rueckfallebene ohne Browserbefehl: Auswahl in ein eigenes span legen.
-  const inhalt=range.extractContents();
+ const knoten=rtTextNodesInRange(root,range);
+ if(!knoten.length)return false;
+ knoten.forEach(eintrag=>{
+  rtDropStyleAbove(root,eintrag,'color');
+  if(!eintrag.parentNode)return;
   const huelle=document.createElement('span');
   huelle.style.color=sicher;
-  huelle.appendChild(inhalt);
+  eintrag.before(huelle);
+  huelle.appendChild(eintrag);
+ });
+ const bereich=document.createRange();
+ bereich.setStartBefore(knoten[0]);
+ bereich.setEndAfter(knoten[knoten.length-1]);
+ rtSetRange(bereich);
+ return true;
+}
+// Setzt die Schriftgroesse. null bedeutet: Grundeinstellung (16 px), dann
+// werden vorhandene Groessenangaben nur entfernt.
+function rtApplyFontSize(root,px){
+ if(!root)return false;
+ const vorher=rtOffsets(root);
+ if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
+ const range=rtRange(root);
+ if(!range)return false;
+ if(range.collapsed){
+  const huelle=document.createElement('span');
+  if(px)huelle.style.fontSize=`${px}px`;
+  huelle.appendChild(document.createTextNode('\u200b'));
   range.insertNode(huelle);
   const neu=document.createRange();
-  neu.selectNodeContents(huelle);
+  neu.setStart(huelle.firstChild,1);
+  neu.collapse(true);
   rtSetRange(neu);
+  return true;
  }
- // Verschachtelte Farbangaben entfernen, damit die neue Farbe oben liegt.
- if(umgebung&&umgebung.querySelectorAll){
-  umgebung.querySelectorAll('font[color]').forEach(element=>element.removeAttribute('color'));
- }
+ const knoten=rtTextNodesInRange(root,range);
+ if(!knoten.length)return false;
+ knoten.forEach(eintrag=>{
+  rtDropStyleAbove(root,eintrag,'fontSize');
+  if(!px||!eintrag.parentNode)return;
+  const huelle=document.createElement('span');
+  huelle.style.fontSize=`${px}px`;
+  eintrag.before(huelle);
+  huelle.appendChild(eintrag);
+ });
+ const bereich=document.createRange();
+ bereich.setStartBefore(knoten[0]);
+ bereich.setEndAfter(knoten[knoten.length-1]);
+ rtSetRange(bereich);
+ return true;
+}
+// Entfernt jede Zeichenformatierung auf der Auswahl. Nachbarn behalten ihre
+// Formatierung, weil die Huellen aufgeteilt und nicht geloescht werden.
+function rtClearFormatting(root){
+ if(!root)return false;
+ const vorher=rtOffsets(root);
+ if(rtEnsureBlocks(root))rtRestoreOffsets(root,vorher);
+ const range=rtRange(root);
+ if(!range||range.collapsed)return false;
+ const knoten=rtTextNodesInRange(root,range);
+ if(!knoten.length)return false;
+ const inline=['STRONG','B','EM','I','U','S','STRIKE','DEL','SPAN','FONT','CODE','A'];
+ knoten.forEach(eintrag=>{
+  for(let runde=0;runde<12;runde++){
+   let huelle=null;
+   let element=eintrag.parentNode;
+   while(element&&element!==root){
+    if(element.nodeType===1&&inline.includes(element.tagName))huelle=element;
+    element=element.parentNode;
+   }
+   if(!huelle)break;
+   rtLiftOutOf(huelle,eintrag);
+  }
+ });
+ const bereich=document.createRange();
+ bereich.setStartBefore(knoten[0]);
+ bereich.setEndAfter(knoten[knoten.length-1]);
+ rtSetRange(bereich);
  return true;
 }
 // Entfernt alle Farbangaben. Die schnellen Notizen sollen laut Vorgabe
@@ -6933,6 +7126,8 @@ function toggleCurrentChecklistItem(){
  if(node?.nodeType===3)node=node.parentElement;
  return toggleChecklistItem(node?.closest?.('ul.note-checklist > li'));
 }
+// Der Link-Schalter wurde auf Wunsch aus der Werkzeugleiste entfernt.
+// Vorhandene Links in Notizen bleiben klickbar.
 function noteLinkCommand(){
  restoreNoteSelection();
  let selection=getSelection();
@@ -6995,11 +7190,12 @@ function noteLinkCommand(){
  }
 }
 function clearNoteFormatting(){
+ const editor=focusNoteEditor();
+ if(!editor)return;
  restoreNoteSelection();
  noteEditorCheckpoint({force:true,inputType:'command:clear'});
  noteEditorState.historyLocked=true;
- document.execCommand('removeFormat',false,null);
- document.execCommand('unlink',false,null);
+ rtClearFormatting(editor);
  noteEditorState.historyLocked=false;
  saveNoteSelection();
  scheduleCurrentNoteSave();
@@ -7039,17 +7235,10 @@ function updateNoteToolbarState(){
 
  let node=inside?selection.anchorNode:null;
  if(node?.nodeType===3)node=node.parentElement;
- const block=node?.closest?.('h2,h3,blockquote,p');
- const blockSelect=$('#note-block-format');
- if(blockSelect){
-  const tag=block?.tagName?.toLowerCase()||'p';
-  blockSelect.value=['h2','h3','blockquote'].includes(tag)?tag:'p';
- }
  const checklist=Boolean(node?.closest?.('ul.note-checklist'));
  $('#note-checklist-btn')?.classList.toggle('active',checklist);
  const bulletButton=$('[data-note-command="insertUnorderedList"]');
  if(bulletButton)bulletButton.classList.toggle('active',stateFor('insertUnorderedList')&&!checklist);
- $('#note-link-btn')?.classList.toggle('active',Boolean(node?.closest?.('a')));
  renderHistoryButtons();
 }
 function placeCaretAtEnd(element){
@@ -7942,11 +8131,6 @@ document.addEventListener('keydown',event=>{
    noteEditorRedo();
    return;
   }
-  if(modifier&&key==='k'){
-   event.preventDefault();
-   noteLinkCommand();
-   return;
-  }
   if(modifier&&event.key==='Enter'){
    event.preventDefault();
    toggleCurrentChecklistItem();
@@ -8691,12 +8875,9 @@ bind('#quick-note-editor','paste',event=>{
  saveQuickNoteValue();
 });
 
-bind('#note-block-format','change',event=>applyNoteBlockFormat(event.target.value));
 bind('#note-font-size','change',event=>applyNoteFontSize(event.target.value));
 bind('#note-checklist-btn','mousedown',event=>event.preventDefault());
 bind('#note-checklist-btn','click',toggleNoteChecklist);
-bind('#note-link-btn','mousedown',event=>event.preventDefault());
-bind('#note-link-btn','click',noteLinkCommand);
 bind('#note-clear-format-btn','mousedown',event=>event.preventDefault());
 bind('#note-clear-format-btn','click',clearNoteFormatting);
 bind('#note-undo-btn','mousedown',event=>event.preventDefault());
@@ -8839,6 +9020,9 @@ window.__dashboardTest={
  rtToggleList,
  rtToggleInline,
  rtApplyColor,
+ rtApplyFontSize,
+ rtDropStyleAbove,
+ rtClearFormatting,
  rtStripColors,
  rtSelectedBlocks,
  rtEnsureBlocks,
