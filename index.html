@@ -1313,6 +1313,19 @@ body:not(.mobile) .tools{justify-content:space-between;gap:0}
 }
 .mail-status{flex:1;color:var(--muted);font-size:13px}
 .mail-foot-hint{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.4}
+.settings-grid.settings-grid-einspaltig{grid-template-columns:minmax(0,1fr)}
+.mail-signature-input{
+ width:100%;
+ max-width:320px;
+ box-sizing:border-box;
+ margin-top:4px;
+ padding:8px 10px;
+ border:1px solid var(--border);
+ border-radius:7px;
+ background:#fff;
+ font-family:inherit;
+ font-size:13px
+}
 .mail-template{margin:10px 0 14px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa}
 .mail-template>summary{padding:9px 11px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text)}
 .mail-template-body{display:grid;gap:6px;padding:0 11px 12px}
@@ -2830,6 +2843,11 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
       <summary>Auswahlmöglichkeiten</summary>
       <div id="settings-options-body" class="settings-accordion-content"></div>
     </details>
+
+    <details class="settings-accordion">
+      <summary>Vorlage für vorbereitete Nachrichten</summary>
+      <div id="settings-mail-body" class="settings-accordion-content"></div>
+    </details>
   </div>
 
   <footer class="editor-foot">
@@ -2863,7 +2881,7 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 43.1 vom 14.10.2026, 21:25';
+const DASHBOARD_RELEASE='Dashboard 44.0 vom 14.10.2026, 21:50';
 const RECURRING_PRIORITY_ID='work-recurring';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben & Projekte',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
@@ -5606,6 +5624,7 @@ function renderSettings(){
   ['priorities','Prioritäten','Gilt für den neuen Aufgaben-Reiter, eigene und vergebene Aufgaben sowie Projekte.',true]
  ];
 
+ renderMailEinstellungen();
  $('#settings-options-body').innerHTML=
   `<div class="selection-grid">${groups.map(([group,label,hint,locked])=>`
    <section class="settings-group">
@@ -5620,15 +5639,7 @@ function renderSettings(){
       </select>
       <span style="font-size:12px;color:var(--muted);margin-left:8px">Diese Person bekommt keinen eigenen Block in „Vergebene Aufgaben".</span>
      </div>
-     <div class="settings-hint" style="margin-bottom:8px">
-      <strong>Name für die Unterschrift:</strong>
-      <input type="text" id="signature-name-input" maxlength="80"
-             value="${esc(state.config.shared.signatureName||'')}"
-             placeholder="${esc(selbstBezeichnung()||'z. B. Max Mustermann')}"
-             style="margin-left:8px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-width:200px">
-      <span style="font-size:12px;color:var(--muted);margin-left:8px">Steht unter vorbereiteten Nachrichten. Leer: es wird „Ich bin" verwendet.</span>
-     </div>
-     ${renderMailVorlageEinstellung()}`:''}
+`:''}
     <div class="option-list" data-option-section="shared" data-option-group="${group}">
      ${options('shared',group).map(item=>renderOptionRow('shared',group,item,{locked})).join('')}
     </div>
@@ -5636,13 +5647,15 @@ function renderSettings(){
       data-option-section="shared" data-option-group="${group}">+ Auswahl hinzufügen</button>`}
    </section>`).join('')}
    <section class="settings-group">
-    <h4>Kategorien im gemeinsamen Aufgabenreiter</h4>
-    <div class="settings-hint">Legt fest, welche Kategorien im Reiter „Aufgaben" angezeigt werden. Ausgeblendete Kategorien und ihre Aufgaben bleiben erhalten, sie werden nur nicht dargestellt.</div>
+    <h4>Blöcke im Reiter „${esc(state.config.navLabels.tasks||'Aufgaben')}"</h4>
+    <div class="settings-hint">Auf dieser Seite stehen die Aufgaben in Blöcken, einer je Kategorie.
+     Hier legst du fest, welche Blöcke dort erscheinen. Abgewählte Blöcke und die Aufgaben darin
+     bleiben vollständig erhalten – sie werden auf der Seite nur nicht angezeigt.</div>
     ${taskCategoryVisibilityOptions().map(item=>`
      <label class="daily-toggle">
       <input type="checkbox" data-category-visibility="${esc(item.id)}"
        ${state.config.shared.hiddenTaskCategories.includes(item.id)?'':'checked'}>
-      Kategorie „${esc(item.label)}" anzeigen
+      Block „${esc(item.label)}" anzeigen
      </label>`).join('')}
    </section></div>`;
 }
@@ -5650,29 +5663,40 @@ function taskCategoryVisibilityOptions(){
  return[{id:'quick',label:'Schnelle Todos'},...workPriorityOptions()];
 }
 
-// Abschnitt in den Einstellungen, in dem die Mailvorlage bearbeitet wird.
-function renderMailVorlageEinstellung(){
+// Eigener Einstellungsabschnitt: Unterschrift und Mailvorlage.
+function renderMailEinstellungen(){
+ const ziel=$('#settings-mail-body');
+ if(!ziel)return;
  const vorlage=mailVorlage();
- const eigene=state.config.shared.mailTemplate||{};
- const geaendert=Boolean(String(eigene.betreff||'').trim()||String(eigene.text||'').trim());
- return`<details class="mail-template" ${geaendert?'open':''}>
-  <summary>Vorlage für „Als Mail vorbereiten“</summary>
-  <div class="mail-template-body">
-   <label for="mail-template-subject">Betreff</label>
-   <input id="mail-template-subject" type="text" maxlength="300" value="${esc(vorlage.betreff)}">
-   <label for="mail-template-text">Text</label>
-   <textarea id="mail-template-text" rows="12" maxlength="4000">${esc(vorlage.text)}</textarea>
-   <p class="mail-template-hint">
-    <strong>**Text**</strong> wird fett, <em>*Text*</em> kursiv.
-    Eine Zeile verschwindet, wenn alle ihre Platzhalter leer sind.
-   </p>
-   <ul class="mail-template-list">
-    ${MAIL_PLATZHALTER.map(([name,beschreibung])=>
-     `<li><code>${esc(name)}</code> ${esc(beschreibung)}</li>`).join('')}
-   </ul>
-   <button type="button" id="mail-template-reset" class="secondary">Auf Standard zurücksetzen</button>
-  </div>
- </details>`;
+ ziel.innerHTML=`<div class="settings-grid settings-grid-einspaltig">
+  <section class="settings-group">
+   <h4>Unterschrift</h4>
+   <div class="settings-hint">Dieser Name steht unter den vorbereiteten Nachrichten.
+    Bleibt das Feld leer, wird die unter „Verantwortlichkeiten“ gewählte Person „Ich bin“ verwendet.</div>
+   <input type="text" id="signature-name-input" class="mail-signature-input" maxlength="80"
+          value="${esc(state.config.shared.signatureName||'')}"
+          placeholder="${esc(selbstBezeichnung()||'z. B. Max Mustermann')}">
+  </section>
+  <section class="settings-group">
+   <h4>Mailvorlage</h4>
+   <div class="settings-hint">Wird vom Briefumschlag-Symbol bei den vergebenen Aufgaben verwendet.</div>
+   <div class="mail-template-body">
+    <label for="mail-template-subject">Betreff</label>
+    <input id="mail-template-subject" type="text" maxlength="300" value="${esc(vorlage.betreff)}">
+    <label for="mail-template-text">Text</label>
+    <textarea id="mail-template-text" rows="14" maxlength="4000">${esc(vorlage.text)}</textarea>
+    <p class="mail-template-hint">
+     <strong>**Text**</strong> wird fett, <em>*Text*</em> kursiv.
+     Eine Zeile verschwindet, wenn alle ihre Platzhalter leer sind.
+    </p>
+    <ul class="mail-template-list">
+     ${MAIL_PLATZHALTER.map(([name,beschreibung])=>
+      `<li><code>${esc(name)}</code> ${esc(beschreibung)}</li>`).join('')}
+    </ul>
+    <button type="button" id="mail-template-reset" class="secondary">Auf Standard zurücksetzen</button>
+   </div>
+  </section>
+ </div>`;
 }
 function renderOptionRow(section,group,item,{locked=false}={}){
  return`<div class="option-row ${group==='statuses'?'status-option':''} ${group==='people'?'person-option':''} ${locked?'locked':''}"
