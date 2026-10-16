@@ -15,16 +15,16 @@
 <style>
 :root{--bg:#ffffff;--panel:#fff;--text:#1f2d3d;--muted:#6f7b88;--border:#dfe6ee;--accent:#315d8a;--accent-soft:#e8f0f7;--danger:#a94343;--work-group-bg:#eef6ff;--work-group-title:#1565c0;--own:var(--work-group-bg);--project:var(--work-group-bg);--delegated:var(--work-group-bg);--note-bg:#bfd6e9;--note:var(--note-bg);--note-title:#1c4668;--note-category:#66717d;--note-preview:#66717d;--quick-note-bg:#bfd6e9;--quick-note-title:#66717d;--shadow:0 5px 18px rgba(28,39,49,.07);--radius:12px;--sidebar:244px;--sidebar-bg:#dbe8f3;--sidebar-title-color:#1f2933;--sidebar-text-color:#315d8a;--sidebar-active-bg:#bfd6e9;--sidebar-active-text:#1f2933;--sidebar-title-font:'Jolly Lodger',Arial,Helvetica,sans-serif;--sidebar-title-size:30px;--category-border:#d5e5f6;--work-card-bg:#ffffff;--category-gap:12px;--status-width:148px}
 *{box-sizing:border-box}select{font-weight:400!important}html,body{margin:0;min-height:100%;font-family:"Inter",Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit;color:inherit}.app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
-.sidebar{position:relative;z-index:80;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:var(--sidebar-title-size);line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-text-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
-.tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:hover:not(:disabled){background:var(--accent-soft)}.tool:disabled{opacity:.35;cursor:default}
-.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:#f0f3f5}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
+.sidebar{position:sticky;top:0;z-index:80;display:flex;flex-direction:column;height:100vh;overflow-y:auto;overscroll-behavior:contain;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:26px 19px}.sidebar .nav{flex:0 0 auto}.brand{margin-bottom:20px}.brand h1{margin:0;font-size:var(--sidebar-title-size);line-height:1;cursor:pointer;font-family:var(--sidebar-title-font);letter-spacing:.025em;font-weight:400;color:var(--sidebar-title-color)}.brand p{margin:7px 0 0;font-size:13px;color:var(--sidebar-text-color);cursor:pointer}.brand h1:hover,.brand p:hover{text-decoration:underline dotted}
+.tools{display:flex;gap:7px;padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid var(--border)}.tool{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--accent);cursor:pointer;font-size:17px}.tool:disabled{opacity:.35;cursor:default}
+.nav{display:grid;gap:8px}.nav button{border:0;border-radius:9px;background:transparent;padding:12px 13px;text-align:left;cursor:grab;color:var(--sidebar-text-color)}.nav button:hover{background:rgba(255,255,255,.48)}.nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:700}.nav button.dragging{opacity:.35}.nav button.drop-target{outline:2px dashed var(--accent)}
 .main{min-width:0;padding:34px}.page{display:none}.page.active{display:block}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:21px}.page-header h2{margin:0;font-size:28px}.page-header p{margin:6px 0 0;color:var(--muted)}
 .primary,.secondary,.danger{border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf0f3}.danger{background:#f7e5e5;color:var(--danger)}.icon{width:34px;height:34px;border:0;border-radius:8px;display:inline-grid;place-items:center;cursor:pointer}.open-btn{background:#edf0f3;font-size:17px}.delete-btn{background:#f7e5e5;color:var(--danger);font-size:20px}.quick-add{width:29px;height:29px;border:0;border-radius:7px;background:rgba(255,255,255,.78);cursor:pointer;font-size:19px;color:#244d70}.actions{display:flex;gap:6px;align-items:center}
-.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;color:#000;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor p{margin:0 0 .4em}.quick-note-editor p:last-child{margin-bottom:0}.quick-note-editor ul,.quick-note-editor ol{margin:.2em 0 .4em;padding-left:24px}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor{position:relative}.quick-note-editor.quick-note-empty::before{content:attr(data-placeholder);position:absolute;top:10px;left:11px;color:#9099a3;pointer-events:none}.quick-note-tool.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{margin:0 0 4px;font-size:16px;letter-spacing:-.01em;color:var(--note-title)}.small{font-size:12px;color:var(--muted)}.preview{margin-top:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:13px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:13px}
-.group{padding:14px;border:1px solid var(--category-border);border-radius:var(--radius)}.group.own{background:var(--own)}.group.project{background:var(--project)}.group.delegated-group{background:var(--delegated)}.group.drag-over{outline:3px dashed var(--accent)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
-.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 132px 175px auto;gap:10px;align-items:center;padding:11px;background:var(--work-card-bg);border:1px solid var(--border);border-radius:10px}.todo-row.delegated{grid-template-columns:minmax(126px,.6fr) minmax(176px,.96fr) 165px 132px 170px auto}.todo-row.completed{opacity:.62;background:var(--work-card-bg)}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}.todo-row.delegated>.person-select{font-size:13px}
+.quick-note{display:grid;gap:8px;margin-bottom:16px;padding:14px;background:var(--quick-note-bg);border:1px solid var(--category-border);border-radius:var(--radius)}.quick-note-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.quick-note label{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--quick-note-title)}.quick-note-icon{flex:0 0 auto;color:#2f7ec1;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1}.quick-note-toolbar{display:flex;flex-wrap:wrap;gap:5px}.quick-note-tool{height:30px;min-width:32px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}.quick-note-tool:hover{background:var(--accent-soft)}.quick-note-editor{position:relative;width:100%;font-size:15px;min-height:88px;max-height:280px;padding:10px 11px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;color:#000;outline:0;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.quick-note-editor p{margin:0 0 .4em}.quick-note-editor p:last-child{margin-bottom:0}.quick-note-editor ul,.quick-note-editor ol{margin:.2em 0 .4em;padding-left:24px}.quick-note-editor:focus{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}.quick-note-editor.quick-note-empty::before{content:attr(data-placeholder);position:absolute;top:10px;left:11px;color:#9099a3;pointer-events:none}.quick-note-tool.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.note-list,.list,.subtask-list{display:grid;gap:11px}.groups{display:grid;gap:var(--category-gap)}.note-card{padding:9px 14px 9px 16px;background:var(--note-bg);border:1px solid var(--category-border);border-radius:var(--radius);box-shadow:var(--shadow)}.note-main{cursor:pointer}.note-card h3{display:flex;align-items:center;height:29px;margin:0;padding:3px 4px;font-size:16px;line-height:1.25;letter-spacing:-.01em;color:var(--note-title);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.small{font-size:12px;color:var(--muted)}
+.filters{position:relative;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:19px}.filter{position:relative}.filter-trigger{min-width:190px;padding:9px 34px 9px 11px;font-size:13px;border:1px solid var(--border);border-radius:8px;background:#fff;box-shadow:var(--shadow);text-align:left;cursor:pointer}.filter-trigger::after{content:'▾';position:absolute;right:12px;color:var(--muted)}.filter-menu{display:none;position:absolute;overscroll-behavior:contain;top:calc(100% + 5px);left:0;z-index:500;width:285px;max-height:320px;overflow:auto;padding:7px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.14)}.filter.open .filter-menu{display:block}.filter-option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;font-size:12px}.filter-option:hover{background:#f1f3f5}.filter-reset{border:0;background:transparent;color:var(--accent);font-size:12px;cursor:pointer}.filter-info{margin-left:auto;color:var(--muted);font-size:12px}
+.group{padding:14px;border:1px solid var(--category-border);border-radius:var(--radius)}.group.own{background:var(--own)}.group.project{background:var(--project)}.group.delegated-group{background:var(--delegated)}.group-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.group-head h3{margin:0;font-size:17px;color:var(--work-group-title)}.group-meta{display:flex;align-items:center;gap:8px}.count{font-size:12px;color:#365c7b}.empty{padding:21px;border:1px dashed var(--border);border-radius:10px;background:rgba(255,255,255,.7);text-align:center;color:var(--muted)}
+.todo-row{display:grid;grid-template-columns:minmax(126px,.6fr) minmax(280px,1.6fr) 132px 175px auto;gap:10px;align-items:center;padding:11px;background:var(--work-card-bg);border:1px solid var(--border);border-radius:10px}.todo-row.completed{opacity:.62;background:var(--work-card-bg)}.todo-row.completed .title-input-inline,.todo-row.completed .summary-input{text-decoration:line-through}.inline{width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent}.inline:hover,.inline:focus{border-color:var(--border);background:#fff;outline:0}.title-input-inline{font-weight:700}.summary-input{height:61px;min-height:61px;max-height:61px;resize:none;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.35;white-space:pre-wrap;border-color:var(--border);background:#fff}.mini-select{display:block;width:auto;max-width:165px;height:25px;margin:2px 0 0 5px;padding:1px 22px 1px 4px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:11px;font-weight:400}.mini-select:hover,.mini-select:focus{border-color:var(--border);background:#fff}.status-select,.person-select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;font-weight:400}
 .project-card{
  display:block;
  overflow:hidden;
@@ -120,8 +120,8 @@
  font-size:12px;
  font-weight:700
 }
-.project-inline-subtask select,
-.project-inline-subtask input[type="date"]{
+.project-inline-subtask select{
+ height:35px;
  font-size:12px;
  font-weight:400
 }
@@ -169,7 +169,25 @@
 .rich-editor table{width:100%;border-collapse:collapse}
 .rich-editor td,.rich-editor th{padding:5px 7px;border:1px solid var(--border)}
 
-.subtask-head{display:flex;justify-content:space-between;align-items:center}
+.subtask-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+/* Gleiche Optik wie der Plus-Schalter in den Kopfzeilen der Bloecke. */
+.subtask-add{
+ display:inline-grid;
+ place-items:center;
+ flex:0 0 auto;
+ width:32px;
+ height:32px;
+ padding:0;
+ border:1px solid #d8e1eb;
+ border-radius:8px;
+ background:#fff;
+ color:var(--work-group-title);
+ font-size:20px;
+ line-height:1;
+ cursor:pointer;
+ box-shadow:0 1px 2px rgba(31,45,61,.03)
+}
+.subtask-add:hover{background:#f7fbff}
 .subtask-row{
  display:grid;
  grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) 165px 145px 170px auto;
@@ -204,18 +222,14 @@
  font-size:12px;
  line-height:1.35
 }
-.subtask-row select,
-.subtask-row .subtask-deadline{
+.subtask-row select{
+ height:35px;
  font-size:12px;
  font-weight:400
 }
-.subtask-row .subtask-deadline{
- min-width:0;
- font-variant-numeric:tabular-nums
-}
-.settings-shell{width:min(1180px,100%)}.settings-body{display:grid;gap:18px;padding:23px}.settings-section{padding:15px;border:1px solid var(--border);border-radius:12px}.settings-section h3{margin:0 0 13px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(290px,1fr));gap:15px}.settings-group{padding:12px;border:1px solid var(--border);border-radius:10px}.settings-group h4{margin:0 0 9px}.settings-hint{margin:-3px 0 10px;color:var(--muted);font-size:11px}.option-list{display:grid;gap:7px}.option-row{display:grid;grid-template-columns:23px minmax(120px,1fr) auto;gap:7px;align-items:center;padding:7px;background:#f7f8fa;border:1px solid var(--border);border-radius:8px}.option-row.status-option{grid-template-columns:23px minmax(110px,1fr) 42px 42px 105px auto}
-.option-row.person-option{grid-template-columns:23px minmax(132px,1.1fr) 104px minmax(168px,1.3fr) auto}.option-row.dragging{opacity:.35}.option-row.drop-target{outline:2px dashed var(--accent)}.drag-handle{cursor:grab;text-align:center;color:var(--muted)}.option-row input[type=text],.option-row select{width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;background:#fff}.option-row input[type=color]{width:38px;height:30px;border:0;background:transparent}.option-delete{width:30px;height:30px;border:0;border-radius:7px;background:#f7e5e5;color:var(--danger);cursor:pointer}.add-option{margin-top:9px;padding:7px 10px;border:1px dashed var(--accent);border-radius:7px;background:#fff;color:var(--accent);cursor:pointer}
-@media(max-width:1080px){.todo-row,.todo-row.delegated,.project-row{grid-template-columns:1fr}.todo-row>*,.project-row>*{grid-column:1}.subtask-row{grid-template-columns:1fr 1fr}}
+.settings-shell{width:min(1180px,100%)}.settings-body{display:grid;gap:12px;padding:16px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(290px,1fr));gap:10px}.settings-group{padding:9px;border:1px solid var(--border);border-radius:8px}.settings-group h4{margin:0 0 7px;font-size:13px}.settings-hint{margin:-2px 0 7px;color:var(--muted);font-size:10px;line-height:1.35}.option-list{display:grid;gap:5px}.option-row{display:grid;grid-template-columns:23px minmax(120px,1fr) auto;gap:5px;align-items:center;padding:5px;background:#f7f8fa;border:1px solid var(--border);border-radius:8px;font-size:12px}.option-row.status-option{grid-template-columns:23px minmax(110px,1fr) 42px 42px 105px auto}
+.option-row.person-option{grid-template-columns:23px minmax(132px,1.1fr) 104px minmax(168px,1.3fr) auto}.option-row.dragging{opacity:.35}.option-row.drop-target{outline:2px dashed var(--accent)}.drag-handle{cursor:grab;text-align:center;color:var(--muted)}.option-row input[type=text],.option-row input[type=email],.option-row select{width:100%;padding:5px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px}.option-row input[type=color]{width:34px;height:27px;border:0;background:transparent}.option-delete{width:27px;height:27px;border:0;border-radius:7px;background:#f7e5e5;color:var(--danger);cursor:pointer}.add-option{margin-top:6px;padding:6px 8px;border:1px dashed var(--accent);border-radius:7px;background:#fff;color:var(--accent);font-size:11px;cursor:pointer}
+@media(max-width:1080px){.todo-row,.project-row{grid-template-columns:1fr}.todo-row>*,.project-row>*{grid-column:1}.subtask-row{grid-template-columns:1fr 1fr}}
 /* Mobile layout is class-based so the toolbar toggle works on every viewport. */
 body.mobile{--sidebar:0px}
 body.mobile .app{display:block;min-height:100vh}
@@ -234,6 +248,7 @@ body.mobile .sidebar{
  box-shadow:0 3px 12px rgba(28,39,49,.08)
 }
 body.mobile .brand{
+ order:1;
  display:block;
  min-width:0;
  margin-bottom:11px;
@@ -250,6 +265,7 @@ body.mobile .brand h1{
 }
 body.mobile .brand p{display:none}
 body.mobile .tools{
+ order:2;
  display:flex;
  gap:7px;
  margin-bottom:8px;
@@ -270,6 +286,7 @@ body.mobile .sync-indicator{
  height:36px
 }
 body.mobile .nav{
+ order:4;
  display:flex;
  gap:6px;
  padding-bottom:2px;
@@ -301,6 +318,14 @@ body.mobile .primary,
 body.mobile .secondary,
 body.mobile .danger{min-height:40px}
 body.mobile .quick-note{padding:11px}
+/* Mobil: Ueberschrift in einer Zeile, Listenschalter nur mit Symbol. Reicht
+   der Platz auf sehr schmalen Geraeten nicht, rutscht die Leiste als Ganzes
+   in die naechste Zeile statt die Ueberschrift umzubrechen. */
+body.mobile .nur-breit{display:none}
+body.mobile .quick-note-head{flex-wrap:wrap;gap:8px}
+body.mobile .quick-note label{flex:0 0 auto;white-space:nowrap}
+body.mobile .quick-note-toolbar{flex-wrap:nowrap;gap:4px;margin-left:auto}
+body.mobile .quick-note-tool{min-width:32px;padding:0 8px}
 body.mobile .filters{
  display:grid;
  grid-template-columns:1fr;
@@ -317,14 +342,9 @@ body.mobile .filter-menu{
 }
 body.mobile .filter-reset{text-align:left;padding:7px 2px}
 body.mobile .filter-info{margin-left:0}
-body.mobile .group,
-body.mobile .delegated-shell{padding:11px}
-body.mobile .group-head,
-body.mobile .flat-head{align-items:center}
-body.mobile .group-head h3,
-body.mobile .flat-head h3{font-size:16px}
-body.mobile .todo-row,
-body.mobile .todo-row.delegated,
+body.mobile .group{padding:11px}
+body.mobile .group-head{align-items:center}
+body.mobile .group-head h3{font-size:16px}
 body.mobile .project-row{
  grid-template-columns:minmax(0,1fr);
  gap:8px;
@@ -341,7 +361,6 @@ body.mobile .summary-input{
 body.mobile .mini-select{max-width:100%;margin-left:0}
 body.mobile .status-select,
 body.mobile .person-select{min-height:40px}
-body.mobile .todo-row>.actions,
 body.mobile .project-row>.actions{justify-content:flex-end}
 body.mobile .overlay{
  inset:0;
@@ -393,11 +412,6 @@ body.mobile .editor-foot{
  gap:10px;
  padding:12px
 }
-body.mobile .subtask-head{
- align-items:flex-start;
- gap:10px
-}
-body.mobile .subtask-head h3{margin-top:8px}
 body.mobile .subtask-row{
  grid-template-columns:minmax(0,1fr);
  gap:8px
@@ -405,7 +419,6 @@ body.mobile .subtask-row{
 body.mobile .subtask-row>*{grid-column:1}
 body.mobile .subtask-row .delete-btn{justify-self:end}
 body.mobile .settings-body{padding:12px}
-body.mobile .settings-section{padding:11px}
 body.mobile .settings-group{min-width:0}
 body.mobile .option-row{
  grid-template-columns:22px minmax(0,1fr) auto
@@ -431,14 +444,12 @@ body.mobile .auth-actions{
  align-items:stretch
 }
 body.mobile .auth-actions button{width:100%}
-
-
-/* Mobile Aufgabenkarte: einheitliche Linkskante und kompakte Aktionszeile. */
-body.mobile .todo-row,
-body.mobile .todo-row.delegated{
+/* Mobile Aufgabenzeile: einheitliche Linkskante und kompakte Aktionszeile. */
+body.mobile .todo-row{
  grid-template-columns:minmax(0,1fr) auto;
  column-gap:9px;
- row-gap:8px
+ row-gap:8px;
+ padding:10px
 }
 body.mobile .todo-row>div:first-child{
  grid-column:1/-1;
@@ -482,16 +493,11 @@ body.mobile .todo-row>.actions .icon{
  height:42px
 }
 
-
-
-
-body.mobile #project-overlay .detail-grid{grid-template-columns:minmax(0,1fr)}
-body.mobile #project-overlay .field,
-body.mobile #project-overlay .field input,
-body.mobile #project-overlay .field select,
-body.mobile #project-overlay .field textarea{min-width:0;max-width:100%;width:100%}
-
-body.mobile .project-card{overflow:hidden}
+/* Mobil: Dialogfelder nie breiter als der Bildschirm. */
+body.mobile .detail-grid>.field,
+body.mobile .detail-grid>.field input,
+body.mobile .detail-grid>.field select,
+body.mobile .detail-grid>.field textarea{min-width:0;max-width:100%}
 body.mobile .project-preview{
  grid-template-columns:minmax(0,1fr) auto;
  column-gap:9px;
@@ -529,14 +535,15 @@ body.mobile .project-actions{
  width:96px;
  height:96px
 }
-body.mobile .project-actions .icon{height:100%;min-height:0}
-body.mobile .project-expand-btn{height:100%;min-height:0}
 body.mobile .project-expanded{padding:0 10px 10px}
 body.mobile .project-inline-subtask{
- grid-template-columns:minmax(0,1fr)
+ grid-template-columns:minmax(0,1fr);
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ overflow:hidden
 }
-body.mobile .project-inline-subtask>*{grid-column:1}
-body.mobile .theme-grid{grid-template-columns:1fr}
+body.mobile .project-inline-subtask>*{grid-column:1;min-width:0;max-width:100%}
 
 @media(max-width:480px){
  body.mobile .page-header{flex-direction:column}
@@ -558,27 +565,24 @@ body.mobile .theme-grid{grid-template-columns:1fr}
 .auth-message.error{color:var(--danger)}.auth-message.success{color:#2f7040}
 .auth-note{padding:10px 11px;border-radius:8px;background:#f4f6f8;color:var(--muted);font-size:12px;line-height:1.45}
 .sync-indicator{min-width:33px;width:33px;height:33px;padding:0;font-size:18px;line-height:1;white-space:nowrap;overflow:hidden;cursor:default}
-.sync-indicator[data-state="saved"]{color:#2f7040;background:#e8f3eb;border-color:#c8dfce}
-.sync-indicator[data-state="saving"]{color:#7b641a;background:#fff7da;border-color:#eadc9e}
+.sync-indicator[data-state="saved"]{color:#2f7040;border-color:#c8dfce}
+.sync-indicator[data-state="saving"]{color:#7b641a;border-color:#eadc9e}
 .sync-indicator[data-state="saving"] .sync-glyph{display:inline-block;animation:sync-spin .9s linear infinite}
-.sync-indicator[data-state="offline"],.sync-indicator[data-state="error"]{color:#8b4747;background:#f8e8e8;border-color:#e8caca}
+.sync-indicator[data-state="offline"],.sync-indicator[data-state="error"]{color:#8b4747;border-color:#e8caca}
 @keyframes sync-spin{to{transform:rotate(360deg)}}
 
-
-.account-panel{display:grid;gap:12px}
-.account-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
-.account-info{padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa;font-size:13px;color:var(--muted)}
+.account-panel{display:grid;gap:8px}
+.account-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.account-row button{padding:8px 10px;font-size:12px}
+.account-info{padding:8px 9px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa;font-size:12px;color:var(--muted)}
 .file-input{display:none}
 
-
-.group.completed-group{background:#d9dee3!important;border-color:var(--category-border)!important}
 
 .debug-panel{margin-top:14px;padding:10px 11px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa;color:var(--muted);font-size:11px}
 .debug-panel.hidden{display:none}
 .debug-panel pre{max-height:180px;margin:7px 0 0;overflow:auto;white-space:pre-wrap;font:11px/1.4 Consolas,monospace}
 
-
-.rich-editor,.note-card,.note-main,.preview,#note-editor{
+.rich-editor,.note-card,.note-main,#note-editor{
  min-width:0;
  max-width:100%;
  overflow-wrap:anywhere;
@@ -595,17 +599,6 @@ body.mobile .theme-grid{grid-template-columns:1fr}
 }
 .rich-editor img,#note-editor img{max-width:100%;height:auto}
 
-
-.sidebar{
- display:flex;
- flex-direction:column;
- position:sticky;
- top:0;
- height:100vh;
- overflow-y:auto;
- overscroll-behavior:contain
-}
-.sidebar .nav{flex:0 0 auto}
 .sidebar-patch{
  padding-top:12px;
  color:var(--muted);
@@ -634,7 +627,7 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  padding:0;
  border:0;
  border-radius:8px;
- background:transparent;
+ background:#fff;
  opacity:.75;
  cursor:pointer
 }
@@ -822,33 +815,18 @@ body.mobile .theme-grid{grid-template-columns:1fr}
  white-space:nowrap
 }
 .search-empty{padding:9px;color:var(--muted);font-size:12px;text-align:center}
-.search-group-label{
- padding:6px 8px 3px;
- color:var(--muted);
- font-size:10px;
- font-weight:700;
- text-transform:uppercase;
- letter-spacing:.04em
-}
 body.mobile .sidebar-patch{display:none}
-/* Mobil sitzt die Seitenleiste als Kopfbereich – der Fußbereich braucht
-   deshalb keinen automatischen Abstand nach oben. Der Schloss-Button wandert
-   dort per JavaScript in die obere Werkzeugleiste. */
 /* Mobil enthaelt der Fussbereich nur die Suche, weil das Schloss per
    Skript in die obere Werkzeugleiste wandert. Die Reihenfolge bildet
    die gewohnte Anordnung ab: Titel, Werkzeuge, Suche, Reiter. */
 body.mobile .sidebar-foot{
+ order:3;
  display:block;
  margin-top:8px;
  /* Abstand zur Reiterleiste, damit Suchfeld und Reiter nicht aneinanderstossen. */
  margin-bottom:12px;
  padding-top:0
 }
-body.mobile .brand{order:1}
-body.mobile .tools{order:2}
-body.mobile .sidebar-foot{order:3}
-body.mobile .nav{order:4}
-body.mobile .sidebar-patch{order:5}
 body.mobile .sidebar-foot .search-results{top:calc(100% + 5px);bottom:auto}
 body.mobile .vault-lock-btn{
  flex:0 0 36px;
@@ -856,10 +834,8 @@ body.mobile .vault-lock-btn{
  height:36px;
  border:1px solid var(--border);
  border-radius:8px;
- background:#fff!important;
  opacity:1
 }
-
 
 /* Notizarchiv */
 .notes-archive{margin-top:22px;border:1px solid var(--category-border);border-radius:var(--radius);background:#d9dee3;overflow:hidden}
@@ -1051,6 +1027,7 @@ body.split-view:not(.mobile) main>.page.split-secondary{grid-row:2}
  color:var(--sidebar-text-color);
  font-weight:600
 }
+.nav button.secondary-active:hover{background:rgba(255,255,255,.48)}
 .nav button.secondary-active::after{
  content:'\2195';
  margin-left:7px;
@@ -1137,7 +1114,6 @@ body.mobile .home-tile{padding:12px}
    (Titelzeile 29px, Metazeile 23px, Innenabstand 9px oben/unten = 72px hoch).
    Rechter Innenabstand 14px, damit die Buttons bündig mit der Werkzeugleiste
    und dem Textfeld der schnellen Notizen abschließen. */
-.note-card{padding:9px 14px 9px 16px}
 .note-head{
  display:flex;
  align-items:center;
@@ -1145,17 +1121,6 @@ body.mobile .home-tile{padding:12px}
  gap:10px
 }
 .note-head .note-main{flex:1 1 auto;min-width:0}
-.note-card h3{
- display:flex;
- align-items:center;
- height:29px;
- margin:0;
- padding:3px 4px;
- line-height:1.25;
- overflow:hidden;
- text-overflow:ellipsis;
- white-space:nowrap
-}
 .note-head .actions{flex:0 0 auto;display:flex;gap:6px;align-items:center}
 .note-head .actions .icon{width:30px;height:30px;border-radius:7px}
 .note-meta-line{
@@ -1181,110 +1146,146 @@ body.mobile .note-meta-line .note-meta-date{display:none}
 .archive-btn{background:#edf0f3;color:#4e6172;font-size:16px}
 .restore-btn{background:#e8f3eb;color:#2f7040;font-size:17px}
 
-
 /* Drag-and-drop innerhalb der Prioritätsgruppen */
 .todo-row[draggable="true"],.work-row[draggable="true"],.project-row[draggable="true"]{cursor:grab}
 .todo-row.item-dragging,.project-row.item-dragging{opacity:.38}
 .todo-row.item-drop-target,.project-row.item-drop-target{outline:2px dashed var(--accent);outline-offset:2px}
 .group.item-group-target{outline:3px dashed var(--accent);outline-offset:2px}
 
-/* Sidebar-Reiter auf blauem Untergrund */
-.sidebar .nav button:hover{background:rgba(255,255,255,.48)}
-.sidebar .nav button.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text)}
-
-/* Native Datumsfelder stabil innerhalb des Rasters halten */
-.subtask-deadline{width:100%;max-width:100%;box-sizing:border-box;color-scheme:light}
-
-
 .theme-grid{
  display:grid;
- grid-template-columns:repeat(2,minmax(180px,1fr));
- gap:10px
+ grid-template-columns:repeat(3,minmax(150px,1fr));
+ gap:7px
 }
 .theme-control{
  display:grid;
- grid-template-columns:minmax(0,1fr) 46px;
- gap:10px;
+ grid-template-columns:minmax(0,1fr) 38px;
+ gap:7px;
  align-items:center;
- padding:9px 10px;
+ padding:7px 8px;
  border:1px solid var(--border);
  border-radius:8px;
  background:#f7f8fa
 }
-.theme-control label{font-size:12px;font-weight:700}
+.theme-control.font-control{
+ grid-template-columns:110px minmax(0,1fr);
+ grid-column:1/-1
+}
+.theme-control.number-control{grid-template-columns:minmax(0,1fr) 58px}
+.theme-control label{font-size:11px;font-weight:700}
 .theme-control input[type="color"]{
- width:42px;
- height:32px;
+ width:35px;
+ height:28px;
  padding:0;
  border:0;
  background:transparent
 }
-.sidebar .tool{background:#fff!important}
+.theme-control select,
+.theme-control input[type="number"]{
+ width:100%;
+ min-width:0;
+ padding:6px 7px;
+ border:1px solid var(--border);
+ border-radius:6px;
+ background:#fff;
+ font-size:12px
+}
+@media(max-width:900px){
+ .theme-grid{grid-template-columns:repeat(2,minmax(150px,1fr))}
+}
+body.mobile .theme-grid{grid-template-columns:1fr}
+body.mobile .theme-control.font-control{grid-template-columns:1fr}
 /* Desktop: Werkzeugleiste füllt exakt die Breite der Trennlinie aus.
    space-between verteilt den Restplatz gleichmäßig zwischen die Buttons. */
 body:not(.mobile) .tools{justify-content:space-between;gap:0}
 
-
 /* Statusanzeige in Aufgaben etwas kompakter */
 .todo-row>.status-select{font-size:13px}
-/* Deadline auf den Aufgabenkarten. Ueberfaellige Termine werden farblich
-   hervorgehoben, solange die Aufgabe nicht erledigt ist. */
-.todo-date-wrap{position:relative;min-width:0}
-.todo-date-wrap.is-empty::after{
- content:attr(data-empty-label);
- position:absolute;
- z-index:2;
- left:11px;
- top:50%;
- transform:translateY(-50%);
- color:#9099a3;
- font-size:13px;
- line-height:1;
- pointer-events:none
-}
-.todo-date-wrap.is-empty .subtask-deadline{color:transparent}
-.todo-date-wrap.is-empty:hover .subtask-deadline,
-.todo-date-wrap.is-empty:focus-within .subtask-deadline{color:inherit}
-.todo-date-wrap.is-empty:hover::after,
-.todo-date-wrap.is-empty:focus-within::after{opacity:0}
-.todo-date-wrap .subtask-deadline{
+/* ------------------------------------------------------------------
+   Datumsfelder: ein Baustein fuer alle Stellen (Karten, Unteraufgaben,
+   Dialoge). Rahmen, Hoehe und Innenabstand liegen auf dem umgebenden
+   Element, das Eingabefeld selbst hat weder Rahmen noch Innenabstand.
+   Grund: Safari auf dem iPhone rechnet native Datumsfelder ohne
+   box-sizing:border-box - Innenabstand und Rahmen kaemen dort sonst zur
+   Breite und Hoehe hinzu, das Feld liefe ueber den Rand und waere zu hoch.
+   ------------------------------------------------------------------ */
+.datum-feld{
+ --datum-hoehe:38px;
+ position:relative;
+ display:block;
  width:100%;
+ min-width:0;
  max-width:100%;
- height:38px;
- box-sizing:border-box;
- padding:9px 11px;
+ height:var(--datum-hoehe);
+ padding:0 11px;
+ overflow:hidden;
  border:1px solid #d7dfe8;
  border-radius:7px;
  background:#fff;
  color:#536170;
- font-family:inherit;
- font-size:13px;
- line-height:1.35;
+ font-size:13px
+}
+.datum-feld:focus-within{border-color:#9fb8cf;box-shadow:0 0 0 2px rgba(49,93,138,.08)}
+.datum-feld .datum-eingabe{
+ -webkit-appearance:none;
+ appearance:none;
+ display:block;
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ height:calc(var(--datum-hoehe) - 2px);
+ margin:0;
+ padding:0;
+ border:0;
+ border-radius:0;
+ background:transparent;
+ box-shadow:none;
+ outline:0;
+ color:inherit;
+ font:inherit;
+ line-height:calc(var(--datum-hoehe) - 2px);
+ text-align:left;
+ font-variant-numeric:tabular-nums;
  color-scheme:light
 }
-.todo-date-wrap .subtask-deadline:focus{
- border-color:#9fb8cf;
- outline:0;
- box-shadow:0 0 0 2px rgba(49,93,138,.08)
+.datum-feld .datum-eingabe::-webkit-date-and-time-value{margin:0;min-width:0;text-align:left}
+.datum-feld .datum-eingabe::-webkit-datetime-edit{padding:0}
+.datum-feld .datum-eingabe::-webkit-calendar-picker-indicator{margin:0 0 0 6px;padding:0;opacity:.5;cursor:pointer}
+.datum-feld:hover .datum-eingabe::-webkit-calendar-picker-indicator{opacity:.8}
+/* Leeres Feld zeigt "Deadline" statt der Datumsmaske. */
+.datum-feld.is-empty[data-empty-label]::after{
+ content:attr(data-empty-label);
+ position:absolute;
+ left:11px;
+ top:50%;
+ transform:translateY(-50%);
+ color:#9099a3;
+ line-height:1;
+ pointer-events:none
 }
-.todo-date-wrap .subtask-deadline::-webkit-calendar-picker-indicator{
- opacity:.5;
- cursor:pointer
-}
-.todo-date-wrap .subtask-deadline:hover::-webkit-calendar-picker-indicator{opacity:.8}
-.todo-date-wrap.is-overdue .subtask-deadline{
- border-color:var(--danger);
- background:#fdf1f1;
- color:var(--danger);
- font-weight:600
-}
+.datum-feld.is-empty[data-empty-label] .datum-eingabe{color:transparent}
+.datum-feld.is-empty[data-empty-label]:hover .datum-eingabe,
+.datum-feld.is-empty[data-empty-label]:focus-within .datum-eingabe{color:inherit}
+.datum-feld.is-empty[data-empty-label]:hover::after,
+.datum-feld.is-empty[data-empty-label]:focus-within::after{opacity:0}
+/* Ueberfaellig, solange die Aufgabe nicht erledigt ist. */
+.datum-feld.is-overdue{border-color:var(--danger);background:#fdf1f1;color:var(--danger);font-weight:600}
+/* Hoehe und Schrift je Umgebung - jeweils exakt wie die Auswahlfelder daneben. */
+.field .datum-feld{--datum-hoehe:44px;border-color:var(--border);border-radius:8px;color:var(--text);font-size:inherit}
+.field select{height:44px}
+.subtask-row .datum-feld,
+.project-inline-subtask .datum-feld{--datum-hoehe:35px;padding:0 9px;border-color:var(--border);color:inherit;font-size:12px}
+.subtask-row .datum-feld.is-empty[data-empty-label]::after,
+.project-inline-subtask .datum-feld.is-empty[data-empty-label]::after{left:9px}
+.work-inline-subtask .datum-feld{--datum-hoehe:36px;border-color:var(--border);color:#243447;font-size:12px}
+body.mobile .delegated-card>.datum-feld{--datum-hoehe:40px}
+body.mobile .todo-row>.datum-feld{--datum-hoehe:42px;grid-column:1/-1}
 /* Vermerk zur zuletzt vorbereiteten Nachricht, in der Fußzeile. */
 .todo-mail-note{
  flex:1;
  color:var(--muted);
  font-size:12px
 }
-.icon.mail-btn{font-family:Arial,Helvetica,sans-serif}
 .option-row .option-email{min-width:0;width:100%;font-size:13px}
 .mail-body{
  width:100%;
@@ -1326,8 +1327,6 @@ body:not(.mobile) .tools{justify-content:space-between;gap:0}
  font-family:inherit;
  font-size:13px
 }
-.mail-template{margin:10px 0 14px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa}
-.mail-template>summary{padding:9px 11px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text)}
 .mail-template-body{display:grid;gap:6px;padding:0 11px 12px}
 .mail-template-body>label{font-size:12px;font-weight:600;color:var(--muted)}
 .mail-template-body input,
@@ -1359,140 +1358,11 @@ body:not(.mobile) .tools{justify-content:space-between;gap:0}
 .mail-copy-small{flex:0 0 auto;height:34px;padding:0 12px;font-size:13px;white-space:nowrap}
 .option-row .option-anrede{min-width:0;width:100%;font-size:13px;text-align:center}
 
-/* Notizvorschau: echte Umbrüche statt zusammenhängender Zeile */
-.preview{
- white-space:normal!important;
- display:block!important;
- font-size:14px;
- line-height:1.4;
- max-height:5.6em;
- overflow:hidden
-}
-.preview br{display:block}
-
-/* Mobile Unteraufgaben: native Datumsfelder niemals über den Rand hinaus */
-
-/* Kompaktere Einstellungen */
-.settings-body{gap:12px;padding:16px}
-.settings-section{padding:11px;border-radius:10px}
-.settings-section h3{margin:0 0 9px;font-size:15px}
-.settings-grid{gap:10px}
-.settings-group{padding:9px;border-radius:8px}
-.settings-group h4{margin:0 0 7px;font-size:13px}
-.settings-hint{margin:-2px 0 7px;font-size:10px;line-height:1.35}
-.option-list{gap:5px}
-.option-row{gap:5px;padding:5px;font-size:12px}
 body.mobile .option-row.person-option{grid-template-columns:23px minmax(0,1fr) auto}
 body.mobile .option-row.person-option .option-anrede,
 body.mobile .option-row.person-option .option-email{grid-column:2}
-.option-row input[type=text],.option-row select{padding:5px;font-size:12px}
-.option-row input[type=color]{width:34px;height:27px}
-.option-delete{width:27px;height:27px}
-.add-option{margin-top:6px;padding:6px 8px;font-size:11px}
-.account-panel{gap:8px}
-.account-row{gap:6px}
-.account-row button{padding:8px 10px;font-size:12px}
-.account-info{padding:8px 9px;font-size:12px}
 
-/* Kompakte Darstellungsoptionen */
-.theme-grid{
- grid-template-columns:repeat(3,minmax(150px,1fr));
- gap:7px
-}
-.theme-control{
- grid-template-columns:minmax(0,1fr) 38px;
- gap:7px;
- padding:7px 8px
-}
-.theme-control.font-control{
- grid-template-columns:110px minmax(0,1fr);
- grid-column:1/-1
-}
-.theme-control label{font-size:11px}
-.theme-control input[type="color"]{width:35px;height:28px}
-.theme-control select{
- width:100%;
- min-width:0;
- padding:6px 7px;
- border:1px solid var(--border);
- border-radius:6px;
- background:#fff;
- font-size:12px
-}
-@media(max-width:900px){
- .theme-grid{grid-template-columns:repeat(2,minmax(150px,1fr))}
-}
-body.mobile .theme-grid{grid-template-columns:1fr}
-body.mobile .theme-control.font-control{grid-template-columns:1fr}
-
-
-.filter-trigger{font-size:13px}
-.filter-option,.filter-reset,.filter-info{font-size:12px}
-
-
-.subtask-date-wrap{
- display:block;
- width:100%;
- min-width:0;
- max-width:100%;
- overflow:hidden;
- contain:inline-size
-}
-.subtask-date-wrap .subtask-deadline{
- display:block;
- box-sizing:border-box;
- width:100%;
- min-width:0;
- max-width:100%
-}
-body.mobile .project-inline-subtask{
- grid-template-columns:minmax(0,1fr)!important;
- width:100%;
- min-width:0;
- max-width:100%;
- overflow:hidden
-}
-body.mobile .project-inline-subtask>*{
- min-width:0;
- max-width:100%
-}
-body.mobile .project-inline-subtask .subtask-date-wrap{
- width:100%;
- min-width:0;
- max-width:100%;
- overflow:hidden
-}
-body.mobile .project-inline-subtask .subtask-deadline{
- box-sizing:border-box!important;
- width:calc(100% - 1px)!important;
- min-width:0!important;
- max-width:calc(100% - 1px)!important;
- inline-size:calc(100% - 1px)!important;
- min-inline-size:0!important;
- max-inline-size:calc(100% - 1px)!important;
- padding-left:6px;
- padding-right:3px;
- font-size:11px
-}
-body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-value{
- min-width:0;
- padding:0;
- text-align:left
-}
-
-
-.theme-control input[type="number"]{
- width:100%;
- min-width:0;
- padding:6px 7px;
- border:1px solid var(--border);
- border-radius:6px;
- background:#fff;
- font-size:12px
-}
-
-.note-category{color:var(--note-category)!important}
-.note-preview{color:var(--note-preview)!important}
+.note-category{color:var(--note-category)}
 .group.completed-group .group-head h3{color:#374151}
 .completed-list[hidden]{display:none}
 .completed-toggle{
@@ -1547,13 +1417,14 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  font-weight:700
 }
 .option-row.locked .option-delete{visibility:hidden}
+.ich-bin{margin-bottom:8px}
+.ich-bin-auswahl{margin-left:8px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px}
+.ich-bin-hinweis{margin-left:8px;color:var(--muted);font-size:12px}
 @media(max-width:760px){
  .selection-grid{grid-template-columns:1fr}
  .settings-accordion>summary{padding:13px;font-size:15px}
  .settings-accordion-content{padding:10px}
 }
-
-
 
 /* --------------------------------------------------------------------------
    Neuer gemeinsamer Aufgabenreiter – konsolidierte Darstellung
@@ -1637,8 +1508,11 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
 .work-group .completed-toggle:hover{background:#f7fbff}
-.work-group.completed-group{
- border-color:var(--category-border)!important
+/* Erledigt-Bloecke: grau. Steht bewusst nach .group.work-group, damit
+   kein !important noetig ist. */
+.group.completed-group{
+ background:#d9dee3;
+ border-color:var(--category-border)
 }
 .work-group.completed-group .count{
  border-color:#cbd3db;
@@ -1856,13 +1730,25 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  line-height:1;
  box-shadow:0 1px 2px rgba(31,45,61,.03)
 }
-.work-actions .open-btn{
+.work-actions .open-btn,
+.work-actions .mail-btn{
  border:1px solid #d7dce1;
  background:#f1f3f5;
  color:#455463;
  font-size:16px
 }
-.work-actions .open-btn:hover{background:#e7eaed}
+.work-actions .open-btn:hover,
+.work-actions .mail-btn:hover{background:#e7eaed}
+.knopf-symbol{
+ display:block;
+ width:15px;
+ height:15px;
+ fill:none;
+ stroke:currentColor;
+ stroke-width:1.6;
+ stroke-linecap:round;
+ stroke-linejoin:round
+}
 .work-actions .delete-btn{
  border:1px solid #efcaca;
  background:#fff0f0;
@@ -1973,15 +1859,8 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  font-size:13px;
  font-weight:400
 }
-.work-inline-subtask>select,
-.work-inline-subtask .subtask-date-wrap,
-.work-inline-subtask .subtask-deadline{
+.work-inline-subtask>select{
  height:36px;
- min-height:36px;
- max-height:36px
-}
-.work-inline-subtask>select,
-.work-inline-subtask .subtask-deadline{
  padding:0 11px;
  font-size:12px;
  font-weight:400;
@@ -1992,15 +1871,6 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  font-size:12px;
  font-weight:600!important;
  white-space:nowrap
-}
-.work-inline-subtask .subtask-date-wrap{
- display:block;
- overflow:hidden
-}
-.work-inline-subtask .subtask-deadline{
- display:block;
- box-sizing:border-box;
- width:100%
 }
 .work-inline-subtask>.delete-btn{
  width:36px;
@@ -2050,18 +1920,6 @@ body.mobile .project-inline-subtask .subtask-deadline::-webkit-date-and-time-val
  }
  .work-actions{justify-content:flex-end}
 }
-body.mobile #work-overlay .detail-grid{
- grid-template-columns:minmax(0,1fr)
-}
-body.mobile #work-overlay .field,
-body.mobile #work-overlay .field input,
-body.mobile #work-overlay .field select,
-body.mobile #work-overlay .field textarea{
- min-width:0;
- max-width:100%;
- width:100%
-}
-body.mobile .work-card{overflow:hidden}
 body.mobile .work-preview{
  grid-template-columns:minmax(0,1fr);
  gap:8px;
@@ -2109,7 +1967,7 @@ body.mobile .delegated-card{
 }
 body.mobile .delegated-card>.work-meta,
 body.mobile .delegated-card>.work-note,
-body.mobile .delegated-card>.todo-date-wrap,
+body.mobile .delegated-card>.datum-feld,
 body.mobile .delegated-card>.status-select,
 body.mobile .delegated-card>.work-actions{
  grid-column:1;
@@ -2119,7 +1977,7 @@ body.mobile .delegated-card>.work-actions{
 }
 body.mobile .work-expanded{padding:0 10px 10px 18px}
 body.mobile .work-inline-subtask{
- grid-template-columns:minmax(0,1fr)!important;
+ grid-template-columns:minmax(0,1fr);
  width:100%;
  min-width:0;
  max-width:100%;
@@ -2136,81 +1994,8 @@ body.mobile .work-inline-subtask>*{
  max-width:100%
 }
 body.mobile .work-inline-add{margin-left:42px}
-body.mobile .work-inline-subtask .subtask-date-wrap{
- position:relative;
- display:block;
- width:100%;
- min-width:0;
- max-width:100%;
- height:36px;
- min-height:36px;
- max-height:36px;
- overflow:visible;
- contain:none
-}
-body.mobile .work-inline-subtask .subtask-deadline{
- -webkit-appearance:none;
- appearance:none;
- display:block;
- box-sizing:border-box!important;
- width:100%!important;
- min-width:0!important;
- max-width:100%!important;
- height:36px!important;
- min-height:36px!important;
- max-height:36px!important;
- margin:0!important;
- padding:0 40px 0 11px!important;
- border:1px solid var(--border)!important;
- border-radius:7px!important;
- background:#fff!important;
- color:#243447!important;
- font-family:"Inter",Arial,Helvetica,sans-serif!important;
- font-size:12px!important;
- font-weight:400!important;
- line-height:34px!important;
- text-align:left!important;
- opacity:1!important
-}
-body.mobile .work-inline-subtask .subtask-deadline::-webkit-date-and-time-value{
- min-width:0;
- min-height:34px;
- padding:0;
- line-height:34px;
- text-align:left
-}
-body.mobile .work-inline-subtask .subtask-deadline::-webkit-calendar-picker-indicator{
- position:absolute;
- right:10px;
- width:18px;
- height:18px;
- margin:0;
- padding:0;
- opacity:.72
-}
-body.mobile .work-inline-subtask .subtask-date-wrap.is-empty::after{
- content:attr(data-empty-label);
- position:absolute;
- z-index:2;
- left:11px;
- top:50%;
- transform:translateY(-50%);
- color:#7b8794;
- font-size:12px;
- line-height:1;
- pointer-events:none
-}
-body.mobile .work-inline-subtask .subtask-date-wrap.is-empty .subtask-deadline{
- color:transparent!important
-}
 
-
-
-
-.subtask-row.work-detail-subtask{
- grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) 165px 145px 170px auto;
- cursor:grab
-}
+.subtask-row.work-detail-subtask{cursor:grab}
 .subtask-row.work-detail-subtask:active{cursor:grabbing}
 .subtask-row.work-detail-subtask input,
 .subtask-row.work-detail-subtask select,
@@ -2222,20 +2007,15 @@ body.mobile .subtask-row.work-detail-subtask{
 body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
 
 /* Neue Notiz übernimmt stets die aktuelle Seitenleistenfarbe. */
-#new-note-btn{
- background:var(--sidebar-bg);
- color:var(--sidebar-title-color);
- border:1px solid var(--category-border)
-}
-#new-note-btn:hover{filter:brightness(.97)}
+#new-note-btn,
 #new-delegated-btn{
  background:var(--sidebar-bg);
  color:var(--sidebar-title-color);
  border:1px solid var(--category-border)
 }
+#new-note-btn:hover,
 #new-delegated-btn:hover{filter:brightness(.97)}
 
-/* Vergebene Aufgaben im kompakten Design des gemeinsamen Aufgabenreiters. */
 /* Vergebene Aufgaben: exakt dieselbe Kartenoptik wie die Eigenen Aufgaben.
    Layout und Innenabstände entsprechen .work-card + .work-preview. */
 .delegated-card{
@@ -2433,8 +2213,8 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
             <div class="quick-note-toolbar" aria-label="Formatierung für schnelle Notizen">
               <button type="button" class="quick-note-tool" data-quick-command="normal" title="Normal – Formatierung der Zeile entfernen">Normal</button>
               <button type="button" class="quick-note-tool" data-quick-command="bold" title="Fett"><strong>F</strong></button>
-              <button type="button" class="quick-note-tool" data-quick-command="bullet" title="Aufzählung">• Liste</button>
-              <button type="button" class="quick-note-tool" data-quick-command="ordered" title="Nummerierte Liste">1. Liste</button>
+              <button type="button" class="quick-note-tool" data-quick-command="bullet" title="Aufzählung" aria-label="Aufzählung">•<span class="nur-breit"> Liste</span></button>
+              <button type="button" class="quick-note-tool" data-quick-command="ordered" title="Nummerierte Liste" aria-label="Nummerierte Liste">1.<span class="nur-breit"> Liste</span></button>
             </div>
           </div>
           <div id="quick-note-editor" class="quick-note-editor" contenteditable="true"
@@ -2497,9 +2277,9 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
     </div>
     <div id="note-color-buttons" class="toolbar-group" aria-label="Schriftfarbe"></div>
     <div class="toolbar-group">
-      <button type="button" class="toolbar-btn" data-note-command="insertUnorderedList" aria-label="Aufzählung" title="Aufzählung">• Liste</button>
-      <button type="button" class="toolbar-btn" data-note-command="insertOrderedList" aria-label="Nummerierte Liste" title="Nummerierte Liste">1. Liste</button>
-      <button type="button" id="note-checklist-btn" class="toolbar-btn" aria-label="Checkliste" title="Checkliste">☐ Liste</button>
+      <button type="button" class="toolbar-btn" data-note-command="insertUnorderedList" aria-label="Aufzählung" title="Aufzählung">•<span class="nur-breit"> Liste</span></button>
+      <button type="button" class="toolbar-btn" data-note-command="insertOrderedList" aria-label="Nummerierte Liste" title="Nummerierte Liste">1.<span class="nur-breit"> Liste</span></button>
+      <button type="button" id="note-checklist-btn" class="toolbar-btn" aria-label="Checkliste" title="Checkliste">☐<span class="nur-breit"> Liste</span></button>
       <button type="button" class="toolbar-btn" data-note-command="outdent" aria-label="Einzug verkleinern" title="Einzug verkleinern">←</button>
       <button type="button" class="toolbar-btn" data-note-command="indent" aria-label="Einzug vergrößern" title="Einzug vergrößern">→</button>
     </div>
@@ -2608,7 +2388,7 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
     <div id="todo-person-field" class="field"><label>Verantwortliche Person</label><select id="todo-person"></select></div>
     <div class="field"><label>Aktueller Stand</label><select id="todo-status"></select></div>
     <div class="field"><label>Priorität</label><select id="todo-priority"></select></div>
-    <div class="field"><label>Deadline</label><input id="todo-deadline" type="date" min="2000-01-01" max="2100-12-31"></div>
+    <div class="field"><label for="todo-deadline">Deadline</label><div class="datum-feld"><input id="todo-deadline" class="datum-eingabe" type="date" min="2000-01-01" max="2100-12-31"></div></div>
     <div class="field full"><label>Ausführliche Notizen</label><textarea id="todo-details" class="details-text"></textarea></div>
   </div></div>
   <footer class="editor-foot"><span>Automatische Speicherung</span><span id="todo-mail-note" class="todo-mail-note" hidden></span><button type="button" id="delete-todo-detail" class="danger">Aufgabe löschen</button></footer>
@@ -2623,9 +2403,9 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
       <div class="field"><label>Art</label><div id="work-type-label" class="work-detail-type">Aufgabe</div></div>
       <div class="field"><label>Aktueller Status</label><select id="work-status" class="status-select"></select></div>
       <div class="field"><label>Kategorie</label><select id="work-priority"></select></div>
-      <div class="field"><label>Deadline</label><input id="work-deadline" type="date"></div>
+      <div class="field"><label for="work-deadline">Deadline</label><div class="datum-feld"><input id="work-deadline" class="datum-eingabe" type="date" min="2000-01-01" max="2100-12-31"></div></div>
     </div>
-    <section><div class="subtask-head"><h3>Unteraufgaben</h3><button type="button" id="add-work-subtask-btn" class="primary">Unteraufgabe hinzufügen</button></div><div id="work-subtask-list" class="subtask-list"></div></section>
+    <section><div class="subtask-head"><h3>Unteraufgaben</h3><button type="button" id="add-work-subtask-btn" class="subtask-add" title="Unteraufgabe hinzufügen" aria-label="Unteraufgabe hinzufügen">+</button></div><div id="work-subtask-list" class="subtask-list"></div></section>
   </div>
   <footer class="editor-foot"><span>Automatische Speicherung</span><button type="button" id="delete-work-detail" class="danger">Aufgabe oder Projekt löschen</button></footer>
 </div></section>
@@ -2637,9 +2417,9 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
       <div class="field full"><label>Anmerkungen</label><textarea id="project-summary"></textarea></div>
       <div class="field"><label>Aufgabenbereich</label><select id="project-area"></select></div>
       <div class="field"><label>Priorität</label><select id="project-priority"></select></div>
-      <div class="field"><label>Deadline</label><input id="project-deadline" type="date"></div>
+      <div class="field"><label for="project-deadline">Deadline</label><div class="datum-feld"><input id="project-deadline" class="datum-eingabe" type="date" min="2000-01-01" max="2100-12-31"></div></div>
     </div>
-    <section><div class="subtask-head"><h3>Unteraufgaben</h3><button type="button" id="add-subtask-btn" class="primary">Unteraufgabe hinzufügen</button></div><div id="subtask-list" class="subtask-list"></div></section>
+    <section><div class="subtask-head"><h3>Unteraufgaben</h3><button type="button" id="add-subtask-btn" class="subtask-add" title="Unteraufgabe hinzufügen" aria-label="Unteraufgabe hinzufügen">+</button></div><div id="subtask-list" class="subtask-list"></div></section>
   </div>
   <footer class="editor-foot"><span>Automatische Speicherung</span><button type="button" id="delete-project-detail" class="danger">Projekt löschen</button></footer>
 </div></section>
@@ -2708,60 +2488,9 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
             </div>
             <div class="theme-control font-control">
               <label for="theme-title-font">Schriftart des Titels</label>
-              <select id="theme-title-font" data-theme-field="titleFont">
-              <option value="Abril Fatface">Abril Fatface</option>
-              <option value="Alfa Slab One">Alfa Slab One</option>
-              <option value="Anton">Anton</option>
-              <option value="Archivo Black">Archivo Black</option>
-              <option value="Arial">Arial</option>
-              <option value="Audiowide">Audiowide</option>
-              <option value="Baloo 2">Baloo 2</option>
-              <option value="Bangers">Bangers</option>
-              <option value="Barriecito">Barriecito</option>
-              <option value="Barrio">Barrio</option>
-              <option value="Bebas Neue">Bebas Neue</option>
-              <option value="Bitcount Grid Double">Bitcount Grid Double</option>
-              <option value="Bitcount Prop Single">Bitcount Prop Single</option>
-              <option value="Bitcount Prop Single Ink">Bitcount Prop Single Ink</option>
-              <option value="Bungee">Bungee</option>
-              <option value="Butterfly Kids">Butterfly Kids</option>
-              <option value="Cabin Sketch">Cabin Sketch</option>
-              <option value="Cinzel">Cinzel</option>
-              <option value="Cormorant Garamond">Cormorant Garamond</option>
-              <option value="DM Sans">DM Sans</option>
-              <option value="Fontdiner Swanky">Fontdiner Swanky</option>
-              <option value="Fredoka">Fredoka</option>
-              <option value="Henny Penny">Henny Penny</option>
-              <option value="Iceberg">Iceberg</option>
-              <option value="Inter">Inter</option>
-              <option value="Jolly Lodger">Jolly Lodger</option>
-              <option value="Kablammo">Kablammo</option>
-              <option value="Lobster">Lobster</option>
-              <option value="Londrina Sketch">Londrina Sketch</option>
-              <option value="Manrope">Manrope</option>
-              <option value="Megrim">Megrim</option>
-              <option value="Montserrat">Montserrat</option>
-              <option value="Mountains of Christmas">Mountains of Christmas</option>
-              <option value="Nunito">Nunito</option>
-              <option value="Orbitron">Orbitron</option>
-              <option value="Original Surfer">Original Surfer</option>
-              <option value="Oswald">Oswald</option>
-              <option value="Pacifico">Pacifico</option>
-              <option value="Permanent Marker">Permanent Marker</option>
-              <option value="Playfair Display">Playfair Display</option>
-              <option value="Poppins">Poppins</option>
-              <option value="Righteous">Righteous</option>
-              <option value="Roboto Slab">Roboto Slab</option>
-              <option value="Rubik">Rubik</option>
-              <option value="Space Grotesk">Space Grotesk</option>
-              <option value="Special Elite">Special Elite</option>
-              <option value="Tektur">Tektur</option>
-              <option value="Ubuntu">Ubuntu</option>
-              <option value="Unkempt">Unkempt</option>
-              <option value="Yeseva One">Yeseva One</option>
-              </select>
+              <select id="theme-title-font" data-theme-field="titleFont"></select>
             </div>
-            <div class="theme-control">
+            <div class="theme-control number-control">
               <label for="theme-title-size">Größe des Titels</label>
               <input id="theme-title-size" type="number" min="20" max="56" step="1" data-theme-field="titleSize">
             </div>
@@ -2801,7 +2530,7 @@ body.mobile .subtask-row.work-detail-subtask>*{grid-column:1}
               <input id="theme-work-card-bg" type="color"
                      data-theme-field="workCardBg">
             </div>
-            <div class="theme-control">
+            <div class="theme-control number-control">
               <label for="theme-category-gap">Abstand zwischen Kategorieblöcken</label>
               <input id="theme-category-gap" type="number" min="4" max="40"
                      step="1" data-theme-field="groupGap">
@@ -2881,8 +2610,13 @@ const DASHBOARD_SCHEMA_VERSION=27;
 // Sichtbare Versionsangabe in der Seitenleiste. Diese ist bewusst getrennt von
 // DASHBOARD_SCHEMA_VERSION (Datenstruktur/Migrationen) und wird bei jeder
 // Auslieferung hier hochgezählt.
-const DASHBOARD_RELEASE='Dashboard 44.0 vom 14.10.2026, 21:50';
+const DASHBOARD_RELEASE='Dashboard 45.0 vom 16.10.2026, 15:10';
 const RECURRING_PRIORITY_ID='work-recurring';
+// Schalter-Symbole als Zeichnung statt als Schriftzeichen: Pfeil- und
+// Briefsymbole aus der Schrift sehen je nach Geraet unterschiedlich aus (auf
+// dem iPhone ist der Pfeil lang und duenn).
+const SYMBOL_OEFFNEN='<svg class="knopf-symbol" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 11 11 5M6.5 5H11v4.5"/></svg>';
+const SYMBOL_MAIL='<svg class="knopf-symbol" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2.5" y="4" width="11" height="8" rx="1.3"/><path d="m3.2 4.9 4.8 3.6 4.8-3.6"/></svg>';
 const DEFAULT_PAGE_LABELS={home:'Start',notes:'Notizen',tasks:'Aufgaben & Projekte',projects:'Projekte',own:'Eigene Aufgaben',delegated:'Vergebene Aufgaben'};
 const DELETABLE_LEGACY_PAGES=new Set(['own','projects']);
 const SUPABASE_CDN_URLS=[
@@ -3619,7 +3353,6 @@ function normalizeState(raw){
   });
  }
  result.config.noteOrderVersion=source.config?.noteOrderVersion===1?1:0;
- result.config.noteColorVersion=1;
  const available=allowed.filter(page=>!result.config.deletedPages.includes(page));
  result.config.navOrder=Array.isArray(source.config?.navOrder)
   ?source.config.navOrder.filter(item=>available.includes(item))
@@ -3910,18 +3643,13 @@ const expandedWorkItemIds=new Set();
 const expandedProjectIds=new Set();
 let current={noteId:null,todoId:null,todoType:'own',workId:null,projectId:null};
 let filters={tasks:{status:new Set(),area:new Set()},own:{status:new Set(),area:new Set()},delegated:{status:new Set(),area:new Set()},projects:{status:new Set(),area:new Set()}};
-let historyPast=[],historyFuture=[],editKey=null,noteRange=null;
+let historyPast=[],historyFuture=[],editKey=null;
 const noteEditorState={
  saveTimer:null,
  historyPast:[],
  historyFuture:[],
- lastInputAt:0,
- lastInputGroup:'',
- historyLocked:false,
  loading:false,
- savedHtml:'',
- selection:null,
- lastBeforeInputType:''
+ savedHtml:''
 };
 let supabaseClient=null;
 let cloudUser=null;
@@ -4138,7 +3866,7 @@ async function saveCloudState(){
 }
 async function loadCloudState(user){
  showAuthPanel('cloud-loading-panel');
- $('#cloud-loading-text').textContent='Cloud-Daten werden geladen …';
+ setLoadingText('Cloud-Daten werden geladen …');
  setSyncStatus('Lädt …','saving');
 
  cloudUser=user;
@@ -4351,7 +4079,17 @@ async function resetCloudConnection(){
  setSyncStatus('Einrichten','offline');
 }
 function snapshot(){return JSON.stringify(state)}
-function checkpoint(){const value=snapshot();if(historyPast.at(-1)!==value)historyPast.push(value);if(historyPast.length>100)historyPast.shift();historyFuture=[];renderHistoryButtons()}
+// Jeder Rueckgaengig-Schritt ist eine vollstaendige Kopie aller Daten. Bei
+// grossen Notizen wuerden 100 Schritte viel Arbeitsspeicher binden - auf dem
+// iPhone kann Safari die Seite dann neu laden. Deshalb zusaetzlich eine
+// Obergrenze fuer die Gesamtgroesse.
+const VERLAUF_MAX_SCHRITTE=100;
+const VERLAUF_MAX_ZEICHEN=20000000;
+function kuerzeVerlauf(liste){
+ let summe=liste.reduce((gesamt,eintrag)=>gesamt+eintrag.length,0);
+ while(liste.length>1&&(liste.length>VERLAUF_MAX_SCHRITTE||summe>VERLAUF_MAX_ZEICHEN))summe-=liste.shift().length;
+}
+function checkpoint(){const value=snapshot();if(historyPast.at(-1)!==value)historyPast.push(value);kuerzeVerlauf(historyPast);historyFuture=[];renderHistoryButtons()}
 function commit(mutator){checkpoint();mutator();saveState();renderAll()}
 // Eine Notiz ist geoeffnet, wenn die Detailansicht sichtbar ist.
 // Wechselt zwischen Notizliste und geoeffneter Notiz. Beides liegt
@@ -4607,6 +4345,12 @@ function renderTheme(){
 
 function renderThemeSettings(){
  const appearance=state.config.appearance||createDefaults().config.appearance;
+ // Die Auswahl der Titelschriften entsteht aus TITLE_FONT_OPTIONS, damit die
+ // Liste nur an einer Stelle gepflegt wird.
+ const schriftAuswahl=$('#theme-title-font');
+ if(schriftAuswahl&&!schriftAuswahl.options.length){
+  schriftAuswahl.innerHTML=TITLE_FONT_OPTIONS.map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join('');
+ }
  $$('[data-theme-field]').forEach(input=>{
   const value=appearance[input.dataset.themeField];
   if(value&&input.value!==value)input.value=value;
@@ -4663,67 +4407,25 @@ function closeOverlays(){
  if(noteWasOpen){
   flushCurrentNoteSave();
   current.noteId=null;
-  noteRange=null;
-  noteEditorState.selection=null;
  }
  $$('.overlay.open').forEach(item=>item.classList.remove('open'));
  document.body.style.overflow='';
  if(noteWasOpen)renderNotes();
  renderHistoryButtons();
 }
-function previewTextFromHtml(html){
- const root=document.createElement('div');
- root.innerHTML=html||'';
-
- const lines=[];
- let buffer='';
- const blockTags=new Set(['P','DIV','H1','H2','H3','H4','H5','H6','BLOCKQUOTE']);
-
- const flush=()=>{
-  const line=buffer.replace(/\s+/g,' ').trim();
-  if(line)lines.push(line);
-  buffer='';
- };
-
- const walk=(node,listType=null,listIndex=0)=>{
-  if(node.nodeType===3){
-   buffer+=node.nodeValue||'';
-   return;
-  }
-  if(node.nodeType!==1)return;
-
-  const tag=node.tagName;
-  if(tag==='BR'){
-   flush();
-   return;
-  }
-
-  if(tag==='LI'){
-   flush();
-   const checklist=node.parentElement?.classList.contains('note-checklist');
-   buffer+=checklist
-    ?(node.dataset.checked==='true'?'☑ ':'☐ ')
-    :(listType==='OL'?`${listIndex+1}. `:'• ');
-   [...node.childNodes].forEach(child=>walk(child));
-   flush();
-   return;
-  }
-
-  const isBlock=blockTags.has(tag);
-  if(isBlock)flush();
-
-  if(tag==='OL'||tag==='UL'){
-   [...node.children].forEach((child,index)=>walk(child,tag,index));
-  }else{
-   [...node.childNodes].forEach(child=>walk(child,listType,listIndex));
-  }
-
-  if(isBlock)flush();
- };
-
- [...root.childNodes].forEach(node=>walk(node));
- flush();
- return lines.join('\n');
+// Schliesst Dialoge so, wie es der Nutzer erwartet: offene Eingaben werden
+// gespeichert, eine leer gebliebene Aufgabe wird verworfen und die Uebersicht
+// zeigt danach den aktuellen Stand. Gilt fuer das Kreuz, "Fertig", die
+// Escape-Taste und den Wechsel des Reiters.
+function schliesseDialoge(){
+ const offen=name=>Boolean($(`#${name}-overlay`)?.classList.contains('open'));
+ const etwasOffen=Boolean($('.overlay.open'))||noteDetailOpen();
+ if(offen('todo'))beendeTodoBearbeitung();
+ if(offen('work')){saveCurrentWork();current.workId=null}
+ if(offen('project')){saveCurrentProject();current.projectId=null}
+ if(offen('mail'))mailVorlageTodoId=null;
+ closeOverlays();
+ if(etwasOffen)renderAll();
 }
 function autoGrow(element){if(!element)return;element.style.height='auto';element.style.height=`${Math.max(38,element.scrollHeight)}px`}
 function syncWorkSubtaskTextareas(scope=document){
@@ -4781,7 +4483,7 @@ function renderHome(){
 
  const kacheln=[
   {seite:'tasks',symbol:'⚡',klasse:'quick',titel:'Schnelle Todos',zahl:offeneTodos,
-   zusatz:offeneTodos===1?'offen':'offen'},
+   zusatz:'offen'},
   {seite:'tasks',symbol:'⚑',klasse:'work',titel:pageLabel('tasks'),zahl:gesamtWork,
    zusatz:`davon ${offeneWork} offen`},
   {seite:'delegated',symbol:'👤',klasse:'delegated',titel:pageLabel('delegated'),zahl:offeneVergeben,
@@ -4891,28 +4593,52 @@ function setTodoStatus(todo,type,statusId){
   todo.statusId=statusId;
  }
 }
-function renderFilter(containerSelector,section,groups){const root=$(containerSelector);root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button type="button" class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button type="button" class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`}
+// Zeichnet die Filterleiste. Eine gerade geoeffnete Liste bleibt dabei offen
+// und behaelt ihre Scrollposition - sonst klappte sie nach jedem Haken zu.
+function renderFilter(containerSelector,section,groups){const root=$(containerSelector);const offen=root.querySelector('.filter.open');const offenSchluessel=offen?.dataset.filterKey||'';const offenScroll=offen?.querySelector('.filter-menu')?.scrollTop||0;root.innerHTML=groups.map(group=>{const caption=group==='status'?'Bearbeitungsstand':group==='area'?'Aufgabenbereich':'Verantwortliche';const set=filters[section][group];const values=group==='status'?options(section,'statuses'):group==='area'?options(section,'areas'):options(section,'people');return`<div class="filter" data-filter-key="${section}:${group}"><button type="button" class="filter-trigger">${caption}${set.size?` (${set.size})`:''}</button><div class="filter-menu">${values.map(item=>`<label class="filter-option"><input type="checkbox" data-filter-section="${section}" data-filter-group="${group}" value="${esc(item.id)}" ${set.has(item.id)?'checked':''}>${esc(item.label)}</label>`).join('')}</div></div>`}).join('')+`<button type="button" class="filter-reset" data-reset-filter="${section}">Filter zurücksetzen</button><span class="filter-info"></span>`;if(offenSchluessel){const wieder=root.querySelector(`[data-filter-key="${offenSchluessel}"]`);if(wieder){wieder.classList.add('open');const liste=wieder.querySelector('.filter-menu');if(liste)liste.scrollTop=offenScroll}}}
 function todoMatches(todo,type){const selected=filters[type];return(!selected.status.size||selected.status.has(todo.statusId))&&(!selected.area.size||selected.area.has(todo.areaId))}
+// Heutiges Datum im Format des Datumsfelds (JJJJ-MM-TT), in Ortszeit.
+function heuteIso(){
+ const heute=new Date();
+ return`${heute.getFullYear()}-${String(heute.getMonth()+1).padStart(2,'0')}-${String(heute.getDate()).padStart(2,'0')}`;
+}
+function istFristVorbei(datum){
+ const frist=String(datum||'').trim();
+ return Boolean(frist)&&frist<heuteIso();
+}
 // Eine Aufgabe ist ueberfaellig, wenn ihre Deadline vor heute liegt und sie
 // noch nicht erledigt ist.
 function istUeberfaellig(eintrag){
- const frist=String(eintrag&&eintrag.deadline||'').trim();
- if(!frist)return false;
- const heute=new Date();
- const heuteWert=`${heute.getFullYear()}-${String(heute.getMonth()+1).padStart(2,'0')}-${String(heute.getDate()).padStart(2,'0')}`;
- if(frist>=heuteWert)return false;
+ if(!istFristVorbei(eintrag&&eintrag.deadline))return false;
  if(eintrag._kind==='subtask')return !isSubtaskDone(eintrag);
  if(eintrag.personId!==undefined&&eintrag.personId!=='')return !todoIsCompleted(eintrag,'delegated');
  return !todoIsCompleted(eintrag,'own');
 }
+// Einheitliches Datumsfeld fuer Karten und Unteraufgaben (Aufbau und Gruende
+// siehe .datum-feld im Stil). Mit "erledigt" wird zusaetzlich die
+// Ueberfaelligkeit angezeigt - ohne bleibt das Feld neutral.
+function datumsfeldHtml(wert,feldAttribut,{erledigt=null}={}){
+ const datum=String(wert||'');
+ const ueberwacht=erledigt!==null;
+ const klassen=['datum-feld'];
+ if(!datum)klassen.push('is-empty');
+ if(ueberwacht&&!erledigt&&istFristVorbei(datum))klassen.push('is-overdue');
+ return`<div class="${klassen.join(' ')}" data-empty-label="Deadline"${ueberwacht?` data-frist="${erledigt?'erledigt':'offen'}"`:''}>`
+  +`<input class="datum-eingabe" type="date" min="2000-01-01" max="2100-12-31" ${feldAttribut} value="${esc(datum)}" aria-label="Deadline">`
+  +'</div>';
+}
+// Haelt Platzhalter und Ueberfaellig-Markierung beim Tippen aktuell, ohne
+// die ganze Ansicht neu zu zeichnen.
+function aktualisiereDatumsfeld(eingabe){
+ const feld=eingabe?.closest?.('.datum-feld[data-empty-label]');
+ if(!feld)return;
+ feld.classList.toggle('is-empty',!eingabe.value);
+ if(feld.dataset.frist)feld.classList.toggle('is-overdue',feld.dataset.frist==='offen'&&istFristVorbei(eingabe.value));
+}
 function renderTodoRow(todo,type,{draggable=false}={}){
  ensureTodoDoneStatus(type);
  const completed=todoIsCompleted(todo,type);
- const delegatedPerson=type==='delegated'
-  ?`<select class="person-select" data-todo-field="personId">${selectOptions(type,'people',todo.personId,{custom:true})}</select>`
-  :'';
-
- return`<div class="todo-row ${type==='delegated'?'delegated':''} ${completed?'completed':''}"
+ return`<div class="todo-row${completed?' completed':''}"
              data-todo-id="${todo.id}" data-todo-type="${type}" draggable="${draggable}">
   <div>
    <input class="inline title-input-inline" data-todo-field="title"
@@ -4921,11 +4647,7 @@ function renderTodoRow(todo,type,{draggable=false}={}){
   </div>
   <textarea class="inline summary-input" data-todo-field="summary"
             rows="2" placeholder="Anmerkungen">${esc(todo.summary)}</textarea>
-  ${delegatedPerson}
-  <div class="todo-date-wrap${todo.deadline?'':' is-empty'}${istUeberfaellig(todo)?' is-overdue':''}" data-empty-label="Deadline">
-   <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31"
-          data-todo-field="deadline" value="${esc(todo.deadline||'')}" aria-label="Deadline">
-  </div>
+  ${datumsfeldHtml(todo.deadline,'data-todo-field="deadline"',{erledigt:completed})}
   <select class="status-select" data-todo-field="statusId"
           style="${statusStyle(type,todo.statusId)}">${selectOptions(type,'statuses',todo.statusId)}</select>
   <div class="actions">
@@ -5046,7 +4768,7 @@ function renderWorkSubtask(task,{detail=false,workId=''}={}){
   <textarea class="${titleClass}" data-work-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea>
   <textarea class="subtask-summary" data-work-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea>
   <select data-work-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select>
-  <div class="subtask-date-wrap${task.deadline?'':' is-empty'}" data-empty-label="Deadline"><input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31" step="1" data-work-subtask-field="deadline" value="${esc(task.deadline)}" aria-label="Deadline"></div>
+  ${datumsfeldHtml(task.deadline,'data-work-subtask-field="deadline"')}
   <select class="status-select" data-work-subtask-field="statusId" style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select>
   <button type="button" class="icon delete-btn" data-action="delete-work-subtask" title="Unteraufgabe löschen">×</button>
  </div>`;
@@ -5063,7 +4785,7 @@ function renderWorkItemRow(item){
    <select class="status-select" data-work-field="statusId" style="${statusStyle('tasks',item.statusId)}">${selectOptions('tasks','statuses',item.statusId)}</select>
    <div class="work-actions">
     <button type="button" class="icon open-btn" data-action="open-work"
-            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗︎</button>
+            title="Großansicht öffnen" aria-label="Großansicht öffnen">${SYMBOL_OEFFNEN}</button>
     <button type="button" class="icon delete-btn" data-action="delete-work"
             title="Löschen" aria-label="Löschen">×</button>
     <button type="button" class="icon work-expand-btn${expanded?' is-open':''}"
@@ -5379,17 +5101,14 @@ function renderDelegatedEntryRow(entry){
    </div>
    <textarea class="work-note" data-work-subtask-field="summary"
              placeholder="Anmerkungen">${esc(entry.summary||'')}</textarea>
-   <div class="todo-date-wrap${entry.deadline?'':' is-empty'}${istUeberfaellig(entry)?' is-overdue':''}" data-empty-label="Deadline">
-    <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31"
-           data-work-subtask-field="deadline" value="${esc(entry.deadline||'')}" aria-label="Deadline">
-   </div>
+   ${datumsfeldHtml(entry.deadline,'data-work-subtask-field="deadline"',{erledigt:isDone})}
    <select class="status-select" data-work-subtask-field="statusId"
            style="${statusStyle('subtasks',entry.statusId)}">${selectOptions('subtasks','statuses',entry.statusId)}</select>
    <div class="work-actions">
     <button type="button" class="icon mail-btn" data-action="mail-todo"
-            title="Als Mail vorbereiten" aria-label="Als Mail vorbereiten">✉︎</button>
+            title="Als Mail vorbereiten" aria-label="Als Mail vorbereiten">${SYMBOL_MAIL}</button>
     <button type="button" class="icon open-btn" data-action="open-work-from-delegated"
-            title="Großansicht öffnen" aria-label="Großansicht öffnen">↗︎</button>
+            title="Großansicht öffnen" aria-label="Großansicht öffnen">${SYMBOL_OEFFNEN}</button>
     <button type="button" class="icon delete-btn" data-action="delete-delegated-subtask"
             title="Löschen" aria-label="Löschen">×</button>
    </div>
@@ -5407,17 +5126,14 @@ function renderDelegatedEntryRow(entry){
   </div>
   <textarea class="work-note" data-todo-field="summary"
             placeholder="Anmerkungen">${esc(entry.summary)}</textarea>
-  <div class="todo-date-wrap${entry.deadline?'':' is-empty'}${istUeberfaellig(entry)?' is-overdue':''}" data-empty-label="Deadline">
-   <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31"
-          data-todo-field="deadline" value="${esc(entry.deadline||'')}" aria-label="Deadline">
-  </div>
+  ${datumsfeldHtml(entry.deadline,'data-todo-field="deadline"',{erledigt:isDone})}
   <select class="status-select" data-todo-field="statusId"
           style="${statusStyle('delegated',entry.statusId)}">${selectOptions('delegated','statuses',entry.statusId)}</select>
   <div class="work-actions">
    <button type="button" class="icon mail-btn" data-action="mail-todo"
-           title="Als Mail vorbereiten" aria-label="Als Mail vorbereiten">✉︎</button>
+           title="Als Mail vorbereiten" aria-label="Als Mail vorbereiten">${SYMBOL_MAIL}</button>
    <button type="button" class="icon open-btn" data-action="open-todo"
-           title="Großansicht öffnen" aria-label="Großansicht öffnen">↗︎</button>
+           title="Großansicht öffnen" aria-label="Großansicht öffnen">${SYMBOL_OEFFNEN}</button>
    <button type="button" class="icon delete-btn" data-action="delete-todo"
            title="Löschen" aria-label="Löschen">×</button>
   </div>
@@ -5430,45 +5146,43 @@ function delegatedPersonHeading(personId){
  return`<h3><span class="work-group-icon delegated-person" aria-hidden="true">👤</span><span>${esc(label)}</span></h3>`;
 }
 
+// Passt ein Eintrag zu den gesetzten Filtern? Unteraufgaben haben keinen
+// eigenen Aufgabenbereich - fuer sie gilt der Bereich ihres Projekts.
+function delegatedEntryMatches(entry){
+ const gewaehlt=filters.delegated;
+ const bereich=entry._kind==='subtask'
+  ?state.workItems.find(work=>work.id===entry._workId)?.areaId
+  :entry.areaId;
+ return(!gewaehlt.status.size||gewaehlt.status.has(entry.statusId))
+  &&(!gewaehlt.area.size||gewaehlt.area.has(bereich));
+}
 function renderDelegated(){
  renderFilter('#delegated-filters','delegated',['status','area']);
- const active=filters.delegated.status.size||filters.delegated.area.size;
-
- if(active){
-  const items=state.delegatedTodos.filter(todo=>todoMatches(todo,'delegated'));
-  $('#delegated-groups').innerHTML=`<div class="list">${items.map(todo=>renderTodoRow(todo,'delegated',{draggable:true})).join('')||'<div class="empty">Keine Treffer.</div>'}</div>`;
-  $('#delegated-filters .filter-info').textContent=`${items.length} Treffer`;
-  growAll();
-  return;
- }
-
- $('#delegated-filters .filter-info').textContent='';
- const personIds=delegatedPersonIds();
- // Erledigte (todos + subtasks) für den gemeinsamen Erledigt-Block
- const completedTodos=state.delegatedTodos.filter(t=>todoIsCompleted(t,'delegated'));
- const completedSubtasks=[];
- for(const work of state.workItems){
-  for(const task of work.subtasks||[]){
-   if(task.personId&&isSubtaskDone(task))completedSubtasks.push({...task,_kind:'subtask',_workId:work.id,_workTitle:work.title});
-  }
- }
- const completedCount=completedTodos.length+completedSubtasks.length;
+ const filterAktiv=Boolean(filters.delegated.status.size||filters.delegated.area.size);
+ const passt=entry=>!filterAktiv||delegatedEntryMatches(entry);
+ const bloecke=delegatedPersonIds()
+  .map(personId=>({personId,items:delegatedEntriesForPerson(personId).filter(passt)}))
+  .filter(block=>!filterAktiv||block.items.length);
+ // Erledigte Aufgaben und Unteraufgaben stehen gemeinsam in einem Block.
+ const erledigte=allDelegatedEntries()
+  .filter(entry=>entry._kind==='subtask'?isSubtaskDone(entry):todoIsCompleted(entry,'delegated'))
+  .filter(passt);
  const completedOpen=isCompletedOpen('delegated');
+ const trefferZahl=bloecke.reduce((summe,block)=>summe+block.items.length,0)+erledigte.length;
+ $('#delegated-filters .filter-info').textContent=filterAktiv?`${trefferZahl} Treffer`:'';
 
  let html='';
- if(personIds.length===0&&completedCount===0){
-  html='<div class="empty" style="padding:24px;text-align:center;color:var(--muted)">Noch keine vergebenen Aufgaben.</div>';
+ if(!bloecke.length&&!erledigte.length){
+  html=`<div class="empty">${filterAktiv?'Keine Treffer.':'Noch keine vergebenen Aufgaben.'}</div>`;
  }else{
-  html=personIds.map(personId=>{
-   const items=delegatedEntriesForPerson(personId);
-   const total=items.length;
+  html=bloecke.map(({personId,items})=>{
    const categoryKey=`delegated:${personId}`;
    const open=!isCategoryCollapsed(categoryKey);
    return`<section class="group work-group delegated-group">
     <div class="group-head">
      ${delegatedPersonHeading(personId)}
      <div class="group-meta">
-      <span class="count">${total}</span>
+      <span class="count">${items.length}</span>
       <button type="button" class="completed-toggle${open?' is-open':''}" data-action="toggle-category" data-category-key="${categoryKey}" aria-expanded="${open}">▾</button>
       <button type="button" class="quick-add" data-action="quick-delegated" data-person-id="${esc(personId)}" title="Neue Aufgabe für diese Person">+</button>
      </div>
@@ -5478,19 +5192,18 @@ function renderDelegated(){
     </div>
    </section>`;
   }).join('');
-  // Gemeinsamer Erledigt-Block
-  if(completedCount>0){
+  if(erledigte.length){
    html+=`<section class="group work-group delegated-group completed-group">
     <div class="group-head">
      ${workGroupHeading('Erledigt',{id:'__completed__'})}
      <div class="group-meta">
-      <span class="count">${completedCount}</span>
+      <span class="count">${erledigte.length}</span>
       <button type="button" class="completed-toggle${completedOpen?' is-open':''}" data-action="toggle-completed"
               data-completed-section="delegated" aria-expanded="${completedOpen}">▾</button>
      </div>
     </div>
     <div class="list completed-list" ${completedOpen?'':'hidden'}>
-     ${[...completedTodos.map(t=>({...t,_kind:'todo'})),...completedSubtasks].map(renderDelegatedEntryRow).join('')}
+     ${erledigte.map(renderDelegatedEntryRow).join('')}
     </div>
    </section>`;
   }
@@ -5526,10 +5239,7 @@ function renderProjectSubtask(task,{detail=false}={}){
   <textarea class="${titleClass}" data-subtask-field="title" placeholder="Bezeichnung">${esc(task.title)}</textarea>
   <textarea class="subtask-summary" data-subtask-field="summary" placeholder="Anmerkungen">${esc(task.summary)}</textarea>
   <select data-subtask-field="personId">${selectOptions('subtasks','people',task.personId,{custom:true})}</select>
-  <div class="subtask-date-wrap${task.deadline?'':' is-empty'}" data-empty-label="Deadline">
-   <input class="subtask-deadline" type="date" min="2000-01-01" max="2100-12-31" step="1"
-          data-subtask-field="deadline" value="${esc(task.deadline)}" aria-label="Deadline">
-  </div>
+  ${datumsfeldHtml(task.deadline,'data-subtask-field="deadline"')}
   <select class="status-select" data-subtask-field="statusId"
           style="${statusStyle('subtasks',task.statusId)}">${selectOptions('subtasks','statuses',task.statusId)}</select>
   <button type="button" class="icon delete-btn" data-action="delete-subtask" title="Unteraufgabe löschen">×</button>
@@ -5631,13 +5341,13 @@ function renderSettings(){
     <h4>${label}</h4>
     <div class="settings-hint">${hint}</div>
     ${group==='people'?`
-     <div class="settings-hint" style="margin-bottom:8px">
+     <div class="settings-hint ich-bin">
       <strong>Ich bin:</strong>
-      <select id="self-person-select" style="margin-left:8px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+      <select id="self-person-select" class="ich-bin-auswahl">
        <option value="">– niemanden auswählen –</option>
        ${options('shared','people').map(p=>`<option value="${esc(p.id)}" ${state.config.shared.selfPersonId===p.id?'selected':''}>${esc(p.label)}</option>`).join('')}
       </select>
-      <span style="font-size:12px;color:var(--muted);margin-left:8px">Diese Person bekommt keinen eigenen Block in „Vergebene Aufgaben".</span>
+      <span class="ich-bin-hinweis">Diese Person bekommt keinen eigenen Block in „Vergebene Aufgaben".</span>
      </div>
 `:''}
     <div class="option-list" data-option-section="shared" data-option-group="${group}">
@@ -5784,7 +5494,7 @@ function deleteNote(id){
  const note=state.notes.find(item=>item.id===id);
  if(!note||!confirm(`Soll „${note.title||'diese Notiz'}“ wirklich gelöscht werden?`))return;
  commit(()=>state.notes=state.notes.filter(item=>item.id!==id));
- closeOverlays();
+ if(current.noteId===id)closeOverlays();
 }
 
 function createTodo(type,{open=true,priorityId=null,completed=false,personId=null}={}){const config=sectionConfig(type);const shouldComplete=completed||priorityId==='__completed__';const normalStatus=todoOpenStatus(type)?.id||config.statuses[0]?.id||'';const doneStatus=todoDoneStatus(type)?.id||normalStatus;const effectivePriority=priorityId&&priorityId!=='__completed__'?priorityId:(config.priorities[0]?.id||'');const todo={id:uid(),title:'',summary:'',details:'',statusId:shouldComplete?doneStatus:normalStatus,areaId:config.areas[0]?.id||'',personId:type==='delegated'?(personId||config.people[0]?.id||''):'',priorityId:effectivePriority,previousPriorityId:effectivePriority,deadline:'',mailPreparedAt:'',completed:shouldComplete,updatedAt:now()};commit(()=>state[type==='own'?'ownTodos':'delegatedTodos'].unshift(todo));if(open)openTodo(todo.id,type)}
@@ -5842,6 +5552,10 @@ function mailAufgabeFinden(id){
   if(unter)return unter;
  }
  return null;
+}
+// Projekt, zu dem eine Unteraufgabe gehoert.
+function arbeitZuUnteraufgabe(id){
+ return(state.workItems||[]).find(arbeit=>(arbeit.subtasks||[]).some(task=>task.id===id))||null;
 }
 function verantwortlicherVonTodo(todo){
  return options('shared','people').find(person=>person.id===todo.personId)||null;
@@ -5931,7 +5645,7 @@ function mailWerte(todo){
   '{anmerkungen}':anmerkungen,
   '{notizen}':notizen,
   '{deadline}':formatiereDatumDeutsch(todo.deadline||''),
-  '{bereich}':String(options('delegated','areas').find(a=>a.id===todo.areaId)?.label||''),
+  '{bereich}':String(options('delegated','areas').find(a=>a.id===(todo.areaId||arbeitZuUnteraufgabe(todo.id)?.areaId))?.label||''),
   '{status}':String(options('delegated','statuses').find(s=>s.id===todo.statusId)?.label||''),
   '{name}':unterschriftName()
  };
@@ -6126,7 +5840,7 @@ async function kopiereMailText(){
  merkeMailVorbereitet();
 }
 
-function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});closeOverlays()}
+function deleteTodo(id,type){const list=type==='own'?state.ownTodos:state.delegatedTodos;const todo=list.find(item=>item.id===id);if(!todo||!confirm(`Soll „${todo.title||'diese Aufgabe'}“ wirklich gelöscht werden?`))return;commit(()=>{if(type==='own')state.ownTodos=state.ownTodos.filter(item=>item.id!==id);else state.delegatedTodos=state.delegatedTodos.filter(item=>item.id!==id)});if(current.todoId===id){current.todoId=null;if($('#todo-overlay').classList.contains('open'))closeOverlays()}}
 // Legt ein neues Projekt im bisherigen Projektbereich an.
 // Der Bereich ist bei diesem Nutzer geloescht; die Funktion bleibt fuer
 // Zustaende erhalten, in denen der Reiter noch vorhanden ist.
@@ -6175,7 +5889,7 @@ function deleteProject(id){
  if(!project||!confirm(`Soll „${project.title||'dieses Projekt'}“ wirklich gelöscht werden? Alle Unteraufgaben werden ebenfalls gelöscht.`))return;
  expandedProjectIds.delete(id);
  commit(()=>state.projects=state.projects.filter(item=>item.id!==id));
- closeOverlays();
+ if(current.projectId===id){current.projectId=null;if($('#project-overlay').classList.contains('open'))closeOverlays()}
 }
 function resolveSubtaskContext(element){
  const projectId=element.closest('[data-project-id]')?.dataset.projectId||current.projectId;
@@ -6219,7 +5933,10 @@ function addSubtask(projectId=current.projectId){
 }
 function deleteSubtask(id,projectId=current.projectId){
  const project=state.projects.find(item=>item.id===projectId);
- if(!project)return;
+ const task=project?.subtasks.find(item=>item.id===id);
+ if(!project||!task)return;
+ const description=task.title?.trim()?`die Unteraufgabe „${task.title.trim()}“`:'diese Unteraufgabe';
+ if(!confirm(`Soll ${description} wirklich gelöscht werden?`))return;
 
  commit(()=>{
   project.subtasks=project.subtasks.filter(item=>item.id!==id);
@@ -6358,20 +6075,6 @@ function deleteSettingOption(section,group,id){
    .filter(item=>item.id!==id);
  });
 }
-function setDailyOwnEnabled(enabled){
- commit(()=>{
-  state.config.shared.showDailyOwn=Boolean(enabled);
-  if(!enabled){
-   state.ownTodos.forEach(todo=>{
-    if(todo.priorityId==='priority-daily')todo.priorityId='priority-medium';
-    if(todo.previousPriorityId==='priority-daily'){
-     todo.previousPriorityId='priority-medium';
-    }
-   });
-  }
- });
-}
-
 function setNoteSaveStatus(text){
  const status=$('#note-save-status');
  if(status)status.textContent=text;
@@ -6926,14 +6629,6 @@ function qnAktualisiereAnzeige(){
  }
 }
 
-function noteInputGroup(inputType=''){
- if(/^insertText|^insertCompositionText|^deleteContent/.test(inputType))return'typing';
- if(/^insertParagraph|^insertLineBreak/.test(inputType))return'paragraph';
- return inputType||'edit';
-}
-function noteEditorCheckpoint({force=false,inputType='edit'}={}){
- neMerkeVerlauf({gruppiert:!force&&noteInputGroup(inputType)==='typing'});
-}
 function noteEditorUndo(){return neRueckgaengig()}
 function noteEditorRedo(){return neWiederherstellen()}
 function normalizeNoteUrl(value){
@@ -7317,56 +7012,6 @@ function sanitizeNoteHtml(html,{paste=false}={}){
  });
 
  return output.innerHTML;
-}
-function plainTextToNoteHtml(text){
- const lines=String(text||'').replace(/\r\n?/g,'\n').split('\n');
- const root=document.createElement('div');
- let activeList=null;
- let activeType='';
-
- const closeList=()=>{activeList=null;activeType=''};
- const addListItem=(type,content,checked=null)=>{
-  if(!activeList||activeType!==type){
-   activeList=document.createElement(type==='ol'?'ol':'ul');
-   if(type==='check')activeList.className='note-checklist';
-   root.appendChild(activeList);
-   activeType=type;
-  }
-  const item=document.createElement('li');
-  if(type==='check')item.dataset.checked=String(Boolean(checked));
-  item.textContent=content||'';
-  activeList.appendChild(item);
- };
-
- lines.forEach(line=>{
-  let match=line.match(/^\s*\[( |x|X)\]\s+(.*)$/);
-  if(match){
-   addListItem('check',match[2],match[1].toLowerCase()==='x');
-   return;
-  }
-  match=line.match(/^\s*[☐☑]\s+(.*)$/);
-  if(match){
-   addListItem('check',match[1],line.trimStart().startsWith('☑'));
-   return;
-  }
-  match=line.match(/^\s*(?:[-*•])\s+(.*)$/);
-  if(match){
-   addListItem('ul',match[1]);
-   return;
-  }
-  match=line.match(/^\s*\d+[.)]\s+(.*)$/);
-  if(match){
-   addListItem('ol',match[1]);
-   return;
-  }
-
-  closeList();
-  const paragraph=document.createElement('p');
-  if(line)paragraph.textContent=line;
-  else paragraph.appendChild(document.createElement('br'));
-  root.appendChild(paragraph);
- });
- return root.innerHTML;
 }
 // ===============================================================
 //  Notiz-Editor - Dokumentmodell
@@ -8246,16 +7891,6 @@ function neWerkzeugleiste(){
   const name={bold:'fett',italic:'kursiv',underline:'unterstrichen',strikeThrough:'durchgestrichen'}[befehl];
   if(name)schalter.classList.toggle('active',marke(name));
  });
- const arten=[];
- if(auswahl){
-  for(let i=auswahl.von.zeile;i<=auswahl.bis.zeile;i++){
-   if(noteModell[i])arten.push(noteModell[i].art);
-  }
- }
- const alleArt=art=>arten.length>0&&arten.every(eintrag=>eintrag===art);
- $$('[data-note-block]').forEach(schalter=>{
-  schalter.classList.toggle('active',alleArt(schalter.dataset.noteBlock));
- });
  const auswahlFeld=$('#note-font-size');
  if(auswahlFeld){
   let anzeige='';
@@ -8284,10 +7919,7 @@ function neWerkzeugleiste(){
  }
 }
 
-// Weiterleitungen der frueheren Schnittstelle. Sie werden im Programm nicht
-// mehr aufgerufen, bleiben aber bestehen, damit bestehende Aufrufwege und
-// Erweiterungen unveraendert funktionieren.
-function updateNoteEditorEmptyState(){neLeereAnzeige()}
+// Einstiegspunkte, ueber die der restliche Code den Notiz-Editor anspricht.
 function serializeNoteEditorHtml(){return neSerialisiere()}
 function loadNoteEditorContent(html){
  noteEditorState.loading=true;
@@ -8295,8 +7927,7 @@ function loadNoteEditorContent(html){
  noteEditorState.savedHtml=neSerialisiere();
  noteEditorState.loading=false;
 }
-// Die alten Einstiegspunkte bleiben als duenne Weiterleitungen bestehen,
-// damit alle bisherigen Aufrufwege unveraendert funktionieren.
+// Schalter der Werkzeugleiste -> Befehle des Notizmodells.
 const NOTE_BEFEHL_ZUORDNUNG={
  bold:'bold',italic:'italic',underline:'underline',strikeThrough:'strikeThrough',
  insertUnorderedList:'ul',insertOrderedList:'ol',
@@ -8308,32 +7939,20 @@ function noteCommand(command,value=null){
  if(!befehl)return;
  neBefehl(befehl,value);
 }
-function applyNoteBlockFormat(tag){
- const zuordnung={p:'p',h2:'h2',h3:'h3',blockquote:'zitat'};
- neBefehl(zuordnung[String(tag||'p').toLowerCase()]||'p');
-}
 function applyNoteFontSize(value){
  // Leerer Wert bedeutet "gemischt" und ist nur eine Anzeige.
  if(value===''||value===null||value===undefined)return;
  neBefehl('groesse',value);
 }
 
-
-function noteToggleListNeu(typ){
- neBefehl(typ==='ordered'?'ol':(typ==='checklist'?'check':'ul'));
-}
-
-function noteToggleList(typ){noteToggleListNeu(typ)}
 function toggleNoteChecklist(){neBefehl('check')}
 function toggleChecklistItem(item){
  const index=Number(item&&item.dataset?item.dataset.ne:NaN);
  if(!Number.isFinite(index))return false;
  return neHakenUmschalten(index);
 }
-function toggleCurrentChecklistItem(){return neHakenAnPosition()}
 function clearNoteFormatting(){neBefehl('normal')}
 function insertSanitizedNotePaste(html,text){neEinfuegen(html,text)}
-function updateNoteToolbarState(){neWerkzeugleiste()}
 
 function closeFilters(except=null){$$('.filter.open').forEach(item=>{if(item!==except)item.classList.remove('open')})}
 // ── Volltextsuche über Notizen, Aufgaben, Projekte und Unteraufgaben ───────
@@ -8502,10 +8121,10 @@ function vaultTouchActivity(){
  if(!vaultIsUnlocked())return;
  clearTimeout(vaultIdleTimer);
  vaultIdleTimer=setTimeout(()=>{
-  if(vaultIsUnlocked())lockVault({reason:'idle'});
+  if(vaultIsUnlocked())lockVault();
  },VAULT_IDLE_MS);
 }
-function lockVault({reason=''}={}){
+function lockVault(){
  vaultKey=null;
  vaultEntries=[];
  clearTimeout(vaultIdleTimer);
@@ -8513,7 +8132,6 @@ function lockVault({reason=''}={}){
  if(activePage==='passwords')activePage='notes';
  renderNav();
  renderVault();
- if(reason==='idle')setSyncStatus('Passwörter gesperrt','idle');
 }
 async function persistVaultEntries(){
  if(!vaultIsUnlocked())return;
@@ -8733,7 +8351,7 @@ function switchPage(page){
  if(state.config.deletedPages.includes(page))return;
  if(secondaryPage===page)secondaryPage=null;
  activePage=page;
- closeOverlays();
+ schliesseDialoge();
  closeNavContextMenu();
  renderNav();
 }
@@ -8810,6 +8428,7 @@ function renderNoteColors(){
 }
 function applyMobileMode(){
  const mobile=window.innerWidth<=760;
+ const gewechselt=document.body.classList.contains('mobile')!==mobile;
  document.body.classList.toggle('mobile',mobile);
  // Der Schloss-Button sitzt mobil in der oberen Werkzeugleiste, auf dem
  // Desktop unten links im Fußbereich der Seitenleiste.
@@ -8820,7 +8439,7 @@ function applyMobileMode(){
   const target=mobile?tools:foot;
   if(vaultButton.parentElement!==target)target.appendChild(vaultButton);
  }
- closeFilters();
+ if(gewechselt)closeFilters();
 }
 function reloadDashboardPage(){
  location.reload();
@@ -8995,23 +8614,12 @@ document.addEventListener('click',event=>{
   return;
  }
  const noteMain=event.target.closest('.note-main');if(noteMain){openNote(noteMain.closest('[data-note-id]').dataset.noteId);return}
- const close=event.target.closest('[data-close-overlay]');if(close){if(close.dataset.closeOverlay==='mail'){
-  mailVorlageTodoId=null;
-  // Der Aufgabendialog wurde beim Oeffnen der Vorschau geschlossen. Die
-  // Bearbeitung muss trotzdem sauber beendet werden.
-  beendeTodoBearbeitung();
- }
- if(close.dataset.closeOverlay==='todo')beendeTodoBearbeitung();if(close.dataset.closeOverlay==='work')saveCurrentWork();if(close.dataset.closeOverlay==='project')saveCurrentProject();closeOverlays();renderAll();return}
+ if(event.target.closest('[data-close-overlay]')){schliesseDialoge();return}
  const colorButton=event.target.closest('[data-note-color]');if(colorButton){noteCommand('foreColor',colorButton.dataset.noteColor);return}
 });
 
-function syncSubtaskDeadlineAppearance(input){
- const wrap=input?.closest?.('.subtask-date-wrap');
- if(wrap)wrap.classList.toggle('is-empty',!input.value);
-}
-
 document.addEventListener('change',event=>{
- if(event.target.matches?.('.subtask-deadline'))syncSubtaskDeadlineAppearance(event.target);
+ if(event.target.matches?.('.datum-eingabe'))aktualisiereDatumsfeld(event.target);
  const filterInput=event.target.closest('[data-filter-section]');if(filterInput){const set=filters[filterInput.dataset.filterSection][filterInput.dataset.filterGroup];filterInput.checked?set.add(filterInput.value):set.delete(filterInput.value);renderAll();return}
  const quickTodoToggle=event.target.closest('[data-quick-todo-toggle]');
  if(quickTodoToggle){toggleQuickTodo(quickTodoToggle.closest('[data-quick-todo-id]').dataset.quickTodoId,quickTodoToggle.checked);return}
@@ -9091,10 +8699,6 @@ document.addEventListener('change',event=>{
   }
   return;
  }
- if(event.target.id==='show-daily-own'){
-  setDailyOwnEnabled(event.target.checked);
-  return;
- }
  const categoryVisibility=event.target.closest('[data-category-visibility]');
  if(categoryVisibility){
   const id=categoryVisibility.dataset.categoryVisibility;
@@ -9157,7 +8761,7 @@ document.addEventListener('change',event=>{
 });
 
 document.addEventListener('input',event=>{
- if(event.target.matches?.('.subtask-deadline'))syncSubtaskDeadlineAppearance(event.target);
+ if(event.target.matches?.('.datum-eingabe'))aktualisiereDatumsfeld(event.target);
  if(event.target.id==='quick-note-editor')return; // eigener Handler, siehe qnUebernehmeEingabe
  const quickTodoField=event.target.closest('[data-quick-todo-field]');if(quickTodoField){updateQuickTodoTitle(quickTodoField);return}
  const workField=event.target.closest('[data-work-field]');
@@ -9268,7 +8872,9 @@ document.addEventListener('keydown',event=>{
  const inRichEditor=Boolean(event.target.closest?.('[contenteditable="true"]'));
  if(!inRichEditor&&modifier&&key==='z'&&!event.shiftKey){event.preventDefault();undo();return}
  if(!inRichEditor&&modifier&&(key==='y'||(event.shiftKey&&key==='z'))){event.preventDefault();redo();return}
- if(event.key==='Escape'){closeFilters();closeOverlays();return}
+ // Hat ein Feld die Escape-Taste schon selbst behandelt (etwa die Suche),
+ // bleiben Dialog und Notiz offen.
+ if(event.key==='Escape'){closeFilters();if(!event.defaultPrevented)schliesseDialoge();return}
 });
 
 bind('#note-editor','beforeinput',event=>{
@@ -9309,11 +8915,14 @@ function reorderBefore(list,draggedId,targetId){
  const insertIndex=fromIndex<targetIndex?targetIndex-1:targetIndex;
  list.splice(insertIndex,0,item);
 }
-function reorderRelative(list,draggedId,targetId,placeAfter=false){
- const fromIndex=list.findIndex(item=>item.id===draggedId);
+// Verschiebt einen Eintrag vor oder hinter ein Ziel. "schluessel" liefert die
+// Kennung eines Eintrags - bei Listen aus reinen Schluesseln (Reihenfolge der
+// vergebenen Aufgaben) ist das der Eintrag selbst.
+function reorderRelative(list,draggedId,targetId,placeAfter=false,schluessel=item=>item.id){
+ const fromIndex=list.findIndex(item=>schluessel(item)===draggedId);
  if(fromIndex<0||draggedId===targetId)return;
  const[item]=list.splice(fromIndex,1);
- const targetIndex=list.findIndex(entry=>entry.id===targetId);
+ const targetIndex=list.findIndex(entry=>schluessel(entry)===targetId);
  if(targetIndex<0){list.splice(fromIndex,0,item);return}
  list.splice(targetIndex+(placeAfter?1:0),0,item);
 }
@@ -9427,7 +9036,7 @@ document.addEventListener('dragover',event=>{
  const itemRow=event.target.closest('.todo-row[draggable="true"],.work-row[draggable="true"],.project-row[draggable="true"]');
  if(itemRow){event.preventDefault();itemRow.classList.add('item-drop-target')}
 
- const group=event.target.closest('[data-work-drop],[data-own-drop],[data-delegated-drop],[data-project-drop]');
+ const group=event.target.closest('[data-work-drop],[data-own-drop],[data-project-drop]');
  if(group){event.preventDefault();group.classList.add('item-group-target')}
 });
 document.addEventListener('dragleave',event=>{
@@ -9437,7 +9046,7 @@ document.addEventListener('dragleave',event=>{
  event.target.closest('.note-card')?.classList.remove('item-drop-target');
  event.target.closest('[data-delegated-key]')?.classList.remove('item-drop-target');
  event.target.closest('.todo-row,.work-row,.project-row')?.classList.remove('item-drop-target');
- event.target.closest('[data-work-drop],[data-own-drop],[data-delegated-drop],[data-project-drop]')?.classList.remove('item-group-target');
+ event.target.closest('[data-work-drop],[data-own-drop],[data-project-drop]')?.classList.remove('item-group-target');
 });
 document.addEventListener('dragend',()=>{
  $$('.dragging,.drop-target,.item-dragging,.item-drop-target,.item-group-target,.subtask-dragging,.subtask-drop-target')
@@ -9520,7 +9129,7 @@ document.addEventListener('drop',event=>{
     const placeAfter=event.clientY>=targetRect.top+(targetRect.height/2);
     commit(()=>{
      const order=materializeDelegatedOrder();
-     reorderRelative(order,draggedKey,targetKey,placeAfter);
+     reorderRelative(order,draggedKey,targetKey,placeAfter,eintrag=>eintrag);
      state.config.shared.delegatedOrder=order;
     });
    }
@@ -9559,7 +9168,7 @@ document.addEventListener('drop',event=>{
   return;
  }
 
- const group=event.target.closest('[data-work-drop],[data-own-drop],[data-delegated-drop],[data-project-drop]');
+ const group=event.target.closest('[data-work-drop],[data-own-drop],[data-project-drop]');
  if(!group)return;
  event.preventDefault();
 
@@ -9583,8 +9192,8 @@ document.addEventListener('drop',event=>{
 
  if(payload.kind==='todo'){
   const type=payload.type;
-  const groupId=group.dataset.ownDrop||group.dataset.delegatedDrop;
-  if(!groupId||(type==='own'&&!group.dataset.ownDrop)||(type==='delegated'&&!group.dataset.delegatedDrop))return;
+  const groupId=group.dataset.ownDrop;
+  if(type!=='own'||!groupId)return;
 
   commit(()=>{
    const list=type==='own'?state.ownTodos:state.delegatedTodos;
@@ -9634,7 +9243,10 @@ function downloadBackup(){
  const link=document.createElement('a');
  const stamp=new Date().toISOString().slice(0,10);
  link.href=url;
- link.download=`dominiks-dashboard-backup-${stamp}.json`;
+ const titel=String(state.meta.title||'').replace(/['\u2018\u2019`\u00b4]/g,'').replace(/ß/g,'ss');
+ // slug() liefert bei Titeln ohne Buchstaben und Ziffern "option" - dann "dashboard".
+ const name=/[a-z0-9]/i.test(titel.normalize('NFD'))?slug(titel):'dashboard';
+ link.download=`${name}-backup-${stamp}.json`;
  document.body.appendChild(link);
  link.click();
  link.remove();
@@ -9973,7 +9585,13 @@ bind('#note-editor','mouseup',neWerkzeugleiste);
 bind('#note-editor','keyup',neWerkzeugleiste);
 bind('#note-editor','focus',neWerkzeugleiste);
 bind('#note-editor','blur',neWerkzeugleiste);
-window.addEventListener('resize',()=>{applyMobileMode();closeFilters();closeNavContextMenu()});window.addEventListener('scroll',()=>{closeFilters();closeNavContextMenu()},true);
+window.addEventListener('resize',()=>{applyMobileMode();closeNavContextMenu()});
+window.addEventListener('scroll',event=>{
+ // Scrollen innerhalb einer Filterliste oder des Reitermenues laesst beide offen.
+ if(event.target?.closest?.('.filter-menu,#nav-context-menu'))return;
+ closeFilters();
+ closeNavContextMenu();
+},true);
 
 
 
@@ -10085,17 +9703,18 @@ window.__dashboardTest={
  setWorkStatus,
  confirmWorkCompletion,
  renderProjectRow,
- previewTextFromHtml,
+ collectSearchIndex,
+ schliesseDialoge,
+ renderDelegated,
+ datumsfeldHtml,
  renderNoteCard,
  renderTheme,
  renderTodoRow,
  applyMobileMode,
  ensureTitleFontLoaded,
- setDailyOwnEnabled,
  sectionConfig,
  renderSettings,
  sanitizeNoteHtml,
- plainTextToNoteHtml,
  loadNoteEditorContent,
  serializeNoteEditorHtml,
  insertSanitizedNotePaste,
@@ -10131,7 +9750,6 @@ window.__dashboardTest={
  neModellAusHtml,
  getNoteModell:()=>neModellKopie(noteModell),
  noteCommand,
- noteToggleList,
  qnBefehl,
  qnEinfuegen,
  qnRueckgaengig,
@@ -10148,7 +9766,6 @@ window.__dashboardTest={
  getQuickNoteModell:()=>qnModellKopie(quickNoteModell),
  noteEditorUndo,
  noteEditorRedo,
- noteEditorCheckpoint,
  openNote,
  saveCurrentNote,
  getNoteEditorState:()=>({
